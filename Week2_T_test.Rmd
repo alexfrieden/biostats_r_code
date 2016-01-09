@@ -1,0 +1,32 @@
+---
+title: "Week2_T_test"
+author: "Alexander Frieden"
+date: "January 9, 2016"
+output: html_document
+---
+
+In this we are going to be looking to use the T test to work with.  As we have previously described, the T test is a statistical tool that is used to see if two data sets are statistically different from one another and is used when the test statistic follows roughly a normal distribution.  Another way of saying this is to see if two means are reliably different from each other.  
+
+For example:
+```{r}
+cars <- c(52,49)
+barplot(cars, main="coin flips for heads",names=c("me","you"),xlab="flips by person",ylab="number of heads")
+```
+We can see here that I get more heads than you, but do I reliably get more heads than you?  That is what the t test hopes to do.  This is an inferencial statistic.  The T test is going to measure the variance between the groups divided by the variance within these groups.  Lets assume there is a difference of 6 within these groups, thus giving a t value of 1/3.  This isn't big enough to give us 
+
+Each T test has a corresponding P value.  This P value is the probability that the pattern of data in the sample could be produced by random data.  
+
+
+Example: A company that manufactures light bulbs claims that a particular type of light bulb will last 850 hours on average with standard deviation of 50. A consumer protection group thinks that the manufacturer has overestimated the lifespan of their light bulbs by about 40 hours. How many light bulbs does the consumer protection group have to test in order to prove their point with reasonable confidence?
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
