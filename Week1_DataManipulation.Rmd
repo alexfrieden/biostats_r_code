@@ -1,0 +1,63 @@
+---
+title: "Week1_DataManipulation"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+R is a scripting language so we can just run this and it doesn't need to get compiled into any other form.
+
+First we will set the working directory:
+```{r}
+setwd("/Users/alexander.frieden/Documents/biostats/Rcode/")
+```
+
+Then we are going to load data in.  A lot of data is loaded from file formats
+
+```{r}
+mydata = read.table("dummyTable.txt")
+mydata
+```
+
+We can also check the class for an object, in this case it will be a data frame
+
+```{r}
+class(mydata)
+```
+
+As we can see, our table has headers:
+```{r}
+mydata <- read.table("dummyTable.txt",header = TRUE)
+mydata
+```
+
+Notice now all of our data has nice headers.  And we can index off of them. This will give us a data frame. 
+
+```{r}
+mydata["val1"]
+```
+
+This will give us an array.  
+
+```{r}
+mydata$val1
+```
+
+We can do basic vector math
+
+```{r}
+a <- c(1,2,3)
+b <- c(10,11,12,13)
+a+b
+```
+
+Other vector operations
+
+```{r}
+min(a,b)
+max(a,b)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

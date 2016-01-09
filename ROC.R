@@ -22,6 +22,13 @@ train <- diamonds[is_test==FALSE,]
 test <- diamonds[is_test==TRUE,]
 
 summary(fit <- glm(is_expensive ~ carat + cut + clarity, data=train))
+library(ROCR)
+
+prob <- predict(fit, newdata=test, type="response")
+pred <- prediction(prob, test$is_expensive)
+perf <- performance(pred, measure = "tpr", x.measure = "fpr")
+# I know, the following code is bizarre. Just go with it.
+auc <- performance(pred, measure = "auc")
 auc <- auc@y.values[[1]]
 
 roc.data <- data.frame(fpr=unlist(perf@x.values),
@@ -31,3 +38,9 @@ ggplot(roc.data, aes(x=fpr, ymin=0, ymax=tpr)) +
   geom_ribbon(alpha=0.2) +
   geom_line(aes(y=tpr)) +
   ggtitle(paste0("ROC Curve w/ AUC=", auc))
+
+system.file()
+
+setwd(pwd)
+this.dir <- dirname(parent.frame(2)$ofile)
+setwd(this.dir)
