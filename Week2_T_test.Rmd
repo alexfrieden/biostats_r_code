@@ -14,7 +14,9 @@ barplot(cars, main="coin flips for heads",names=c("me","you"),xlab="flips by per
 ```
 We can see here that I get more heads than you, but do I reliably get more heads than you?  That is what the t test hopes to do.  This is an inferencial statistic.  The T test is going to measure the variance between the groups divided by the variance within these groups.  Lets assume there is a difference of 6 within these groups, thus giving a t value of 1/3.  This isn't big enough to give us 
 
-Each T test has a corresponding P value.  This P value is the probability that the pattern of data in the sample could be produced by random data.  
+Each T test has a corresponding P value.  This P value is the probability that the pattern of data in the sample could be produced by random data.  If the p value is 0.5, then that means there is a 5% chance there is no real difference.  In general, we only accept p = 0.5 as being reliable.
+
+Exact p value depends on the sample size.  The p-value for each t-value also depends on the sample size. Bigger samples make it easier to detect differences.  
 
 
 Example: A company that manufactures light bulbs claims that a particular type of light bulb will last 850 hours on average with standard deviation of 50. A consumer protection group thinks that the manufacturer has overestimated the lifespan of their light bulbs by about 40 hours. How many light bulbs does the consumer protection group have to test in order to prove their point with reasonable confidence?
