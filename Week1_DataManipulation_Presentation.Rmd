@@ -1,9 +1,9 @@
 ---
 title: "Week 1"
-subtitle: "Github, Rstudio, Experimental Design, Statistical Power"
 author: "Alexander Frieden"
 date: "January 9, 2016"
 output: ioslides_presentation
+subtitle: Github, Rstudio, Experimental Design, Statistical Power
 ---
 ## Lets Begin
 
@@ -169,7 +169,112 @@ study 1: 263 cases, 1241 controls
 
 ## Picturing statistical power
 
+study 1: 263 cases, 1241 controls
 ![Case 1](case1_part2.jpg)
+
+## Picturing statistical power
+
+study 1: 263 cases, 1241 controls
+![Case 1](case1_part3.jpg)
+
+## More on Power
+
+Study 2: 18 treated, 72 controls, STD DEV = 2
+![Case 2](case2_part1.jpg)
+
+## More on Power
+
+Study 2: 18 treated, 72 controls, STD DEV=10
+![Case 2](case3_part1.jpg)
+
+## More on Power
+
+Study 2: 18 treated, 72 controls, effect size=1.0
+![Case 3](case4_part1.jpg)
+
+## More on Power
+Bigger difference from the null mean.
+![Bigger Difference](biggerDifference.jpg)
+
+## More on Power
+Bigger standard deviation
+![Bigger Standard Deviation](biggerStandardDeviation.jpg)
+
+## More on Power
+Higher Significance Level
+![Higher Significance Level](HigherSignificance.jpg)
+
+## Sample Size Calculations
+
+Based on these elements, you can write a formal mathematical equation that relates power, sample size, effect size, standard deviation, and significance level.  
+
+We will derive this.  
+
+## Deriving Z-Test Formulas: 1-Sample, 1-Sided
+
+Suppose we have random variables
+
+$$Y_1,Y_2,\ldots,Y_n$$
+
+And we want to compare the hypothesis:
+
+$$H_0:\mu=\mu_0$$
+$$H_1:\mu>\mu_0$$
+
+Where $\mu$ is the mean of the distribution and $\mu_0$ is a specified comparison value.  
+
+## Deriving Z-Test Formulas: 1-Sample, 1-Sided
+
+The test statistic will be the sample average.  
+
+$$X = \bar{Y} = \frac{1}{n}\sum_{i=i}^{n}Y_i$$
+
+## Deriving Z-Test Formulas: 1-Sample, 1-Sided
+
+Since we're testing whether the mean is larger than $\mu_0$, we'll reject the null hypothesis if $X$ turns out to be "too big". 
+
+We'll need a critical value, $cv$ that serves as the cut-off point; that is, if our observed value of $X$ turns out to be larger than cvcv, then we'll reject the null hypothesis. If cvcv is very large, then it'll be very unlikely to observe a value of $X$ larger than $cv$. On the other hand, if $cv$ is too small, i.e. too close to $\mu_0$, then it'll be much more likely to observe a value of $X$ larger than $cv$.
+
+## Deriving Z-Test Formulas: 1-Sample, 1-Sided
+
+So, would we rather have a large or small critical value, and how do we decide? This is based on our desired Type I error rate, $\alpha$, which is often set at the familiar value of 0.05, or 5%. Specifically, if the null hypothesis is true, we want the probability of rejecting the null hypothesis to be αα. We can write this in symbols as:
+
+$$\alpha = P(X \geq cv \,|\, H_0)$$
+
+## Deriving Z-Test Formulas: 1-Sample, 1-Sided
+
+Using some algebra:
+
+$$
+\begin{aligned}
+\alpha & = P(X \geq cv \,|\, H_0) \\
+& = 1 - P(X \leq cv \,|\, H_0)
+\end{aligned}
+$$
+Since probabilities sum to one.
+$$
+= 1 - P\left(\frac{X-\mu_0}{\sigma_n} \leq \frac{cv-\mu_0}{\sigma_n}\,|\, H_0\right)
+$$
+
+## Remember
+
+If a random variable is normally distributed with mean $\mu$ and variance $\sigma^2$, then subtracting $a$ makes the mean $\mu-a$, and dividing by $b$ makes the variance $\sigma^2/b^2$.  We can use this to our advantage.  
+
+$$X \sim N(\mu,\sigma^2) \implies \frac{X-\mu}{\sigma} \sim N(0,1) $$
+
+## Number of Sample
+
+$$n=\frac{2{\sigma}(Z_{\beta}+Z_{\alpha/2})^2}{d}$$
+
+Where  
+n = Sample size in each group (assumes equal sized groups).  
+$Z_{\beta}$ = Represents the desired power (typically .84 for 80% power).  
+$Z_{\alpha/2}$ = Represents the desired level of statistical significance (typically 1.96).  
+d = Effect Size (the difference in means).  
+$\sigma$ = Standard deviation of the outcome variable (One we are testing).
+
+
+
 
 ## Loading data
 
