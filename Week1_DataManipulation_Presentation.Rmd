@@ -262,6 +262,144 @@ If a random variable is normally distributed with mean $\mu$ and variance $\sigm
 
 $$X \sim N(\mu,\sigma^2) \implies \frac{X-\mu}{\sigma} \sim N(0,1) $$
 
+Using this, we can then get the following:
+$$
+\begin{align}
+&\alpha = 1 - P\left(\frac{X-\mu_0}{\sigma_n} \leq \frac{cv-\mu_0}{\sigma_n}\,|\, H_0\right) \\
+& = 1 - \Phi\left(\frac{cv-\mu_0}{\sigma_n}\right)
+\end{align}
+$$
+
+## Deriving Z-Test Formulas: 1-Sample, 1-Sided
+
+So, 
+
+$$
+\alpha  = 1 - \Phi\left(\frac{cv-\mu_0}{\sigma_n}\right)  \\
+1 - \alpha = \Phi\left(\frac{cv-\mu_0}{\sigma_n}\right)
+$$
+
+Using definition of standard normal quantile:
+
+$$
+z_{1-\alpha} = \frac{cv-\mu_0}{\sigma_n} \\
+cv = \mu_0 + z_{1-\alpha}\sigma_n
+$$
+
+## Critical Value Result
+
+Acceptance Region: Accept $H_0$ if $X<\mu_0+z_{1−\alpha}\sigma_n$   
+Rejection Region: Reject $H_0$ if $X\geq\mu_0+z_{1−\alpha}\sigma_n$
+
+Note also that:
+
+Let $z_a$ be the $a^{th}$ quantile of the standard normal distribution. That is, the area under the standard normal curve to the left of $z_a$ is $a$.  Then
+
+$$
+z_a = -z_{1-a}
+$$
+
+## Power Derivation
+
+$$ 
+\begin{align}
+Power & = P(X\geq\mu_0 + z_{1-\alpha}\sigma_n \,|\, H_1) \\
+& = 1 - P(X<\mu_0 + z_{1-\alpha}\sigma_n \,|\, H_1) \\
+& = 1 - P\left(\frac{X-\mu}{\sigma_n}<\frac{\mu_0 + z_{1-\alpha}\sigma_n -\mu}{\sigma_n} \,|\, H_1\right) \\
+& = 1- \Phi\left(\frac{\mu_0-\mu}{\sigma_n} + z_{1-\alpha}\right) \\
+\end{align}
+$$
+
+And using the symmetry here of $1-\Phi(x) = \Phi(-x)$ or $z_a = -z(1-a)$
+
+$$
+Power  =  \Phi\left(\frac{\mu_0-\mu}{\sigma_n} - z_{1-\alpha}\right)
+$$
+
+## Type I and Type II Error
+
+In statistical hypothesis testing, a type I error is the incorrect rejection of a true null hypothesis (a "false positive"), while a type II error is the failure to reject a false null hypothesis (a "false negative"). More simply stated, a type I error is detecting an effect that is not present, while a type II error is failing to detect an effect that is present.
+
+## Sample Size
+
+A formula for sample size can be obtained by algebraically solving for nn in the above power formula. Here, we'll solve for $\sigma_n$, and below we'll fill in the specific form of σnσn for the cases when the data are normal and binomial.  First, note that the typical notation is Power = $1-\beta$, where $\beta$ is the Type II error rate. First lets take the power formula from before:
+
+$$
+1-\beta = \Phi\left(\frac{\mu-\mu_0}{\sigma_n}-z_{1-\alpha}\right) \\
+$$
+Then apply our definition of standard normal quantiles
+$$
+z_{1-\beta} = \frac{\mu-\mu_0}{\sigma_n}-z_{1-\alpha}
+$$
+
+## Sample Size
+
+Then some algebra:
+
+$$
+\frac{1}{\sigma_n} = \frac{z_{1-\beta} + z_{1-\alpha}}{\mu-\mu_0}
+$$
+
+## Normal Data
+
+Now suppose the data $Y_1,Y_2,...,Y_n$ are independently and identically distributed (iid) to $N(\mu,\sigma^2)$.  Let $X=\bar{Y}=\frac{1}{n}\sum_{i=1}^{n}Y_i=E(Y)$.  
+
+Then we know the expected value is similiarly distributed.  (We will not prove this).  So $\bar{Y} \sim N(\mu,\sigma^2/n)$
+
+Thus we replace $\sigma_n$ with $\sigma/\sqrt{n}$ and use our standard normal identity and power equation:
+
+$$
+Power = \Phi\left(\frac{\mu - \mu_0}{\sigma/\sqrt{n}}-z_{1-\alpha}\right) \\
+n = \left(\sigma\frac{z_{1-\beta}+z_{1-\alpha}}{\mu-\mu_0}\right)^2
+$$
+
+## Binomial Data
+
+Binomial data is a series of binary outcomes (coin flips).  
+
+Suppose the data $Y_1,Y_2,...,Y_n$ represent $n$ independent binary outcomes, each with success probability $p$.  Then the test statistic is the sample proportion, $X = \hat{p}=\frac{1}{n}\sum_{i=1}^{n}Y_i$.  For large n, we get the approximate distribution (you guessed it)
+
+$$
+\hat{p} \sim N\left(p,\frac{p(1-p)}{n}\right)  
+$$
+
+So we take our previous sample size and power calculations and replace $\sigma_n$ with $\sqrt{p(1-p)/n}$
+
+## Binomial Data
+
+We are left with
+
+$$
+Power = \Phi\left(\frac{p-p_0}{\sqrt{p(1-p)/n}}-z_{1-\alpha}\right)
+$$
+
+and
+
+$$
+n=p(1-p)\left(\frac{z_{1-\beta}+z_{1-\alpha}}{p-p_0}\right)^2
+$$
+
+## Quantile
+
+Please note $z_a$ is the quantile of the standard normal distribution such that the area under the curve to the left of $z_a$ is $a$. These quantiles are easily obtained from a standard normal distribution table or programatically. For example, if $\alpha=0.05$, then we have the familiar values of $z_{1−\alpha}=1.64$ and $z_{1−\alpha/2}=1.96$.
+
+## Example Sample Size Calculation
+
+Example 1: How many people would you need to sample in each group to achieve power of 80%?  Assume our mean is 120 and we are comparing to 115 and standard deviation is 24.  
+
+## Example 1 Solution
+
+So remember, $\beta$ is our type 2 error.  This means $1-\beta$ is our power.  Since our power is 80%, that means $\beta$ is 20%.  Thus we have:
+$$
+\begin{align}
+n & = \left(\sigma\frac{z_{1-\beta}+z_{1-\alpha}}{\mu-\mu_0}\right)^2 \\
+& = \left(24\frac{0.84+1.64}{120-115}\right)^2 \\
+& = \left(\frac{59.52}{5}\right)^2 = 141.7052 
+\end{align}
+$$
+
+
+
 ## Number of Sample
 
 $$n=\frac{2{\sigma}(Z_{\beta}+Z_{\alpha/2})^2}{d}$$
@@ -331,4 +469,8 @@ Other vector operations
 min(a,b)
 max(a,b)
 ```
+
+## R example of sample size calculation
+
+
 

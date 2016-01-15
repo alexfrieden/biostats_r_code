@@ -328,6 +328,137 @@
 
 <p>\[X \sim N(\mu,\sigma^2) \implies \frac{X-\mu}{\sigma} \sim N(0,1) \]</p>
 
+<p>Using this, we can then get the following: \[
+\begin{align}
+&amp;\alpha = 1 - P\left(\frac{X-\mu_0}{\sigma_n} \leq \frac{cv-\mu_0}{\sigma_n}\,|\, H_0\right) \\
+&amp; = 1 - \Phi\left(\frac{cv-\mu_0}{\sigma_n}\right)
+\end{align}
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Deriving Z-Test Formulas: 1-Sample, 1-Sided</h2></hgroup><article  id="deriving-z-test-formulas-1-sample-1-sided-5">
+
+<p>So,</p>
+
+<p>\[
+\alpha  = 1 - \Phi\left(\frac{cv-\mu_0}{\sigma_n}\right)  \\
+1 - \alpha = \Phi\left(\frac{cv-\mu_0}{\sigma_n}\right)
+\]</p>
+
+<p>Using definition of standard normal quantile:</p>
+
+<p>\[
+z_{1-\alpha} = \frac{cv-\mu_0}{\sigma_n} \\
+cv = \mu_0 + z_{1-\alpha}\sigma_n
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Critical Value Result</h2></hgroup><article  id="critical-value-result">
+
+<p>Acceptance Region: Accept \(H_0\) if \(X&lt;\mu_0+z_{1−\alpha}\sigma_n\)<br/>Rejection Region: Reject \(H_0\) if \(X\geq\mu_0+z_{1−\alpha}\sigma_n\)</p>
+
+<p>Note also that:</p>
+
+<p>Let \(z_a\) be the \(a^{th}\) quantile of the standard normal distribution. That is, the area under the standard normal curve to the left of \(z_a\) is \(a\). Then</p>
+
+<p>\[
+z_a = -z_{1-a}
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Power Derivation</h2></hgroup><article  id="power-derivation">
+
+<p>\[ 
+\begin{align}
+Power &amp; = P(X\geq\mu_0 + z_{1-\alpha}\sigma_n \,|\, H_1) \\
+&amp; = 1 - P(X&lt;\mu_0 + z_{1-\alpha}\sigma_n \,|\, H_1) \\
+&amp; = 1 - P\left(\frac{X-\mu}{\sigma_n}&lt;\frac{\mu_0 + z_{1-\alpha}\sigma_n -\mu}{\sigma_n} \,|\, H_1\right) \\
+&amp; = 1- \Phi\left(\frac{\mu_0-\mu}{\sigma_n} + z_{1-\alpha}\right) \\
+\end{align}
+\]</p>
+
+<p>And using the symmetry here of \(1-\Phi(x) = \Phi(-x)\) or \(z_a = -z(1-a)\)</p>
+
+<p>\[
+Power  =  \Phi\left(\frac{\mu_0-\mu}{\sigma_n} - z_{1-\alpha}\right)
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Type I and Type II Error</h2></hgroup><article  id="type-i-and-type-ii-error">
+
+<p>In statistical hypothesis testing, a type I error is the incorrect rejection of a true null hypothesis (a &quot;false positive&quot;), while a type II error is the failure to reject a false null hypothesis (a &quot;false negative&quot;). More simply stated, a type I error is detecting an effect that is not present, while a type II error is failing to detect an effect that is present.</p>
+
+</article></slide><slide class=''><hgroup><h2>Sample Size</h2></hgroup><article  id="sample-size">
+
+<p>A formula for sample size can be obtained by algebraically solving for nn in the above power formula. Here, we&#39;ll solve for \(\sigma_n\), and below we&#39;ll fill in the specific form of σnσn for the cases when the data are normal and binomial. First, note that the typical notation is Power = \(1-\beta\), where \(\beta\) is the Type II error rate. First lets take the power formula from before:</p>
+
+<p>\[
+1-\beta = \Phi\left(\frac{\mu-\mu_0}{\sigma_n}-z_{1-\alpha}\right) \\
+\] Then apply our definition of standard normal quantiles \[
+z_{1-\beta} = \frac{\mu-\mu_0}{\sigma_n}-z_{1-\alpha}
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Sample Size</h2></hgroup><article  id="sample-size-1">
+
+<p>Then some algebra:</p>
+
+<p>\[
+\frac{1}{\sigma_n} = \frac{z_{1-\beta} + z_{1-\alpha}}{\mu-\mu_0}
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Normal Data</h2></hgroup><article  id="normal-data">
+
+<p>Now suppose the data \(Y_1,Y_2,...,Y_n\) are independently and identically distributed (iid) to \(N(\mu,\sigma^2)\). Let \(X=\bar{Y}=\frac{1}{n}\sum_{i=1}^{n}Y_i=E(Y)\).</p>
+
+<p>Then we know the expected value is similiarly distributed. (We will not prove this). So \(\bar{Y} \sim N(\mu,\sigma^2/n)\)</p>
+
+<p>Thus we replace \(\sigma_n\) with \(\sigma/\sqrt{n}\) and use our standard normal identity and power equation:</p>
+
+<p>\[
+Power = \Phi\left(\frac{\mu - \mu_0}{\sigma/\sqrt{n}}-z_{1-\alpha}\right) \\
+n = \left(\sigma\frac{z_{1-\beta}+z_{1-\alpha}}{\mu-\mu_0}\right)^2
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Binomial Data</h2></hgroup><article  id="binomial-data">
+
+<p>Binomial data is a series of binary outcomes (coin flips).</p>
+
+<p>Suppose the data \(Y_1,Y_2,...,Y_n\) represent \(n\) independent binary outcomes, each with success probability \(p\). Then the test statistic is the sample proportion, \(X = \hat{p}=\frac{1}{n}\sum_{i=1}^{n}Y_i\). For large n, we get the approximate distribution (you guessed it)</p>
+
+<p>\[
+\hat{p} \sim N\left(p,\frac{p(1-p)}{n}\right)  
+\]</p>
+
+<p>So we take our previous sample size and power calculations and replace \(\sigma_n\) with \(\sqrt{p(1-p)/n}\)</p>
+
+</article></slide><slide class=''><hgroup><h2>Binomial Data</h2></hgroup><article  id="binomial-data-1">
+
+<p>We are left with</p>
+
+<p>\[
+Power = \Phi\left(\frac{p-p_0}{\sqrt{p(1-p)/n}}-z_{1-\alpha}\right)
+\]</p>
+
+<p>and</p>
+
+<p>\[
+n=p(1-p)\left(\frac{z_{1-\beta}+z_{1-\alpha}}{p-p_0}\right)^2
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Quantile</h2></hgroup><article  id="quantile">
+
+<p>Please note \(z_a\) is the quantile of the standard normal distribution such that the area under the curve to the left of \(z_a\) is \(a\). These quantiles are easily obtained from a standard normal distribution table or programatically. For example, if \(\alpha=0.05\), then we have the familiar values of \(z_{1−\alpha}=1.64\) and \(z_{1−\alpha/2}=1.96\).</p>
+
+</article></slide><slide class=''><hgroup><h2>Example Sample Size Calculation</h2></hgroup><article  id="example-sample-size-calculation">
+
+<p>Example 1: How many people would you need to sample in each group to achieve power of 80%? Assume our mean is 120 and we are comparing to 115 and standard deviation is 24.</p>
+
+</article></slide><slide class=''><hgroup><h2>Example 1 Solution</h2></hgroup><article  id="example-1-solution">
+
+<p>So remember, \(\beta\) is our type 2 error. This means \(1-\beta\) is our power. Since our power is 80%, that means \(\beta\) is 20%. Thus we have: \[
+\begin{align}
+n &amp; = \left(\sigma\frac{z_{1-\beta}+z_{1-\alpha}}{\mu-\mu_0}\right)^2 \\
+&amp; = \left(24\frac{0.84+1.64}{120-115}\right)^2 \\
+&amp; = \left(\frac{59.52}{5}\right)^2 = 141.7052 
+\end{align}
+\]</p>
+
 </article></slide><slide class=''><hgroup><h2>Number of Sample</h2></hgroup><article  id="number-of-sample">
 
 <p>\[n=\frac{2{\sigma}(Z_{\beta}+Z_{\alpha/2})^2}{d}\]</p>
@@ -406,7 +537,9 @@ a+b</pre>
 
 <pre class = 'prettyprint lang-r'>max(a,b)</pre>
 
-<pre >## [1] 13</pre></article></slide>
+<pre >## [1] 13</pre>
+
+</article></slide><slide class=''><hgroup><h2>R example of sample size calculation</h2></hgroup><article  id="r-example-of-sample-size-calculation"></article></slide>
 
 
   <slide class="backdrop"></slide>
