@@ -45,6 +45,102 @@ Biostars is a stackexchange style site for questions and answers to get help on 
 
 ![Central Dogma](centralDogmaOfStats.jpg)
 
+## Axioms of probability
+
+
+Let A be an event defined over probability space S.  Then $P(A) \geq 0$
+
+$P(S) = 1$
+
+Let A and B be any two mutually exclusive events defined over S.  Then:
+
+$$
+P(A \cup B) = P(A) + P(B)
+$$
+
+## Quick overview of probability and statistics
+
+$P(A^c) = 1 - P(A)$
+
+By second Axiom, $P(S) = 1 = P(A \cup A^c)$
+
+Since $A$ and $A^c$ are mutually exclusive then we can use third axiom.  
+
+$$
+1 = P(A \cup A^c) = P(A) + P(A^c) \\
+1 = P(A) + P(A^c) \\
+1 - P(A) = P(A^c)
+$$
+
+## Conditional Probability
+
+Conditional Probability is the idea that we want to ask about one probability's event given that another event has occured.  
+
+Let $A$ and $B$ be any two events defined on $S$ such that $P(B) > 0$.  The conditional probability of $A$, assuming that $B$ has occured is written $P(A|B)$.  It is given by:
+
+$$
+P(A|B) = \frac{P(A\cap B)}{P(B)}
+$$
+
+## Random Variable 
+
+a random variable is a variable whose value is subject to variations due to chance.  A random variable can take on a set of possible different values.  The set of values this can be is usually referred to as the sample space.  
+
+## Expected Value
+
+The expected value of a random variable is intuitively the long-run average value of repetitions of the experiment it represents.  
+
+The law of large numbers guarantees that the arithmetic mean of the values almost surely converges to the expected value as the number of repetitions goes to infinity.
+
+## Expected Value
+
+$$
+E(X) = \sum_{k}k\frac{1}{n} = \frac{1}{n}\sum_{all \, k}k
+$$
+
+Example: Dice roll
+
+$$
+\begin{align}
+E(X) & = \frac{1}{6}\sum_{i=1}^{6}i = \frac{1}{6}(1+2+3+4+5+6) \\
+& = \frac{1}{6}(21) = \frac{21}{6} = 3.5
+\end{align}
+$$
+
+## Expected Value
+
+This can also be written as:
+$$
+E(X) = \mu = \mu_X = \sum_{all \, k}k\cdot p_X(k)
+$$
+
+Notice this is only for the discrete case.  
+
+## Continuous expected value
+
+If Y is a continuous random variable with probability density function (pdf) $f_Y(y)$ then the expected value is:
+
+$$
+E(X) = \mu = \mu_X = \int_{-\infty}^{\infty}y\cdot f_Y(y)dy
+$$
+
+Assuming both the sum and the integral converge absolutely.  This creates some issues that I think can be resolved but for our purposes we want them to converge (You can do some crazy stuff with dirac delta functions and other distributions that get around classic functions).  To converge absolutely, we want:
+
+$$
+\sum_{all \, k}k\cdot p_X(k) < \infty  \int_{-\infty}^{\infty}y\cdot f_Y(y)dy < \infty
+$$
+
+## Variance
+
+The variance of a random variable is the expected value of its squared deviations from $\mu$.  If X is discrete with pdf $p_X(k)$
+
+$$
+Var(X) = \sigma^2 = E\left[(X - \mu)^2\right] = \sum_{all \, k}(k-\mu)^2\cdot p_X(k)
+$$
+If Y is continuous with pdf $f_Y(y)$
+$$
+Var(Y) = \sigma^2 = E\left[(Y - \mu)^2\right] = \int_{-\infty}^{\infty}(y-\mu)^2\cdot f_Y(y)dy
+$$
 
 ##Variability of biological experiment
 
@@ -385,7 +481,7 @@ Please note $z_a$ is the quantile of the standard normal distribution such that 
 
 ## Example Sample Size Calculation
 
-Example 1: How many people would you need to sample in each group to achieve power of 80%?  Assume our mean is 120 and we are comparing to 115 and standard deviation is 24.  
+How many people would you need to sample in each group to achieve power of 80%?  Assume our mean is 120 and we are comparing to 115 and standard deviation is 24.  
 
 ## Example 1 Solution
 
@@ -400,19 +496,19 @@ $$
 
 
 
-## Number of Sample
+## Example 2 Sample Size
 
-$$n=\frac{2{\sigma}(Z_{\beta}+Z_{\alpha/2})^2}{d}$$
+What power can I achieve if my our mean is 100 and we are comparing to 90 and standard deviation is 10 with 12 samples?
 
-Where  
-n = Sample size in each group (assumes equal sized groups).  
-$Z_{\beta}$ = Represents the desired power (typically .84 for 80% power).  
-$Z_{\alpha/2}$ = Represents the desired level of statistical significance (typically 1.96).  
-d = Effect Size (the difference in means).  
-$\sigma$ = Standard deviation of the outcome variable (One we are testing).
+## Example 2 Sample Size Solution
 
-
-
+$$
+\begin{align}
+Power & = \Phi\left(\frac{\mu - \mu_0}{\sigma/\sqrt{n}}-z_{1-\alpha}\right) \\
+& = \Phi\left(\frac{100 - 90}{10/\sqrt{12}}-1.64\right) \\
+& = \Phi(\frac{10\sqrt(12)}{10} - 1.64) = \Phi(1.82) = 0.9656
+\end{align}
+$$
 
 ## Loading data
 
@@ -472,5 +568,40 @@ max(a,b)
 
 ## R example of sample size calculation
 
+In our previous sample size calculation,we saw we got 142 as the sample size.  Lets see if we we can do this now in r.  
 
+```{r}
+mu=115
+mu0=120
+sd=24
+alpha=0.05
+beta=0.20
+(n=(sd*(qnorm(1-alpha)+qnorm(1-beta))/(mu-mu0))^2)
+```
+So,  because of our errors i rounding, we are actually a full sample off.  
+
+## R example of sample size calculation
+
+And as we expect
+
+```{r}
+z=(mu-mu0)/sd*sqrt(n)
+(Power=pnorm(abs(z)-qnorm(1-alpha)))
+```
+
+## R example of power calculation
+
+Remember the question is: What power can I achieve if my our mean is 100 and we are comparing to 90 and standard deviation is 10 with 12 samples?
+
+Lets set up our variables
+
+```{r}
+alpha=0.05
+mu = 100
+mu0 = 90
+sd = 10
+n = 12
+Power = pnorm((100-90)/10*sqrt(12)-qnorm(1-alpha))
+Power
+```
 
