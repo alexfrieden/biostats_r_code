@@ -224,6 +224,98 @@ Var(X) = \sigma^2 = E\left[(X - \mu)^2\right] = \sum_{all \, k}(k-\mu)^2\cdot p_
 Var(Y) = \sigma^2 = E\left[(Y - \mu)^2\right] = \int_{-\infty}^{\infty}(y-\mu)^2\cdot f_Y(y)dy
 \]</p>
 
+</article></slide><slide class=''><hgroup><h2>Standard Deviation</h2></hgroup><article  id="standard-deviation">
+
+</article></slide><slide class=''><hgroup><h2>Z transformation</h2></hgroup><article  id="z-transformation">
+
+<p>While we won&#39;t be doing the proof here, we will be using what is called the Z transformation throughout this class. For a continuous random variable \(Y\), mean \(\mu\) and variance \(\sigma^2\), then we can let: \[
+  \frac{Y-\mu}{\sigma} = Z
+\]</p>
+
+<p>What value does this have? What we really want is to show that this is also a standard normal random variable.</p>
+
+</article></slide><slide class=''><hgroup><h2>Statistical Moments</h2></hgroup><article  id="statistical-moments">
+
+<p>The \(n^{th}\) moment of a real valued continuous function \(f(x)\) of a real variable about a value \(c\) is</p>
+
+<p>\[
+\mu_n =  \int_{-\infty}^{\infty}(x-c)^nf(x)dx
+\]</p>
+
+<p>For nth moments about zero of a probability density function \(f(x)\) is the expected value of \(X^n\). Moments about the mean \(\mu\) are called central moments.</p>
+
+<p>For \(n = 1\), the raw moment is the mean.</p>
+
+<p>For \(n = 2\), the central moment is the variance.</p>
+
+<p>So as we can see, the moments are very powerful in gaining incite about what we are trying to do.</p>
+
+</article></slide><slide class=''><hgroup><h2>Moment Generating Functions</h2></hgroup><article  id="moment-generating-functions">
+
+<p>Finding moments directly of random variables, especially for higher moments can be very difficult. Thus, we will use moment generating functions, which have the very useful property that the \(rth\) derivative of $M_W(t) evaluated at zero is equal to \(E(W^r)\)</p>
+
+<p>Let W be a random variable. The moment generating function (mgf) for \(W\) is denoted \(M_W(t)\) and given by:</p>
+
+<p>\[
+M_W(t) = E(e^{tW}) = 
+\begin{cases}
+\sum_{all \, k}e^{tk}p_W(k),&amp; \text{if W is discrete} \\
+\int_{-\infty}^{\infty}e^{tW}f_W(w)dw, &amp; \text{if W is continuous}
+\end{cases}
+\]</p>
+
+<p>At all values of \(t\) for which the expected value exists</p>
+
+</article></slide><slide class=''><hgroup><h2>Proof of Z transformation is standard normal.</h2></hgroup><article  id="proof-of-z-transformation-is-standard-normal.">
+
+<p>We need to show that the random variable \(Z\) follows a \(N(0,1)\) distribution. So, let&#39;s find the cumulative distribution function \(F(z)\), which is also incidentally referred to as \(\Phi(z)\) \[
+Z = \frac{X-\mu}{\sigma}
+\] So \[
+f_Z(z) = \Phi(z) = P(Z \leq z) = P\left(\frac{X-\mu}{\sigma} \leq z\right)
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Remember defintion of Standard Normal</h2></hgroup><article  id="remember-defintion-of-standard-normal">
+
+<p>\[
+P(X \leq x) = \int_{-\infty}^{x}\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-x^2}{2}}dx
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Proof of Z transformation is standard normal</h2></hgroup><article  id="proof-of-z-transformation-is-standard-normal">
+
+<p>So lets apply our definition of standard normal to the Z transformation</p>
+
+<p>\[
+f_X(z) = P(X\leq\mu+z\sigma) = \int_{-\infty}^{\mu +z\sigma}\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-(\frac{x-\mu}{\sigma})^2}{2}}dx
+\]</p>
+
+<p>Lets do another substitution. Let \(w=\frac{x-\mu}{\sigma}\). From this we will get:</p>
+
+<p>\[
+x = w\sigma \\
+dx = \sigma dw
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Proof of Z transformation is standard normal</h2></hgroup><article  id="proof-of-z-transformation-is-standard-normal-1">
+
+<p>Now lets apply our w substitution.</p>
+
+<p>For the endpoints, if \(x = −\infty\), then \(w\) also equals \(−\infty\); and if \(x = \mu + z\sigma\), then \(w = \frac{\mu + z\sigma − \mu}{\sigma} = z\). Therefore, upon making all of the substitutions for \(x\), \(w\), and \(dx\), our integration looks like this:</p>
+
+<p>\[
+\begin{align}
+f_X(z) &amp; = \int_{-\infty}^{z}\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{w^2}{2}}\sigma dw \\
+&amp; = \int_{-\infty}^{z}\frac{1}{\sqrt{2\pi}}e^{-\frac{w^2}{2}} dw
+\end{align}
+\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Proof of Z transformation is standard normal</h2></hgroup><article  id="proof-of-z-transformation-is-standard-normal-2">
+
+<p>We should now recognize that as the cumulative distribution of a normal random variable with mean \(\mu = 0\) and standard deviation \(\sigma = 1\). Our proof is complete.</p>
+
+</article></slide><slide class=''><hgroup><h2>Similiar proof for Z transformation</h2></hgroup><article  id="similiar-proof-for-z-transformation">
+
+<p>A similar proof can be found here: <a href='http://aubuchon.jsc.vsc.edu/probTheoryDocumentTheoremNormTrans.htm' title=''>http://aubuchon.jsc.vsc.edu/probTheoryDocumentTheoremNormTrans.htm</a></p>
+
 </article></slide><slide class=''><hgroup><h2>Variability of biological experiment</h2></hgroup><article  id="variability-of-biological-experiment">
 
 <p>V(Genomic Measurement) = Phenotypic variability + Measurement Error + Natural biological variation</p>
