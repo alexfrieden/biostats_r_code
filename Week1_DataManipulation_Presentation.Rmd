@@ -188,8 +188,19 @@ At all values of $t$ for which the expected value exists
 
 ## Cumulative Distribution Function
 
+In working with random variables, we frequently need to calculate the probability that the value of a random variable is somewhere between two numbers.  
 
+For example, suppose we want to evaluate the expression $P(s\leq X \leq t)$.  If the pdf for this is $p_X(k)$ for $X$ then:  
 
+$$
+P(s\leq X \leq t) = \sum_{k=s}^tp_X(k)
+$$
+
+But this can be difficult depending on how many $k$'s there are and what our pdf is.  We can also write this:
+
+$$
+P(s\leq X \leq t) = P(X\leq t) - P(X \leq s - 1)
+$$
 
 ## Proof of Z transformation is standard normal.  
 
@@ -199,7 +210,7 @@ Z = \frac{X-\mu}{\sigma}
 $$
 So
 $$
-f_Z(z) = \Phi(z) = P(Z \leq z) = P\left(\frac{X-\mu}{\sigma} \leq z\right)
+F_Z(z) = \Phi(z) = P(Z \leq z) = P\left(\frac{X-\mu}{\sigma} \leq z\right)
 $$
 
 ## Remember defintion of Standard Normal
@@ -213,7 +224,7 @@ $$
 So lets apply our definition of standard normal to the Z transformation
 
 $$
-f_X(z) = P(X\leq\mu+z\sigma) = \int_{-\infty}^{\mu +z\sigma}\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-(\frac{x-\mu}{\sigma})^2}{2}}dx
+F_X(z) = P(X\leq\mu+z\sigma) = \int_{-\infty}^{\mu +z\sigma}\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-(\frac{x-\mu}{\sigma})^2}{2}}dx
 $$
 
 Lets do another substitution.  Let $w=\frac{x-\mu}{\sigma}$.  From this we will get:
@@ -231,7 +242,7 @@ For the endpoints, if $x = −\infty$, then $w$ also equals $−\infty$; and if 
 
 $$
 \begin{align}
-f_X(z) & = \int_{-\infty}^{z}\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{w^2}{2}}\sigma dw \\
+F_X(z) & = \int_{-\infty}^{z}\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{w^2}{2}}\sigma dw \\
 & = \int_{-\infty}^{z}\frac{1}{\sqrt{2\pi}}e^{-\frac{w^2}{2}} dw
 \end{align}
 $$
@@ -295,7 +306,7 @@ These are often not completely distinct and a single dataset can often be used f
 
 The Question: Given data on a collection of samples, are there biologically interesting patterns that exist?
 
-Unsupervised methods do not use the sample classification as input – they do not take into account, for example, whether the samples come from ALL or AML patients. 
+Unsupervised methods do not use the sample classification as input – they do not take into account, for example, whether the samples come from ALL(Acute lymphoblastic leukemia) or AML (acute myeloid leukemia) patients. 
 
 They simply group samples together based on some measure of similarity between them. 
 
@@ -355,11 +366,128 @@ The design must reflect experimental reality.
 
 The most straight-forward designs compare expression in two classes of samples to look for patterns that distinguish them.
 
+## Normal Distribution
+```{r}
+x <- seq(-4, 4, length=100)
+hx <- dnorm(x)
+degf <- c(1, 3, 8, 30)
+colors <- c("red", "blue", "darkgreen", "gold", "black")
+labels <- c("df=1", "df=3", "df=8", "df=30", "normal")
+```
+
+## Normal Distribution
+
+What is special about this distribution?
+```{r}
+plot(x, hx, type="l", lty=2, xlab="x value",ylab="Density", 
+     main="Comparison of t Distributions")
+for (i in 1:4){lines(x, dt(x,degf[i]), lwd=2, col=colors[i])}
+legend("topright", inset=.05, title="Distributions",labels, lwd=2, lty=c(1, 1, 1, 1, 2), col=colors)
+```
+
+
+## T test
+
+In this we are going to be looking to use the T test to work with.  The T test is a statistical tool that is used to see if two data sets are statistically different from one another and is used when the test statistic follows roughly a normal distribution.  Another way of saying this is to see if two means are reliably different from each other.  
+
+## T test
+For example:
+```{r}
+cars <- c(52,49)
+barplot(cars, main="coin flips for heads",names=c("me","you"),xlab="flips by person",ylab="number of heads")
+```
+
+## T test
+We can see here that I get more heads than you, but do I reliably get more heads than you?  That is what the t test hopes to do.  This is an inferencial statistic.  The T test is going to measure the variance between the groups divided by the variance within these groups.  Lets assume there is a difference of 6 within these groups, thus giving a t value of 1/3.  This isn't big enough to give us 
+
+## T test
+We can see here that I get more heads than you, but do I reliably get more heads than you?  That is what the t test hopes to do.  This is an inferencial statistic.  The T test is going to measure the variance between the groups divided by the variance within these groups.  Lets assume there is a difference of 6 within these groups, thus giving a t value of 1/3.  This isn't big enough to give us 
+
+Each T test has a corresponding P value.  This P value is the probability that the pattern of data in the sample could be produced by random data.  If the p value is 0.5, then that means there is a 5% chance there is no real difference.  In general, we only accept p = 0.5 as being reliable.
+
+In general we want a p value for our t test of 0.05 or below.  
+
+## T test
+Exact p value depends on the sample size.  The p-value for each t-value also depends on the sample size. Bigger samples make it easier to detect differences.  
+
+Example: A company that manufactures light bulbs claims that a particular type of light bulb will last 850 hours on average with standard deviation of 50. A consumer protection group thinks that the manufacturer has overestimated the lifespan of their light bulbs by about 40 hours. How many light bulbs does the consumer protection group have to test in order to prove their point with reasonable confidence?
+
+## T Test Example
+Our first goal is to figure out the number of light bulbs that need to be tested.  That is, we will determine the sample size for a given a significance level and power. Next, we will reverse the process and determine the power, given the sample size and the significance level.
+
+## T Test Example
+
+We know so far that the manufacturer claims that the average lifespan of the light bulb is 850 with the standard deviation of 50, and the consumer protection group believes that the manufactory has overestimated by about 40 hours. So in terms of hypotheses, our null hypothesis is $H_0 = 850$ and our alternative hypothesis is $H_a = 810$.
+
+## T Test Example
+
+The significance level is the probability of a Type I error (i.e. $\alpha$), that is the probability of rejecting $H_0$ when it is actually true. We will set it at the .05 level. The power of the test against Ha is the probability of that the test rejects $H_0$. We will set it at .90 level.
+
+## T Test Example
+
+We are almost ready for our power analysis. But let's talk about the standard deviation a little bit.
+
+Intuitively, the number of light bulbs we need to test depends on the variability of the lifespan of these light bulbs. Take an extreme case where all the light bulbs have exactly the same lifespan. Then we just need to check a single light bulb to prove our point. Of course, this will never happen. 
+
+On the other hand, suppose that some light bulbs last for 1000 hours and some only last 500 hours. We will have to select quite a few of light bulbs to cover all the ground. Therefore, the standard deviation for the distribution of the lifespan of the light bulbs will play an important role in determining the sample size.
+
+Power Analysis
+
+In R, it is fairly straightforward to perform a power analysis for comparing means. For example, we can use R's pwr.t.test function for our calculation as shown below. First, we specify the two means, the mean for the null hypothesis and the mean for the alternative hypothesis divided by the standard deviation for the population. We also need to set the alpha level (.05 for our example), type equal to one.sample and alternative equal to two.sided (two-tail).
+
+## T Test Example
+
+Power Analysis
+
+In R, it is fairly straightforward to perform a power analysis for comparing means. For example, we can use R's pwr.t.test function for our calculation as shown below. First, we specify the two means, the mean for the null hypothesis and the mean for the alternative hypothesis divided by the standard deviation for the population. We also need to set the alpha level (.05 for our example), type equal to one.sample and alternative equal to two.sided (two-tail).
+
+## T Test Example
+
+```{r}
+library(pwr)
+pwr.t.test(d=(850-810)/50,power=0.9,sig.level=0.05,type="one.sample"
+           ,alternative="two.sided")
+```
+
+## T Test Example
+
+The result tells us that we need a sample size at least 19 light bulbs to reject $H_0$ under the alternative hypothesis $H_a$ to have a power of 0.9.
+
+Next, suppose we have a sample of size 10, how much power do we have keeping all of the other numbers the same? 
+```{r}
+pwr.t.test(d=(850-810)/50,n=10,sig.level=0.05,type="one.sample"
+           ,alternative="two.sided")
+```
+
+## T Test Example
+
+You can see that the power is about .616 for a sample size of 10. What then is the power for sample size of 15?
+
+```{r}
+pwr.t.test(d=(850-810)/50,n=15,sig.level=0.05,type="one.sample"
+           ,alternative="two.sided")
+```
+So now the power is about .82. You could also do it again to find out the power for a sample size of 20. You'll probably expect that the power will be greater.
+
+## T Test Example
+
+So if we want 80% power if looks like 15 light bulbs will do the trick.  
+
+There is another technical assumption, the normality assumption. If the variable is not normally distributed, a small sample size usually will not have the power indicated in the results, because those results are calculated using the common method based on the normality assumption. It might not even be a good idea to do a t-test on such a small sample to begin with if the normality assumption is in question.
+
 ## Sample Size and Power Calculations
 
 What is Statistical Power?  
 
 Statistical Power refers to the is the likelihood that a study will detect an effect when there is an effect there to be detected. If statistical power is high, the probability of concluding there is no effect when, in fact, there is one, goes down.
+
+* Power = Probability of discovering a real signal if it is there  
+* Power is typically set to 80%  
+* Calculations are based on made up assumptions (since you need to calculate this often before experiment is run)  
+* Higher power is better  
+* Lower power studies don’t replicate
+
+
 
 
 ## Picturing statistical power
@@ -708,4 +836,58 @@ n = 12
 Power = pnorm((100-90)/10*sqrt(12)-qnorm(1-alpha))
 Power
 ```
+
+
+## What did we just do here?
+
+So we just used the pnorm and qnorm functions.  What do these do?
+
+We can run the question mark command to get the R documentation on a command
+
+```{r}
+?pnorm
+```
+
+As we see when we go to it, we see pnorm returns the cdf value and qnorm returns the inverse cumulative density function (quantiles).  
+
+Good read up on this is at: http://www.cyclismo.org/tutorial/R/probability.html
+
+
+## How Many Replicates?
+
+From Simon et al., Genetic Epidemiology 23: 21-36, 2002)
+
+$$
+n = \frac{[7.84\sigma^2(z_{a/2} + z_{b})^2]}{\delta^2}
+$$
+
+Where $z_{a/2}$ and $z_b$ are normal percentile values at significance level a and false negative rate $\beta$; parameter $\delta$ represents the minimum detectable log2 ratio; and $\sigma$ represents the SD of log ratio values.
+
+For $\alpha = 0.001$ and $\beta = 0.05$, then $z_{a/2} = -3.29$ and $z_b = -1.65$.
+Assume $\delta = 1.0$ (2-fold change) and $\sigma = 0.25$,
+Therefore $n = 12$ samples (6 query and 6 control).  This is clearly not sufficient.
+
+
+## Power Calculations
+
+* There are many papers now describing microarray power calculations.
+
+* Most require knowledge of many parameters that simply are not known and hard to estimate given our lack of knowledge of the existing data
+
+* Most suggest 4-6, 20-30, >100 samples per group for most two-class experiments but these are often insufficient, particularly for applications such as classification
+
+* The real calculation people do is:	
+$$
+\frac{money\,available}{money\,per\,array}
+$$
+
+This is an area where significant work remains to be done.  Answers depends on the goal.
+
+## Replication
+
+* People distinguish “Biological Replicates” and “Technical Replicates”
+
+* “Technical Replicates” hybridize the same samples to the array multiple times – captures variability in the assay
+
+* “Biological Replicates” use independent biological samples -  captures variability in biological system and in the assay
 
