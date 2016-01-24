@@ -2,9 +2,57 @@
 title: "Week 1"
 author: "Alexander Frieden"
 date: "January 9, 2016"
-output: ioslides_presentation
+output: 
+  ioslides_presentation: 
+    transition: slower
 subtitle: Github, Rstudio, Experimental Design, Statistical Power
 ---
+
+## Introduction 
+
+Alexander Frieden  
+Adjunct Professor
+Department of Mathematical Sciences
+University of Massachusetts Lowell
+Alex@Frieden.org
+
+Office Hours by Appointment 
+(or if people have a preference)
+
+## Class
+Monday Evenings 6:30-9:20
+
+**Texts (optional)**  
+Applied Statistical Genetics in R by Andrea S. Foulkes
+Principles of Biostatistics, 2nd Edition, Pagano and Gauvreau
+
+**For Further Reading**  
+Introduction to Genomics, Arthur M. Lesk,Oxford University Press
+
+
+## About Me
+
+I am a bioinformatics scientist at Claritas Genomics.  I have worked in NGS and rare diseases for around three years and have worked in immunology for a year before that.  Went to UML for undergrad and did my masters at LSU and also did a short stint at Harvard.  
+
+## About Class
+* We will learn a lot of R(but you can do your work in any language such as python or julia)
+* Go back through basics of statistics including variance, distributions, expected value
+* Do some work in Power, Sample Size, T test, ANOVA.  
+* Go through a bunch of the technology for a background
+* Go through diagnostic metrics such as Sensitivity, Specificity, and PPV
+* Go through file formats such as VCF
+* Linkage Disequilibrium, PCA, Hardy Weinberg, K-Means
+* Correlation and Alternatives
+* Fisher's exact test and Chi-Squared Distribution. 
+
+Possibly some other topics including monte carlo
+
+## Grades
+
+30%  Participation  
+40%  Homework  
+30%  Take home Exam  
+
 ## Lets Begin
 
 Science is built with facts as a house is with stones – but a collection of facts is no more a science than a heap of stones is a house.
@@ -488,8 +536,6 @@ Statistical Power refers to the is the likelihood that a study will detect an ef
 * Lower power studies don’t replicate
 
 
-
-
 ## Picturing statistical power
 
 study 1: 263 cases, 1241 controls
@@ -742,6 +788,218 @@ Power & = \Phi\left(\frac{\mu - \mu_0}{\sigma/\sqrt{n}}-z_{1-\alpha}\right) \\
 \end{align}
 $$
 
+## More on power
+
+Another way of thinking about power is:
+$$
+power = P(reject\,H_0\,|\,H_0\,is\,false)
+$$
+
+Before we conduct a test of hypothesis.  We must decide whether we are concerned with deviations from $\mu_0$ that could occur in both directions.  Either higher AND lower or just lower or higher.  
+
+This decision needs to be made before choosing a random variable.  If prior knowledge indicates that $\mu$ cannot be less than $\mu$ then we can safely look at a one sided analysis.  
+
+## More on power
+
+In situations like this, we can state the null hypothesis:
+
+$$
+H_0:\,\mu \leq \mu_0
+$$
+
+And thus alternative hypothesis is:
+$$
+H_A:\mu > \mu_0
+$$
+
+For example, most people would agree that it is unreasonable to believe that exposure to a toxic substance - such as ambient carbon monoxide or sulphur dioxide could possibly be beneficial to humans.  Therefore, we anticipate only harmful effects and conduct a one-sided test.  
+
+**A two-sided test is always the more conservative choice, in general.  However, the p-value of a two sided test is twice as large as that of a one-sided test**
+
+## Diastolic Blood Pressure Example
+
+Consider the case of a drug that has been deemed effective for reducing high blood pressure.  After being treated with this drug for a given period of time, a population of individuals suffering from hypertension has mean diastolic blood pressure $\mu_d$, a value that is clinically lower than the mean diastolic lood pressure of untreated hypertensives.  
+
+Now suppose that another another company produces a generic version of the same drug.  We would like to know whether the generic drug is as effective as reducing blood pressure.  
+
+To determine this, we examine the distribution of diastolic blood pressure for a sample of individuals who have been treated with the generic drug.  If $\mu$ is the same of this population, we use the sample to test the null hypothesis.  
+
+## Diastolic Blood Pressure Example
+
+Thus 
+
+$$
+H_0:\,\mu=\mu_d
+$$
+What if the manufacturer of the generic drug actually submits the brand-name product for testing in place if its own version?  Vitarine Pharmaceuticals, a New York based drug company has reportedly done just that ("Firm Admits Using Rival's Drug in Tests," _The Boston Globe_, July 1, 1989, 41).  The company has made similar substitutions on four different occasions.  In a situation such as this, we know that the null hypothesis must be true.  
+
+## Diastolic Blood Pressure Example
+
+Thus 
+
+$$
+H_0:\,\mu=\mu_d
+$$
+What if the manufacturer of the generic drug actually submits the brand-name product for testing in place if its own version?  Vitarine Pharmaceuticals, a New York based drug company has reportedly done just that ("Firm Admits Using Rival's Drug in Tests," _The Boston Globe_, July 1, 1989, 41).  
+
+The company has made similar substitutions on four different occasions.  In a situation such as this, we know that the null hypothesis must be true.  
+
+## Diastolic Blood Pressure Example
+
+Therefore if we test a hypothesis leads us to reject $H_0$ and pronounce the "generic" drug to be either more or less effective than the brand-name version, then this is still a type 1 error.  
+
+The second kind of error we can make is a type II error, also known as an acceptance error or $\beta$ error.  A type II error is made if we fail to reject the null hypothesis or
+
+$$
+H_0:\,\mu\,=\,\mu_0
+$$
+When $H_0$ is false.  The probabilty of a type II error is represented by the Greek letter $\beta$ where
+
+$$
+\beta = P(do\,not\,reject\,H_0\,|\,H_0\,is\,false)
+$$
+
+## Diastolic Blood Pressure Example
+
+For example, if $\beta = 0.10$ the probability that we do not reject the null hypothesis when $\mu$ is not equal to $\mu_0$ is 0.10 or 10%.  
+
+Lets suppose we have a study of 20 to 74 year old males in the United States.  The mean of this population is $\mu = 211$ mg/100 ml.  The standard deviation $\sigma = 46$ mg/100 ml.  Suppose that we do not know the true mean of this population; however, we do know that the mean serum cholesterol level for the subpopulation of 20- to 24-year-old males is 180 mg/100 ml.  
+
+Since older men tend to have higher cholesterol levels than younger men on average, we would expect the mean choleterol level of the larger group to be higher than 180 mg/100 ml.  Therefore, lets conduct a one-sided test of the null hypothesis.  
+
+## Diastolic Blood Pressure Example
+
+So null hypothesis is:
+$$
+H_0:\mu\leq 180\,mg/100\,ml
+$$
+
+And alternative hypothesis is:
+$$
+H_A:\mu>180\,mg/100\,ml
+$$
+
+We would expect to reject $H_0$.  It is possible it will not be rejected.  This probability of reaching this incorrect conclusion, a type II error, is $\beta$
+
+What is the value of $\beta$ assocaiated with a test of the null hypothesis assuming we select a sample size of 25?  To determine this, we first find the mean serum cholesterol level our sample must have for $H_0$ to be rejected.  
+
+## Diastolic Blood Pressure Example
+
+Since we are conducting a one-sided test at the $\alpha = 0.05$ level of significance, $H_0$ would be rejected for $z \geq 1.645$.  This is the critical value for the test.  Writing out the test statistic:
+
+$$
+z = \frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
+$$
+Filling in our values:
+$$
+1.645 = \frac{\bar{x} - 180}{46/\sqrt{25}}
+$$
+Solve for x:
+$$
+\bar{x} = 180 + \frac{1.645(46)}{\sqrt{25}} = 195.1
+$$
+
+## Diastolic Blood Pressure Example
+
+```{r}
+source("Diastolic-BloodPressure-Plot.R")
+plotDiastolicBloodPressure()
+```
+
+## Diastolic Blood Pressure Example
+
+So, as the figure shows the area to the right of $\bar{x}=195.1$ corresponds to the upper 5% of the sampling distribution of means of samples of size 25 when $\mu=180$. Therefore the null hypothesis 
+
+$$
+H_0 : \mu \leq 180\,mg/100\,ml
+$$
+
+Would be rejected if our sample has a mean $\bar{X}$ that is greater than or equal to 195.1.  Note that a sample with a smaller mean ould not provide sufficient evidence to reject $H_0$ in favor of $H_A$ at the 0.05 level of confidence.  
+
+## Diastolic Blood Pressure Example
+
+Recall that the probability of making a type II error (or $\beta$) is the probability of not rejecting the null hypothesis given that $H_0$ is false.  There, it is the chance of obtaining a sample mean that is less than 195.1 mg/100 ml given that the population mean is not 180 but is instead $\mu_1 = 211$ mg/100 ml.  
+
+To find $\beta$ we again consider the sampling distribution of means of samples of size 25.  This time however we let $\mu$ equal 211.  Since a sample mean less than $\bar{x}=211$ mg/100 ml implies that we do not reject $H_0$, we would like to know what proportion of this new distribution centered at 211 mg/100 ml lies below 195.1.  Observe that:
+
+$$
+z = \frac{195.1-211.0}{46/\sqrt{25}} = -1.73
+$$
+
+## Diastolic Blood Pressure Example
+
+The area under the standard normal curve that lies to the left of $z = -1.73$ is 0.042.  Therefore $\beta$, the probability of failing to reject
+
+$$
+H_0: \mu \leq 180\,mg/100\,ml
+$$
+
+when the true population mean is $\mu = 211$ mg/100 ml is equal to 0.042.  
+
+## Diastolic Blood Pressure Example
+
+Remember $\alpha$ the probability of committing a type I error is determined by looking at the case in which $H_0$ is true and $\mu$ is equal to $\mu_0$.  $\beta$ is found by considering the situation in which $H_0$ is false and $\mu$ do not equal $\mu_0$, however there are an infinite number of possible values that $\mu$ could assume.  
+
+The type II error is calculated for a single possible such value $\mu_1$.  If we had chosen a different alternative hypthosis we would have  computed a different value for $\beta$.  
+
+## Diastolic Blood Pressure Example
+
+Now, lets look at the expression:
+
+$$
+1-\beta = 1 - 0.042 = 0.958
+$$
+
+Consequently for a test conducted at the 0.05 level of significance and using a sample of size 25, there is a 95.8% chance of rejecteding the null hypothesis
+
+$$
+H_0: \mu \leq 180\,mg/100\,ml
+$$
+
+## Diastolic Blood Pressure Example
+We can also express the previous in the following:
+
+$$
+\begin{align}
+power & = P(reject\,\mu\leq 180 \,|\,\mu = 211) \\
+& = P(\bar{X}\leq 195.1\,|\,\mu = 211) \\
+& = P(Z \geq -1.73) \\
+& = 1 - P(Z < -1.73) \\
+& = 1 - 0.042 \\
+& = 0.958
+\end{align}
+$$
+
+The quantity $1 - \beta$ would have assumed a different value if we had set $\mu_1$ equal to 200 mg/100 ml, and yet another value if we had let $\mu_1$ be 220 mg/100 ml.  If we were to plot the values of $1 - \beta$ against all possible alternative population means, we would end up with what is known as a power curve.  
+
+## Diastolic Blood Pressure Example
+Note that if $\mu_1 = 180$
+$$
+\begin{align}
+power & = P(reject\,\mu\leq 180\,|\,\mu = 180) \\
+& = P(reject\,\mu\leq 180\,|\,H_0 is true) \\
+& = \alpha = 0.05
+\end{align}
+$$
+
+Note that the power of the test approaches 1 as the alternative mean moves farther and arther away from the null value of 180 mg/100 ml. 
+
+Investigators generally try to design tests of hypotheses so that they have high power.  It is not enough to know that we have a small probability of rejecting $H_0$ when it is true.  We would also like to have a large probability of rejecting the null hypothesis when it is false.  
+
+## Diastolic Blood Pressure Example
+
+One way to increase the power of a test is to increase $\alpha$, which raises the power of your test.  However, this increases the probability of a type I error.  
+
+The trade off between $\alpha$ and $\beta$ is similar to that oberved to exist between the sensitivity and specificity of diagnostic tests.  We will discuss this in later classes.  
+
+## Power Curve
+
+![Power Curve 1](powerCurve1.png)
+
+## Power Curve
+
+![Power Curve 2](powerCurve2.png)
+
 ## Loading data
 
 Then we are going to load data in.  A lot of data is loaded from file formats
@@ -890,4 +1148,15 @@ This is an area where significant work remains to be done.  Answers depends on t
 * “Technical Replicates” hybridize the same samples to the array multiple times – captures variability in the assay
 
 * “Biological Replicates” use independent biological samples -  captures variability in biological system and in the assay
+
+![Replication](replication.png)
+
+## Finally
+
+Before I came here I was confused 
+about this subject. 
+After listening to your lecture, 
+I am still confused but at a higher level. 
+
+- Enrico Fermi, (1901-1954)
 
