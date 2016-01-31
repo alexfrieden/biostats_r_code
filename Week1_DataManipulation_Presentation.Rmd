@@ -13,11 +13,20 @@ subtitle: Github, Rstudio, Experimental Design, Statistical Power
 Alexander Frieden  
 Adjunct Professor
 Department of Mathematical Sciences
-University of Massachusetts Lowell
+University of Massachusetts Lowell  
 Alex@Frieden.org
 
 Office Hours by Appointment 
 (or if people have a preference)
+
+<div class="notes">
+This is my *note*.
+
+- It can contain markdown
+- like this list
+
+</div>
+
 
 ## Class
 Monday Evenings 6:30-9:20
@@ -45,7 +54,7 @@ I am a bioinformatics scientist at Claritas Genomics.  I have worked in NGS and 
 * Correlation and Alternatives
 * Fisher's exact test and Chi-Squared Distribution. 
 
-Possibly some other topics including monte carlo
+And many more topics, depends on how fast we get through this
 
 ## Grades
 
@@ -77,9 +86,13 @@ GitHub is a Web-based Git repository hosting service. It offers all of the distr
 
 We will use github for pulling down data and sharing.  Please make an account at github.com
 
+## Don't go alone
+
+![don't go alone](its-dangerous-to-go-alone-take-this.jpg)
+
+
 ## Sites to get help
 
-Don’t go at this stuff alone!
 I am always available for help
 However, one of the best places to go is Q and A sites.  
 
