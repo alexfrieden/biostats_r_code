@@ -1,0 +1,25 @@
+---
+title: "92.651 homework 1"
+date: "February 1, 2016"
+output: pdf_document
+---
+
+1.  In R, run **attach(faithful)**, how would you get the column names for the faithful dataset?
+
+2.  How would you create a histogram of the eruptions dataaset?  This dataset comes with the previous attachment.  
+
+3.  How would you now create a histogram for the same dataset only with three bars?
+
+4.  We are going to use the PlantGrowth dataset.  Run the following:
+
+```{r}
+plant.df = PlantGrowth
+plant.df$group = factor(plant.df$group,
+  labels = c("Control", "Treatment 1", "Treatment 2"))
+```
+
+Describe what these two commands have done.  
+
+5.  Create a linear model using the **lm** method between the two column names of the plant.df data frame.  
+
+6.  Is the linear model a good fit for this data?  Show why you think so.  

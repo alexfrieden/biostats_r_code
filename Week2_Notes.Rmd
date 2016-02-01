@@ -482,3 +482,56 @@ boxplot(age ~ mol.biol, bcrabl)
 <div class="notes">
 We removed all other results so only two of the columns are present.  
 </div>
+
+## Confidence Intervals
+
+* The confidence interval can be expressed in terms of samples (or repeated samples): "Were this procedure to be repeated on multiple samples, the calculated confidence interval (which would differ for each sample) would encompass the true population parameter 90% of the time.
+
+* Note that this does not refer to repeated measurement of the same sample, but repeated sampling.
+
+* The confidence interval can be expressed in terms of a single sample: There is a 90% probability that the calculated confidence interval from some future experiment encompasses the true value of the population parameter.
+
+
+## What Confidence Intervals are Not
+* A 95% confidence interval does not mean that 95% of the sample data lie within the interval.
+
+* A confidence interval is not a range of plausible values for the sample mean, though it may be understood as an estimate of plausible values for the population parameter.
+
+* A particular confidence interval of 95% calculated from an experiment does not mean that there is a 95% probability of a sample mean from a repeat of the experiment falling within this interval.
+
+## Example
+
+Suppose we want to estimate the average weight of an adult male in Boston, MA. We draw a random sample of 1,000 men from a population of 1,000,000 men and weigh them. We find that the average man in our sample weighs 180 pounds, and the standard deviation of the sample is 30 pounds. What is the 95% confidence interval.
+
+## CI Solution 
+Compute the standard error by dividing the standard deviation by the square root of the sample size:  
+$$
+SE = \frac{\sigma}{\sqrt{n}} = \frac{30}{\sqrt{1000}} = 0.9486833
+$$
+Now compute the standard error by 2 to get the margin of error.  
+MOE = (2)(SE) = 2*0.95 = 1.9
+
+## CI Solution
+Compute the confidence interval by adding the margin of error to the mean and then subtracting the margin of error from the mean:
+$$
+180 + 1.9 = 181.9 \\
+180 - 1.9 = 178.1
+$$
+
+The 95% confidence interval is 178.1 to 181.9. The federal government has reported the average weight in the USA is 195.  This confidence interval tells us that we can be fairly confident that Bostonians are lighter than average because the upper boundary of the confidence interval (181.9) is still below the national average (195).  
+
+## Using Confidence Interval in R
+
+To use Confidence Interval in R, all I need to do is to do:
+```{r}
+mean = 180;sd = 30;n = 1000
+error <- qnorm(0.975)*sd/sqrt(n)
+error
+left <- mean - error
+left
+right <- mean + error
+right
+```
+<div class="notes">
+1.96 is the approximate value of the 97.5 percentile point of the normal distribution used in probability and statistics. 95% of the area under a normal curve lies within roughly 1.96 standard deviations of the mean,
+</div>
