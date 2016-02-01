@@ -245,6 +245,29 @@ Assign experiments to two groups, e.g., in the expression matrix below, assign E
 
 ![alt text](pictures/expressionToGroups.jpg)
 
+## T test
+
+Determine whether a gene’s expression levels are significantly different between the two groups by one of three methods:
+
+“Just alpha” (a significance level): If the calculated p-value for a gene is less than or equal to the user-input alpha (critical p-value), the gene is considered significant.		
+					OR
+Use Bonferroni corrections to reduce the probability of erroneously classifying nonsignificant genes as significant.
+
+B) Standard Bonferroni correction: The user-input alpha is divided by the total number of genes to give a critical p-value that is used as above –> $p_{critical} = \alpha/N$. 
+
+## Bonferroni Correction
+
+Statistical inference logic is based on rejecting the null hypotheses if the likelihood of the observed data under the null hypotheses is low. The problem of multiplicity arises from the fact that as we increase the number of hypotheses being tested, we also increase the likelihood of a rare event, and therefore, the likelihood of incorrectly rejecting a null hypothesis (i.e., make a Type I error).
+
+The Bonferroni correction is based on the idea that if an experimenter is testing m hypotheses, then one way of maintaining the familywise error rate (FWER) is to test each individual hypothesis at a statistical significance level of 1/m times the desired maximum overall level.
+
+## Bonferroni Correction (Continued)
+
+So, if the desired significance level for the whole family of tests is $\alpha$, then the Bonferroni correction would test each individual hypothesis at a significance level of $\alpha/m$. For example, if a trial is testing m = 8 hypotheses with a desired $\alpha = 0.05$, then the Bonferroni correction would test each individual hypothesis at $\alpha = 0.05/8 = 0.00625$.
+
+Statistically significant simply means that a given result is unlikely to occur if the null hypothesis is true (i.e., no difference among groups, no effect of treatment, no relation among variables).
+
+
 ## ANOVA random normal example
 
 ```{r}
@@ -340,3 +363,122 @@ between group means with corrections for multiple testing. The general form is
 ```{r}
 pairwise.t.test(pain, drug, p.adjust="bonferroni")
 ```
+
+## ANOVA Example (Part 11)
+
+The results state that the difference in means is not significantly different
+between drugs B and C (p-value = 1.00), but both are significantly different from
+drug A (p-values = 0.00119 and 0.00068, respectively). Hence, we can conclude
+that the mean pain is significantly different for drug A.
+Another multiple comparisons procedure is Tukey‟s method (a.k.a. Tukey's
+Honest Significance Test). The function TukeyHSD() creates a set of confidence
+intervals on the differences between means with the specified family-wise
+probability of coverage. The general form is
+
+# More Advanced R
+## R
+Get Column Names
+```{r}
+pdata<-read.delim("files/ALLphenoData.tsv")
+colnames(pdata)
+```
+
+## More R
+Look at top of file
+```{r}
+head(pdata)
+```
+
+## Summary
+To look at a summary of our data
+```{r}
+summary(pdata$sex)
+```
+
+```{r}
+summary(pdata$cyto.normal)
+```
+
+## Get particular elements
+```{r}
+pdata[1:5, 3:4]
+```
+
+## More on looping
+```{r}
+pdata[1:5, ]
+```
+
+## Compose functions
+```{r}
+head(pdata[pdata$age > 21,])
+```
+
+## Subsetting
+It seems from below that there are 17 females over 40 in the data set, but when sub-setting pdata to contain just those individuals 19 rows are selected. Why? What can we do to correct this?
+
+```{r}
+idx <- pdata$sex == "F" & pdata$age > 40
+table(idx)
+```
+
+```{r}
+dim(pdata[idx,])
+```
+
+So why are we getting 19?
+
+## Subsetting 
+```{r}
+pdata[idx,]$sex
+```
+So the NA's are the problem, we can actually remove them.
+```{r}
+summary(idx)
+summary(subset(idx, !is.na(idx)))
+
+```
+
+## More subsetting
+Use the **mol.biol** column to subset the data to contain just individuals with 'BCR/ABL' or 'NEG':
+```{r}
+bcrabl <- pdata[pdata$mol.biol %in% c("BCR/ABL", "NEG"),]
+bcrabl
+```
+
+## Factors
+The mol.biol column is a factor, and retains all levels even after subsetting. How might you drop the unused factor levels?
+
+
+Read more about factors here:  
+http://www.stat.berkeley.edu/~s133/factors.html
+
+## More with levels
+```{r}
+table(bcrabl$BT)
+```
+How might one collapse B1, B2, … to a single type B, and likewise for T1, T2, …, so there are only two subtypes, B and T
+```{r}
+levels(bcrabl$BT) <- substring(levels(bcrabl$BT), 1, 1)
+table(bcrabl$BT)
+```
+
+## Aggregate
+Now lets use **aggregate()** to calculate the average age of males and females in the **BCR/ABL** and **NEG** treatment groups.
+
+```{r}
+aggregate(age ~ mol.biol + sex, bcrabl, mean)
+```
+
+## T Test (again)
+```{r}
+t.test(age ~ mol.biol, bcrabl)
+```
+
+## and plot results
+```{r}
+boxplot(age ~ mol.biol, bcrabl)
+```
+<div class="notes">
+We removed all other results so only two of the columns are present.  
+</div>
