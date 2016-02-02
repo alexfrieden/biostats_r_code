@@ -6,8 +6,7 @@ output:
   ioslides_presentation: 
     transition: slower
     widescreen: yes
-subtitle: review, technology overview, R overview (more of it!),Maybe some others
-  sampling distribution, File overview, diagnostic tests
+subtitle: error types, t-test, 
 ---
 
 
@@ -79,7 +78,7 @@ Depending on how much weight they lost you would determine if the diet was effec
 
 ## T Test
 
-he null hypothesis for pattern analysis tools essentially states that there is no spatial pattern among the features, or among the values associated with the features, in the study area -- said another way: the expected pattern is just one of the many possible versions of complete spatial randomness. The Z score is a test of statistical significance that helps you decide whether or not to reject the null hypothesis. The p-value is the probability that you have falsely rejected the null hypothesis.
+The null hypothesis for pattern analysis tools essentially states that there is no spatial pattern among the features, or among the values associated with the features, in the study area -- said another way: the expected pattern is just one of the many possible versions of complete spatial randomness. The Z score is a test of statistical significance that helps you decide whether or not to reject the null hypothesis. The p-value is the probability that you have falsely rejected the null hypothesis.
 
 ## T Test
 
@@ -90,7 +89,7 @@ If the Z score falls outside that range (for example -2.5 or +5.4), the pattern 
 
 ## Hypothesis Testing Example
 
-An old blood alcohol is producing the following outputs:
+An old blood alcohol testing device is producing the following outputs:
 ```{r}
 values<-c(12.3,12.6,13.2,13.1,13.1,12.7,13.1,12.8,12.9,12.4,13.6,
          12.6,12.4,13.3,12.4,12.7,13.1,12.6,12.6,13.1,12.9,12.7,12.4,
@@ -146,6 +145,86 @@ We never accept the null hypothesis
 
 # R Review
 
+
+## Data Structures
+
+
+R's base data structures can be organised by their dimensionality (1d, 2d, or nd) and whether they're homogeneous (all contents must be of the same type) or heterogeneous (the contents can be of different types). This gives rise to the five data types most often used in data analysis: 
+
+|    | Homogeneous   | Heterogeneous |
+|----|---------------|---------------|
+| 1d | Atomic vector | List          |
+| 2d | Matrix        | Data frame    |
+| nd | Array         |               |
+
+## Factors
+
+One important use of attributes is to define factors. A factor is a vector that can contain only predefined values, and is used to store categorical data. Factors are built on top of integer vectors using two attributes: the `class()`, "factor", which makes them behave differently from regular integer vectors, and the `levels()`, which defines the set of allowed values. \index{factors|(}
+
+## Factors
+```{r}
+x <- factor(c("a", "b", "b", "a"))
+x
+class(x)
+levels(x)
+```
+
+## Factors
+```{r}
+# You can't use values that are not in the levels
+x[2] <- "c"
+x
+
+# You can't combine factors
+c(factor("a"), factor("b"))
+```
+
+## Factors
+Factors are useful when you know the possible values a variable may take, even if you don't see all values in a given dataset. Using a factor instead of a character vector makes it obvious when some groups contain no observations:
+
+```{r}
+sex_char <- c("m", "m", "m")
+sex_factor <- factor(sex_char, levels = c("m", "f"))
+```
+
+## Factors
+```{r}
+table(sex_char)
+table(sex_factor)
+```
+
+## Factors
+Sometimes when a data frame is read directly from a file, a column you'd thought would produce a numeric vector instead produces a factor. This is caused by a non-numeric value in the column, often a missing value encoded in a special way like `.` or `-`. To remedy the situation, coerce the vector from a factor to a character vector, and then from a character to a double vector. (Be sure to check for missing values after this process.) Of course, a much better plan is to discover what caused the problem in the first place and fix that; using the `na.strings` argument to `read.csv()` is often a good place to start.
+
+
+## Factors
+```{r}
+# Reading in "text" instead of from a file here:
+z <- read.csv(text = "value\n12\n1\n.\n9")
+typeof(z$value)
+as.double(z$value)
+# Oops, that's not right: 3 2 1 4 are the levels of a factor, 
+# not the values we read in!
+```
+
+## Factors
+
+```{r}
+class(z$value)
+# We can fix it now:
+as.double(as.character(z$value))
+```
+
+## Factors
+```{r}
+# Or change how we read it in:
+z <- read.csv(text = "value\n12\n1\n.\n9", na.strings=".")
+typeof(z$value)
+class(z$value)
+z$value
+# Perfect! :)
+```
+
 ## Basics
 
 ```{r}
@@ -154,6 +233,7 @@ head(x)
 y <- x + rnorm(1000, sd=.5)
 head(y)
 ```
+
 
 ## Basics Continued
 ```{r}
@@ -202,39 +282,6 @@ Note: both of these are special cases of a linear regression.
 
 This is a lot, so we are going to look at an example to get better insight.  
 
-## Expression Vectors
-
-Crucial concept for understanding clustering
-Each gene is represented by a vector where coordinates are its values log(expression) in each sample  
-$$
-x = log(expression)_{sample1} \\ 
-y = log(expression)_{sample2}  \\
-z = log(expression)_{sample3}  \\
-etc.
-$$
-For example, if we do six experiments, 
-$$
-Gene1 = (1.2, 0.5, 0, 0.25, 0.75, 1.4) \\
-Gene2 = (0.2, 0.5, 1.2, 0.25, 1.0, 1.5) \\
-Gene3 = (1.2, 0.5, 0, 0.25, 0.75, 1.4) \\
-etc.
-$$
-
-## Expression Matrix
-These gene expression vectors of log(expression) values can be used to construct an expression matrix
-
-gene| sample1| sample2| sample3| sample4
------|-----|-----|-----|-----
-gene1|1.2|2.5|5|6.25
-gene2|4.2|2.5|1.2|0.25
-gene3|1.2|6.5|4|0.25
-
-This is often represented as a red/green colored matrix
-
-
-## Expression Matrix
-The Expression Matrix is a representation of data frommultiple microarray experiments.
-![alt text](pictures/expressionMatrix.jpg)
 
 ## More on T Test
 
@@ -374,6 +421,41 @@ Another multiple comparisons procedure is Tukey‟s method (a.k.a. Tukey's
 Honest Significance Test). The function TukeyHSD() creates a set of confidence
 intervals on the differences between means with the specified family-wise
 probability of coverage. The general form is
+
+## Expression Vectors
+
+Crucial concept for understanding clustering
+Each gene is represented by a vector where coordinates are its values log(expression) in each sample  
+$$
+x = log(expression)_{sample1} \\ 
+y = log(expression)_{sample2}  \\
+z = log(expression)_{sample3}  \\
+etc.
+$$
+For example, if we do six experiments, 
+$$
+Gene1 = (1.2, 0.5, 0, 0.25, 0.75, 1.4) \\
+Gene2 = (0.2, 0.5, 1.2, 0.25, 1.0, 1.5) \\
+Gene3 = (1.2, 0.5, 0, 0.25, 0.75, 1.4) \\
+etc.
+$$
+
+## Expression Matrix
+These gene expression vectors of log(expression) values can be used to construct an expression matrix
+
+gene| sample1| sample2| sample3| sample4
+-----|-----|-----|-----|-----
+gene1|1.2|2.5|5|6.25
+gene2|4.2|2.5|1.2|0.25
+gene3|1.2|6.5|4|0.25
+
+This is often represented as a red/green colored matrix
+
+
+## Expression Matrix
+The Expression Matrix is a representation of data frommultiple microarray experiments.
+![alt text](pictures/expressionMatrix.jpg)
+
 
 # More Advanced R
 ## R
