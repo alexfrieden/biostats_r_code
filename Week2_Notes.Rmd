@@ -287,6 +287,41 @@ This is a lot, so we are going to look at an example to get better insight.
 
 ![alt text](pictures/t-test-idea.jpg)
 
+## Expression Vectors
+
+Crucial concept for understanding clustering
+Each gene is represented by a vector where coordinates are its values log(expression) in each sample  
+$$
+x = log(expression)_{sample1} \\ 
+y = log(expression)_{sample2}  \\
+z = log(expression)_{sample3}  \\
+etc.
+$$
+For example, if we do six experiments, 
+$$
+Gene1 = (1.2, 0.5, 0, 0.25, 0.75, 1.4) \\
+Gene2 = (0.2, 0.5, 1.2, 0.25, 1.0, 1.5) \\
+Gene3 = (1.2, 0.5, 0, 0.25, 0.75, 1.4) \\
+etc.
+$$
+
+## Expression Matrix
+These gene expression vectors of log(expression) values can be used to construct an expression matrix
+
+gene| sample1| sample2| sample3| sample4
+-----|-----|-----|-----|-----
+gene1|1.2|2.5|5|6.25
+gene2|4.2|2.5|1.2|0.25
+gene3|1.2|6.5|4|0.25
+
+This is often represented as a red/green colored matrix
+
+
+## Expression Matrix
+The Expression Matrix is a representation of data frommultiple microarray experiments.
+![alt text](pictures/expressionMatrix.jpg)
+
+
 ## t-tests (Between Subjects or unpaired)  
 Assign experiments to two groups, e.g., in the expression matrix below, assign Experiments 1, 2 and 5 to group A, and experiments 3, 4 and 6 to group B.
 
@@ -421,41 +456,6 @@ Another multiple comparisons procedure is Tukey‟s method (a.k.a. Tukey's
 Honest Significance Test). The function TukeyHSD() creates a set of confidence
 intervals on the differences between means with the specified family-wise
 probability of coverage. The general form is
-
-## Expression Vectors
-
-Crucial concept for understanding clustering
-Each gene is represented by a vector where coordinates are its values log(expression) in each sample  
-$$
-x = log(expression)_{sample1} \\ 
-y = log(expression)_{sample2}  \\
-z = log(expression)_{sample3}  \\
-etc.
-$$
-For example, if we do six experiments, 
-$$
-Gene1 = (1.2, 0.5, 0, 0.25, 0.75, 1.4) \\
-Gene2 = (0.2, 0.5, 1.2, 0.25, 1.0, 1.5) \\
-Gene3 = (1.2, 0.5, 0, 0.25, 0.75, 1.4) \\
-etc.
-$$
-
-## Expression Matrix
-These gene expression vectors of log(expression) values can be used to construct an expression matrix
-
-gene| sample1| sample2| sample3| sample4
------|-----|-----|-----|-----
-gene1|1.2|2.5|5|6.25
-gene2|4.2|2.5|1.2|0.25
-gene3|1.2|6.5|4|0.25
-
-This is often represented as a red/green colored matrix
-
-
-## Expression Matrix
-The Expression Matrix is a representation of data frommultiple microarray experiments.
-![alt text](pictures/expressionMatrix.jpg)
-
 
 # More Advanced R
 ## R
