@@ -18,14 +18,8 @@ Bioconductor is, for R, the largest library to do bioinformatics and statistical
 To install 
 ```{r install bioconudctor}
 ## try http:// if https:// URLs are not supported
-source("https://bioconductor.org/biocLite.R")
-biocLite()
-```
-
-## To install
-```{r}
-source("https://bioconductor.org/biocLite.R")
-biocLite()
+#source("https://bioconductor.org/biocLite.R")
+#biocLite()
 ```
 
 ## Locus
@@ -74,12 +68,256 @@ The haplotype frequency, then, is the frequency that a particular haplotype exis
 You can read more about haplotype frequency estimation here:
 http://www.stat.washington.edu/thompson/Stat550/Notes/2013/Chap_1_Secs_5-6.pdf
 
+## LD Calculation Step 2
+From our example of two SNPs each with two alleles all
+possible haplotypes are 
+
+![snp haplotype table](pictures/SNP_Haplotype_Table.png)
+
+
+## LD Calculation Step 2 (part 2)
+Suppose haplotype frequencies are as follows:
+
+![haplotype frequency](pictures/haplotypeFrequency.png)
+
+## Linkage Equilibrium (Step 3)
+
+When haplotype frequencies are equal to the product of their corresponding allele frequencies, it means the loci are in linkage equilibrium.
+
+  Haplotype Frequency                 Product of Allele Frequency     
+---------------------     ---------   ----------   
+     $p_{11}$                =        $p_1q_1$        
+     $p_{12}$                =        $p_1q_2$       
+     $p_{21}$                =        $p_2q_1$        
+     $p_{22}$                =        $p_2q_2$ 
+
+## Step 4: Calculate Difference
+
+We can deduce linkage disequilibrium for each haplotype as the deviation of observed haplotype frequency from its corresponding allelic frequencies expected under equilibrium.  
+  
+  
+![ld snp map](pictures/LD_SNP_Map.png)
+
+## Step 4: Calculate Difference
+
+After solving above for D, we get as follows: 
+
+$$
+D_{11} = p_{11} - p_1q_1 \\
+D_{12} = p_{12} - p_1q_2 \\
+D_{21} = p_{21} - p_2q_1 \\
+D_{22} = p_{22} - p_2q_2
+$$
+
+Where the $D_{ij}$'s are our difference, the $p_{ij}$'s are the observed, and the $p_iq_j$'s are our expectation under equilibrium.  
+
+## Step 5: Calculation of Linkage Disequilibrium Measure D
+
+While we are not going to prove, this (maybe an exercise?), the measure we can show to be:
+
+$$
+D = p_{11}p_{22} − p_{12}p_{21}
+$$
+
+## LD Example 1
+
+If allele frequencies of $p_1$ and $q_1$ are both 0.5 and equilibrium occurs (only Ab and aB exist in the population)
+
+$$
+P_{11} = p_1q_1= (0.5)(0.5) = 0.25 \\
+P_{22} = p_2q_2= (0.5)(0.5) = 0.25 \\
+P_{12} = p_1q_2= (0.5)(0.5) = 0.25 \\
+P_{21} = p_2q_1= (0.5)(0.5) = 0.25 
+$$
+
+## LD Example 1
+
+Now calculate D
+$$
+\begin{align}
+D & = (P_{11})(P_{22}) -(P_{12})(P_{21}) \\
+  & = (0.25)(0.25) - (0.25)(0.25) = 0 
+\end{align}
+$$
+So what has happened here?
+<div class="notes">
+Linkage Equilibrium!
+</div>
+
+## Standardization of LD Measure (D)
+
+* Sometimes, depending on allele frequency of two loci, the value of D can be negative
+* Why is this a problem?
+* To solve this, we standardize the value.  
+
+<div class="notes">
+Because this is a measurement of frequencies, so it can't be negative
+</div>
+
+## Standardization of D 
+
+In a common standardization method, a relative measure of disequilibrium (D) compared to its maximum is used: 
+$$
+D` = \frac{D}{D_{max}}
+$$
+
+When D is positive: $D_{max} = min[(p_1q_2)\,or\,(p_2q_1)]$
+
+When D is negative: $D_{max} = min[(p_1q_1)\,or\,(p_2q_2)]$
+
+This standardization makes D-values range
+between 0 and 1 
+
+## Correlation Coefficient as a Measure of LD
+
+Another commonly used measure to calculate LD between loci is Pearson coefficient of correlation (r)
+$$
+r = \frac{D}{\sqrt{p_1p_2q_1q_2}} = \frac{D}{\sqrt{p_1(1-p_1)q_1(1-q_1)}}
+$$
+However, squared coefficient of correlation ($r^2$) is often used to remove the arbitrary sign introduced.  
+
+Why are these two quantities the same?
+
+## Chi Squared Distribution
+
+
+## Testing for LD with D
+
+* $D_{ij} = 0$ corresponds to the status of no linkage disequilibrium
+* It is often of interest to test the null hypothesis
+
+$$
+H_0 : D_{ij} = 0 \\
+H_a : D_{ij} \neq 0 
+$$
+
+Look familiar?  As this turns out, we can't use our standard normal approach.  
+
+## Testing for LD with D (part 2)
+
+One way to do this is to use a chi-square statistic z:
+
+$$
+Z^2 = \left(\frac{\hat{D_{ij}}-E_0(\hat{D_{ij}})}{Var_0(\hat{D_{ij}})}\right)^2
+$$
+
+Where $E_0$ is the expected value and $Var_0$ is the variance calculated under the assumption of no LD i.e. $D_{ij} = 0$ 
+
+
+## Measuring LD with $r^2$
+
+Define a random variable $X_A$ to be 1 if the allele at the first locus is $A$ and 0 if the allele is $a$.  What is this?
+
+Define a random variable $X_B$ to be 1 if the allele at the second locus is $B$ and 0 if the allele is $b$.
+
+$$
+\begin{align}
+r_{AB} & = \frac{COV(X_A,X_B)}{\sqrt{Var(X_A)Var(X_B)}} = \frac{D_{AB}}{\sqrt{p_A(1-p_A)p_B(1-p_B)}}
+\end{align}
+$$
+And for $r^2$
+$$
+\begin{align}
+r_{AB}^2 &= \left(\frac{D_{AB}}{\sqrt{p_A(1-p_A)p_B(1-p_B)}}\right)^2
+\end{align}
+$$
+
+## Measuring LD with $r^2$
+
+It turns out that we can state:
+$$
+X^2 = N\hat{r}^2
+$$
+Where N is the number of haplotypes
+
+## LD Example (part 1)
+
+Let’s assume that we have genotypic data for the two SNPs with two alleles each 
+
+Genotypic data
+$$
+GA = 474 \\
+GT = 611 \\
+CA = 142 \\
+CT = 773 \\
+Total = 2000 \\
+$$
+
+## LD Example (part 2)
+
+Haplotype Frequencies:
+
+$$
+GA = 474 / 2000 = .2370 \\
+GT = 611 / 2000 = .3055 \\
+CA = 142 / 2000 = .0710 \\
+CT = 773 / 2000 = .3865
+$$
+
+Allele Frequencies:
+
+$$
+G = 0.542 \\ 
+C = 0.457 \\
+A = 0.308 \\
+T = 0.692 \\
+$$
+
+## LD Example (part 3) 
+Input values in the equation for D to calculate
+linkage disequilibrium
+
+$$
+\begin{align}
+D & = P_{11}P_{22} - P_{12}P_{21} = \\
+& = (0.2370)(0.3865) - (0.3055)(0.0710) \\
+& = 0.0699
+\end{align}
+$$
+
+Now calculate $D_{max}$.  Remember $D_{max} = min[(p_1q_2),(p_2q_1)]$ 
+$$
+\begin{align}
+D_{max} & = min[p_1q_2,p_2q_1] \\
+& = min[(0.5425)(0.692),(0.4575)(0.308)] \\
+& = 0.141
+\end{align}
+$$
+
+## LD Example (part 4) 
+
+So:
+$$
+D' = \frac{D}{D_{max}} = \frac{0.0699}{0.141} = 0.496
+$$
+
+To look at correlation coefficient:
+$$
+\begin{align}
+r & = \frac{D}{\sqrt{p_1p_2q_1q_2}} = \frac{0.0699}{\sqrt{(0.5425)(0.4575)(0.308)(0.692)}} \\
+& = \frac{0.0699}{0.23} = 0.304 \\
+r^2 & = 0 .092
+\end{align}
+$$
+
+## LD Example Conclusion
+
+* LD is 50% of the theoretical maximum
+
+* What about $r^2$ score?
+
+* $D'$ and $r^2$ have a big difference in that a high value of $D'$ does not mean that one locus can predict the other with high accuracy, which in the case of say imputing SNPs could be a major issue. 
+
+* On the other hand, an $r^2$ of 1 implies perfect predictability; if we know the allele at one locus we can predict perfectly the allele at the second locus and vice-versa. 
+
+i.e. we can't predict one allele from the other in this.  
 
 
 ## Linkage Disequilibrium
 This can be found at:
 http://pbgworks.org/sites/pbgworks.org/files/measuresoflinkagedisequilibrium-111119214123-phpapp01_0.pdf
 
+# More on Bonferroni
 
 ## Bonferroni Correction
 
@@ -110,3 +348,33 @@ plot.p.values <- function(){
 ```{r}
 plot.p.values()
 ```
+
+## Another Example
+```{r p-value example}
+require(graphics)
+set.seed(123)
+x <- rnorm(50, mean = c(rep(0, 25), rep(3, 25)))
+p <- 2*pnorm(sort(-abs(x)))
+round(p, 3)
+round(p.adjust(p), 3)
+round(p.adjust(p, "BH"), 3)
+```
+
+## Another Example (part 2)
+```{r}
+## or all of them at once (dropping the "fdr" alias):
+p.adjust.M <- p.adjust.methods[p.adjust.methods != "fdr"]
+p.adj    <- sapply(p.adjust.M, function(meth) p.adjust(p, meth))
+round(p.adj, 3)
+## or a bit nicer:
+noquote(apply(p.adj, 2, format.pval, digits = 3))
+```
+
+## Another Example (part 3)
+```{r}
+matplot(p, p.adj, ylab="p.adjust(p, meth)", type = "l", 
+        asp = 1, lty = 1:6,main = "P-value adjustments")
+legend(0.7, 0.6, p.adjust.M, col = 1:6, lty = 1:6)
+```
+
+
