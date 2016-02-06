@@ -1,0 +1,12 @@
+source("https://bioconductor.org/biocLite.R")
+biocLite()
+#source("http://bioconductor.org/course-packages/install-SeattleIntro2010.R")
+courseRepos <- "http://bioconductor.org/course-packages"
+allRepos <- c(courseRepos, biocinstallRepos())
+allPkgs <- c("SeattleIntro2010","Biobase", "affy", "genefilter", "limma", "multtest", "arrayQualityMetrics", "IRanges", "GenomicRanges", "rtracklayer", "biomaRt", "GenomicFeatures", "Biostrings", "BSgenome", "Rsamtools", "ShortRead", "DESeq", "ALL", "hgu95av2.db", "GO.db", "org.Hs.eg.db", "BSgenome.Scerevisiae.UCSC.sacCer2", "org.Sc.sgd.db", "lattice")
+update.packages(repos = allRepos, ask = FALSE)
+biocLite("genefilter")
+biocLite(c("affy", "limma"))
+library("affy")
+library("limma")
+biocLite("hgu95av2.db")

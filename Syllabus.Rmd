@@ -1,0 +1,27 @@
+---
+title: "92.651 Biostatistics Syllabus"
+author: "Alexander Frieden"
+date: "February 4, 2016"
+output: pdf_document
+---
+This class will extend on the mathematical probability and statistics course.  We will learn
+
+* The R scripting language.
+* T-test, analysis of variance, k means method
+* Introduction to various technologies including NGS and microarray
+* Diagnostic Tests
+* Linkage disequilibrium
+* Covariance Matrix
+* Maximum Likelihood
+* Normalization
+* Bayesian Network
+* Implementation of the above methods
+
+Grades will be broken as such:
+
+30% participation  
+40% homework  
+30% final exam  
+
+There is no official textbook for the course that we will be following.  
+

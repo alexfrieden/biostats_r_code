@@ -18,3 +18,4 @@ result <- paste("P(",lb,"< IQ <",ub,") =",
 mtext(result,3)
 axis(1, at=seq(30, 500, 5), pos=0)
 }
+
