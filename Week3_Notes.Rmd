@@ -18,8 +18,8 @@ Bioconductor is, for R, the largest library to do bioinformatics and statistical
 To install 
 ```{r install bioconudctor}
 ## try http:// if https:// URLs are not supported
-#source("https://bioconductor.org/biocLite.R")
-#biocLite()
+source("https://bioconductor.org/biocLite.R")
+biocLite()
 ```
 
 ## Locus
@@ -316,6 +316,72 @@ i.e. we can't predict one allele from the other in this.
 ## Linkage Disequilibrium
 This can be found at:
 http://pbgworks.org/sites/pbgworks.org/files/measuresoflinkagedisequilibrium-111119214123-phpapp01_0.pdf
+
+## LD in R
+
+How did you not see this coming?  
+
+Lets look at an LD dataset
+```{r}
+biocLite("snpStats") # install the snpStats bioconductor package.   
+library(snpStats)
+data(ld.example)
+```
+
+## LD in R (part 2)
+
+The data are drawn from the International HapMap Project and concern 603 SNPs over a 1mb region of chromosome 22 in sample of Europeans (ceph.1mb) and a sample of Africans (yri.1mb):
+```{r hapmap_data}
+ceph.1mb
+yri.1mb
+```
+
+## LD in R (part 3)
+The details of these SNP are stored in the dataframe support.ld:
+
+```{r snp_data}
+class(support.ld)
+head(support.ld)
+```
+
+## LD in R (part 4)
+* The function for calculating measures of linkage disequilibrium (LD) in snpStats is ld. 
+* The following two commands call this function to calculate the D-prime and R-squared measures of LD between pairs of SNPs for the European and African samples:
+```{r calculate_ld}
+ld.ceph <- ld(ceph.1mb, stats=c("D.prime", "R.squared"), depth=100)
+ld.yri <- ld(yri.1mb, stats=c("D.prime", "R.squared"), depth=100)
+```
+
+## LD Depth
+* The argument depth specifies the maximum separation between pairs of SNPs to be considered.
+* i.e. $depth=1$ would have specified calculation of LD only between immediately adjacent SNPs
+
+## LD in R(part 5)
+* Both ld.ceph and ld.yri are lists with two elements each, named D.prime and R.squared.
+* These elements are (upper triangular) band matrices, stored in a packed form defined in the Matrix package. They are too large to be listed, but the Matrix package provides an image.  
+
+## LD in R(part 6)
+```{r}
+# european population
+image(ld.ceph$D.prime, lwd=0)
+```
+
+## LD in R(part 7)
+```{r}
+image(ld.yri$D.prime, lwd=0)
+```
+
+## LD in R(part 8)
+
+Takeaways:
+* There are fairly well-defined “blocks” of LD, and
+* LD is more pronounced in the Europeans than in the Africans.
+The second point is demonstrated by extracting the D-prime values from the matrices.  We can see it by looking at the quantiles.  
+
+```{r}
+quantile(ld.ceph$D.prime@x, na.rm=TRUE)
+quantile(ld.yri$D.prime@x, na.rm=TRUE)
+```
 
 # More on Bonferroni
 
