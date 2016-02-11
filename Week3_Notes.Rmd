@@ -7,6 +7,9 @@ output: ioslides_presentation
 
 
 ## T distribution vs Normal Distribution
+* The normal distribution is used when the population distribution of data is assumed normal. 
+
+* The t statistic is an estimate of the standard error of the mean of the population or how well known is the mean based on the sample size.
 
 
 ## Bioconductor
@@ -16,7 +19,7 @@ Bioconductor is, for R, the largest library to do bioinformatics and statistical
 ## Install Bioconductor
 
 To install 
-```{r install bioconudctor}
+```{r install bioconductor}
 ## try http:// if https:// URLs are not supported
 source("https://bioconductor.org/biocLite.R")
 biocLite()
@@ -25,6 +28,8 @@ biocLite()
 ## Locus
 
 Think of this an interval or a union of intervals across a set of base pairs.  
+
+
 
 
 ## Linkage Disequilibrium 
@@ -43,6 +48,22 @@ Suppose there are two genes on Chromosome 5 of James, each with two alleles
 For shortage, Linkage Disequilibrium is abreviated LD
 
 i.e. Assume we are in LD.  
+
+## Distances Among East Coast Cities
+
+![distance Among Cities](pictures/distanceAmongCities.png)
+
+## Distances Among East Coast Cities (part 2)
+
+![distance Among Cities](pictures/distanceAmongCities2.png)
+
+## Distances Among East Coast Cities (part 3)
+
+![distance Among Cities](pictures/distanceAmongCities3.png)
+
+## Distances Among East Coast Cities (part 4)
+
+![distance Among Cities](pictures/distanceAmongCities4.png)
 
 ## Linkage Disequilibrium
 
@@ -178,8 +199,25 @@ However, squared coefficient of correlation ($r^2$) is often used to remove the 
 
 Why are these two quantities the same?
 
+## Degrees of Freedom
+
+* The number of degrees of freedom is the number of values in the final calculation of a statistic that are free to vary. 
+
+* The number of independent ways by which a dynamic system can move, without violating any constraint imposed on it, is called number of degrees of freedom.
+
 ## Chi Squared Distribution
 
+If $Z_1, . . . , Z_k$ are independent standard normal random variables, then
+$$
+\chi^2 = Z_1^2 + . . . + Z_k^2
+$$
+has a $\chi^2$ distribution with k degrees of freedom.  
+
+## Chi Squared Distribution Part 2
+
+The functions **pchisq()** and qchisq() find probabilities and
+quantiles, respectively, from the χ
+2 distributions
 
 ## Testing for LD with D
 
@@ -373,7 +411,7 @@ image(ld.yri$D.prime, lwd=0)
 
 ## LD in R(part 8)
 
-Takeaways:
+Takeaways:  
 * There are fairly well-defined “blocks” of LD, and
 * LD is more pronounced in the Europeans than in the Africans.
 The second point is demonstrated by extracting the D-prime values from the matrices.  We can see it by looking at the quantiles.  
@@ -383,11 +421,54 @@ quantile(ld.ceph$D.prime@x, na.rm=TRUE)
 quantile(ld.yri$D.prime@x, na.rm=TRUE)
 ```
 
-# More on Bonferroni
+## LD in R (part 9)
+
+* The current plot is pretty hard to see, would be easier to see if we can see it in color.  
+* We first create a set of 10 colours ranging from yellow (for low values) to red (for high values)
+
+```{r define color spectrum}
+spectrum <- rainbow(10, start=0, end=1/6)[10:1]
+print(spectrum)
+```
+
+## LD in R (part 10)
+```{r}
+image(ld.ceph$D.prime, lwd=0, cuts=9, col.regions=spectrum, colorkey=TRUE)
+```
+
+## LD in R (part 11)
+```{r}
+image(ld.ceph$D.prime[75:274,75:274], lwd=0, cuts=9, 
+      col.regions=spectrum,colorkey=TRUE)
+```
+
+## Why do we care about LD
+
+We care because a lot of the methods out there require LD or use it in some way.  
+
+
+
+# More on Hypothesis Testing
+
+## Motivation
+
+* Say you have a set of hypotheses that you wish to test simultaneously. The first idea that might come to mind is to test each hypothesis separately, using some level of significance α.
+
+* At first blush, this doesn’t seem like a bad idea. However, consider a case where you have 20 hypotheses to test, and a significance level of 0.05. What’s the probability of observing at least one significant result just due to chance?
+
+## Calculation
+
+$$
+P(at\,least\,one\,result\,is\,significant) = \\
+1 - P(no\,results\,are\,significant) \\
+= 1 - (1 - 0.05)^{20} = 0.641 
+$$
+
+So, with 20 tests being considered, we have a 64% chance of observing at least one significantresult, even if all of the tests are actually not significant.
 
 ## Bonferroni Correction
 
-As we saw last week, Bonferroni correction can be used to change the critical p value that we want to hit
+As we saw last week, Bonferroni correction can be used to change the critical p value that we want to hit.  
 
 ## Bonferroni Correction Code
 
@@ -442,5 +523,7 @@ matplot(p, p.adj, ylab="p.adjust(p, meth)", type = "l",
         asp = 1, lty = 1:6,main = "P-value adjustments")
 legend(0.7, 0.6, p.adjust.M, col = 1:6, lty = 1:6)
 ```
+
+
 
 
