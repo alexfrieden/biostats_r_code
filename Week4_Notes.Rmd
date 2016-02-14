@@ -1,0 +1,21 @@
+---
+title: "Week4_Notes"
+author: "Alexander Frieden"
+date: "February 13, 2016"
+output: html_document
+---
+
+## PCA
+
+* This week we will work with a statistical tool called principal component analysis.  
+
+## What is it?
+
+is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables into a set of values of linearly uncorrelated variables called principal components. 
+
+## VCF File
+
+Variant Call Format
+
+
+
