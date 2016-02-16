@@ -2,7 +2,7 @@
 title: "Week4_Notes"
 author: "Alexander Frieden"
 date: "February 13, 2016"
-output: html_document
+output: ioslides_presentation
 ---
 
 ## PCA
@@ -17,5 +17,170 @@ is a statistical procedure that uses an orthogonal transformation to convert a s
 
 Variant Call Format
 
+## Install Bioconductor and packages
+
+```{r install_packages}
+source("http://bioconductor.org/biocLite.R")
+biocLite("gdsfmt")
+biocLite("SNPRelate")
+# Load the R packages: gdsfmt and SNPRelate
+library(gdsfmt)
+library(SNPRelate)
+```
+
+## PCA on vcf data (part 1)
+```{r load_vcf_data}
+## Load our vcf data
+vcf.fn <- system.file("extdata", "sequence.vcf", package="SNPRelate")
+## we can also explictly load the data
+## vcf.fn <- "C:/your_folder/your_vcf_file.vcf"
+```
+
+## PCA on vcf data (part 2)
+
+```{r}
+# Reformat
+snpgdsVCF2GDS(vcf.fn, "test.gds", method="biallelic.only")
+snpgdsSummary("test.gds")
+```
+
+## PCA on vcf data (part 3)
+```{r}
+# Open the GDS file
+genofile <- snpgdsOpen(snpgdsExampleFileName())
+pop_code <- read.gdsn(index.gdsn(genofile, path="sample.annot/pop.group"))
+table(pop_code)
+```
 
 
+## PCA on vcf data (part 4)
+
+```{r hap_map_ethnicity_values}
+# Display the first six values
+head(pop_code)
+```
+
+## HapMap populations
+
+    Key     Description    
+-------     ------ 
+    ASW     African ancestry in Southwest USA    
+    CEU     Utah residents with Northern and Western European ancestry from the CEPH collection   
+    CHB     Han Chinese in Beijing, China
+    CHD     Chinese in Metropolitan Denver, Colorado
+    GIH     Gujarati Indians in Houston, Texas
+    JPT     Japanese in Tokyo, Japan
+    LWK     Luhya in Webuye, Kenya
+    MXL     Mexican ancestry in Los Angeles, California
+
+## HapMap populations (part 2)
+    Key     Description  
+-------     ------ 
+    MKK     Maasai in Kinyawa, Kenya
+    TSI     Toscani in Italia
+    YRI     Yoruba in Ibadan, Nigeria
+    
+## PCA on vcf data (part 5)
+
+* It is suggested to use a pruned set of SNPs which are in approximate linkage equilibrium with each other to avoid the strong influence of SNP clusters in principal component analysis and relatedness analysis.
+
+* Interesting paper relating to this here:
+https://cdr.lib.unc.edu/indexablecontent/uuid:0a68bb86-def4-4493-ae41-2d3228668b84
+
+* This is called LD-based SNP pruning.  
+
+## PCA on vcf data (part 6)
+
+```{r ld_snp_pruning}
+set.seed(1000)
+# Try different LD thresholds for sensitivity analysis
+snpset <- snpgdsLDpruning(genofile, ld.threshold=0.2)
+```
+
+
+## PCA on vcf data (part 7)
+Now we can see all the names of our snpset.  Question: what do we not see here?
+
+```{r}
+names(snpset)
+# Get all selected snp id
+snpset.id <- unlist(snpset)
+```
+
+
+## PCA on vcf data (part 8)
+The functions in SNPRelate for PCA include calculating the genetic covariance matrix from genotypes, computing the correlation coefficients between sample loadings and genotypes for each SNP, calculating SNP eigenvectors (loadings), and estimating the sample loadings of a new dataset from specified SNP eigenvectors.
+
+## Quick review: Covariance matrix and covariance
+
+## Review eigenvectors and eigenvalues
+
+## PCA on vcf data (part 9)
+
+```{r run_pca}
+# Run PCA
+pca <- snpgdsPCA(genofile, snp.id=snpset.id, num.thread=2)
+```
+
+## PCA on vcf data (part 10)
+
+* The following codeshows how to calculate the percent of variation is accounted for by the top principal components. 
+
+* It is clear to see the first two eigenvectors hold the largest percentage of variance among the population, although the total variance accounted for is still less the one-quarter of the total.
+
+## PCA on vcf data (part 11)
+
+```{r}
+# variance proportion (%)
+pc.percent <- pca$varprop*100
+head(round(pc.percent, 2))
+```
+
+## PCA on vcf data (part 12)
+In the case of no prior population information, we can compose it
+```{r}
+tab <- data.frame(sample.id = pca$sample.id,
+    EV1 = pca$eigenvect[,1],    # the first eigenvector
+    EV2 = pca$eigenvect[,2],    # the second eigenvector
+    stringsAsFactors = FALSE)
+head(tab)
+```
+
+## PCA on vcf data (part 13)
+
+```{r plot_pca}
+# Draw
+plot(tab$EV2, tab$EV1, xlab="eigenvector 2", ylab="eigenvector 1")
+```
+
+## PCA on vcf data (part 14)
+
+```{r}
+# Get sample id
+sample.id <- read.gdsn(index.gdsn(genofile, "sample.id"))
+# Get population information
+#   or pop_code <- scan("pop.txt", what=character())
+#   if it is stored in a text file "pop.txt"
+pop_code <- read.gdsn(index.gdsn(genofile, "sample.annot/pop.group"))
+# assume the order of sample IDs is as the same as population codes
+head(cbind(sample.id, pop_code))
+```
+
+## PCA on vcf data (part 15)
+```{r}
+# Make a data.frame
+tab <- data.frame(sample.id = pca$sample.id,
+    pop = factor(pop_code)[match(pca$sample.id, sample.id)],
+    EV1 = pca$eigenvect[,1],    # the first eigenvector
+    EV2 = pca$eigenvect[,2],    # the second eigenvector
+    stringsAsFactors = FALSE)
+head(tab)
+```
+
+
+## PCA on vcf data (part 16)
+```{r}
+# Draw
+plot(tab$EV2, tab$EV1, col=as.integer(tab$pop), xlab="eigenvector 2", ylab="eigenvector 1")
+legend("bottomright", legend=levels(tab$pop), pch="o", col=1:nlevels(tab$pop))
+```
