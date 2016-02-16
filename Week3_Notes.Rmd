@@ -7,6 +7,10 @@ output: ioslides_presentation
 
 ## T distribution
 
+We talked about the T test, but a student brought up T test vs T distribution last week.  What is it?
+
+## T distribution
+
 * This distribution was discovered by W. S. Gosset, the chief statistician of the Guinness brewery in Dublin, Ireland. He discovered the t-distribution in order to deal with small samples arising in statistical quality control.
 
 * The brewery had a policy against employees publishing under their own names, thus he published is results about the t-distribution under the pen name "Student", and that name has become attached to the distribution.
@@ -14,14 +18,14 @@ output: ioslides_presentation
 ## T distribution vs Normal Distribution
 * The normal distribution is used when the population distribution of data is assumed normal. 
 
-* The t statistic is an estimate of the standard error of the mean of the population or how well known is the mean based on the sample size.
+* The t distribution (aka, Student's t-distribution) is a probability distribution that is used to estimate population parameters when the sample size is small and/or when the population variance is unknown
 
 ## T distribution
 
 If $\bar{X}$ is the sample mean and S the sample standard deviation for a random sample of size $n$ from a population with mean $\mu$ and standard deviation $\sigma$, define 
 
 $$
-Z = \frac{\bar{X} - \mu}{\sigma/\sqrt(n)}
+Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}}
 $$
 and
 $$
@@ -30,83 +34,28 @@ $$
 
 ## T distribution
 
-We know:
-* both Z and T are approximately Normal(0, 1), if n is large.
-* Z is exactly Normal(0, 1) regardless of the size of n, if the population distribution is exactly normal.
+We know:  
+
+* both Z and T are approximately Normal(0, 1), if n is large.  
+* Z is exactly Normal(0, 1) regardless of the size of n, if the population distribution is exactly normal.  
 * T is exactly Student(n - 1), if the population distribution is exactly normal.
 
 ## T distribution
 
 * We know item 3 just by definition. That is how the t-distribution was originally defined.
 
-* Comparing 1 and  3, it is clear that the t-distribution is close to the Normal(0, 1) distribution if n is large. Hence the difference only matters when n is small. 
+* Comparing 1 and  3, it is clear that the t-distribution is close to the Normal(0, 1) distribution if n is large. Hence the difference only matters when n is small.   
 
 * For this reason the t-distribution is sometimes called a "small sample" distribution, but that name is misleading in two ways
 
 ## T distribution
 
-The distribution of T is Student(n - 1) for all sample sizes n large or small.
+Often times we don't know the standard deviation or variance of a distribution.  
+
+The distribution of T of sample size $n$ has degrees of freedom $n-1$ for all sample sizes n large or small.
 The key assumption is not that n is small, but that the population is exactly normal.
 
-## T distribution code example 1 part 1
 
-```{r define_sampling_distribution}
-n <- 5;nsim <- 1000;mu <- 500;sigma <- 100
-xbar <- double(nsim)
-sx <- double(nsim)
-for (i in 1:nsim) {
-   x <- rnorm(n, mu, sigma)
-   xbar[i] <- mean(x)
-   sx[i] <- sd(x)
-}
-zstat <- (xbar - mu) / (sigma / sqrt(n))
-tstat <- (xbar - mu) / (sx / sqrt(n))
-nbin <- 30
-zout <- hist(zstat, probability=TRUE, plot=FALSE, breaks=nbin)
-
-```
-
-## T distribution code example 1 part 2
-
-```{r}
-tout <- hist(tstat, probability=TRUE, plot=FALSE, breaks=nbin)
-foo <- range(-3, 3, zout$breaks, tout$breaks)
-xx <- seq(foo[1], foo[2], length=1000)
-zz <- dnorm(xx)
-tt <- dt(xx, df=n-1)
-```
-
-## T distribution code example 1 part 3
-```{r}
-samplingDistributionZStat<-function() {
-  hist(zstat, probability=TRUE, xlim=range(xx), xlab="",
-   ylim=range(0, zout$intensities, zz, tt), breaks=nbin,
-   main=paste("Sampling Distribution of z-statistic, n =", n))
-  lines(xx, zz)
-  lines(xx, tt, col=2)
-}
-```
-
-## T distribution code example 1 part 4
-```{r plot_sampling_distribution_z_state}
-samplingDistributionZStat()
-```
-
-## T distribution code example 1 part 5
-```{r}
-samplingDistributionTStat<-function() {
-  hist(tstat, probability=TRUE, xlim=range(xx), xlab="",
-   ylim=range(0, tout$intensities, zz, tt), breaks=nbin,
-   main=paste("Sampling Distribution of t-statistic, n =", n))
-  lines(xx, zz)
-  lines(xx, tt, col=2)
-}
-```
-
-## distribution code example 1 part 6
-```{r sampling_distribution_t_stat}
-samplingDistributionTStat()
-```
 
 ## T distribution compare curves
 * One why to compare Student's t-distribution and the standard normal distribution is just to run the simulation in the preceding section with different sample sizes n.
@@ -117,15 +66,15 @@ samplingDistributionTStat()
 
 ```{r}
 compareCurves<-function(){
-  n <- c(3, 4, 5, 10, 15, 20, 25, 30)
-  df <- n - 1
-  quantile <- qt(1 - 0.01, df=min(df))
-  quantile
-  xx <- seq(-quantile, quantile, length=1000)
-  plot(xx, dnorm(xx), type="l", xlab="", ylab="Relative Frequency")
-  for (i in 1:length(df)) {
-    lines(xx, dt(xx, df=df[i]), col=i+1)
-  }
+x <- seq(-4, 4, length=100)
+hx <- dnorm(x)
+degf <- c(1, 3, 8, 30)
+colors <- c("red", "blue", "darkgreen", "gold", "black")
+labels <- c("df=1", "df=3", "df=8", "df=30", "normal")
+plot(x, hx, type="l", lty=2, xlab="x value",ylab="Density", 
+     main="Comparison of t Distributions")
+for (i in 1:4){lines(x, dt(x,degf[i]), lwd=2, col=colors[i])}
+legend("topright", inset=.05, title="Distributions",labels, lwd=2, lty=c(1, 1, 1, 1, 2), col=colors)
 }
 ```
 
@@ -136,20 +85,14 @@ increasing in sample size means we approach normal distribution (tallest one)
 compareCurves()
 ```
 
-## T distribution example
+## More on the T distribution.  
 
-Acme Corporation manufactures light bulbs. The CEO claims that an average Acme light bulb lasts 300 days. A researcher randomly selects 15 bulbs for testing. The sampled bulbs last an average of 290 days, with a standard deviation of 50 days. If the CEO's claim were true, what is the probability that 15 randomly selected bulbs would have an average life of no more than 290 days?
+$S$ the standard deviation that we have estimated introduces variability from samples to samples.  
 
-## T distribution solution
+The degrees of freedom (df) are a measure of the amount of information available in the data that can be used to estimate the variance.
 
-The first thing we need to do is compute the t score, based on the following equation:
-$$
-\begin{align}
-t & = \frac{\bar{x} - \mu}{s/\sqrt{n}} \\
-& = \frac{290-300}{50 / \sqrt{15}} = \frac{-10}{12.909945} = - 0.7745966
-\end{align}
-$$
-Where $\bar{x}$ is the sample mean, $\mu$ is the population mean, s is the standard deviation of the sample, and n is the sample size.
+The degrees of freedom are n - 1 rather than n because we lose 1 df by estimating the sample mean $\bar{x}$
+
 
 
 ## Homework 
@@ -160,7 +103,7 @@ Where $\bar{x}$ is the sample mean, $\mu$ is the population mean, s is the stand
 
 ## Difficult Material
 
-*  One of the difficulties of this is that it combines biology, stats, and programming
+*  One of the difficulties of this is that it combines biology, stats, and programming.  
 
 *  Don't feel bad if this is difficult, because it is.  
 
@@ -216,6 +159,8 @@ i.e. Assume we are in LD.
 ## Distances Among East Coast Cities (part 4)
 
 ![distance Among Cities](pictures/distanceAmongCities4.png)
+
+This is called an LD Block
 
 ## Linkage Disequilibrium
 
