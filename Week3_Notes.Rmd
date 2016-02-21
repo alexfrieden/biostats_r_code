@@ -454,7 +454,7 @@ http://pbgworks.org/sites/pbgworks.org/files/measuresoflinkagedisequilibrium-111
 
 ## LD in R
 Lets look at an LD dataset
-```{r}
+```{r,echo=FALSE}
 biocLite("snpStats") # install the snpStats bioconductor package.   
 library(snpStats)
 data(ld.example)

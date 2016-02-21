@@ -13,6 +13,227 @@ output: ioslides_presentation
 
 is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables into a set of values of linearly uncorrelated variables called principal components. 
 
+Before we get into it, lets introduce the various topics
+
+## Covariance
+
+* Standard deviation and variance only operate on 1 dimension, so that you could
+only calculate the standard deviation for each dimension of the data set independently of the other dimensions. 
+
+* However, it is useful to have a similar measure to find out how
+much the dimensions vary from the mean with respect to each other
+
+* Covariance is such a measure. Covariance is always measured between 2 dimensions.  If you calculate the covariance between one dimension and itself, you get the variance. 
+
+## Covariance (part 2)
+
+* So, if you had a 3-dimensional data set $(x, y, z)$, then you could measure the
+covariance between the x and y dimensions, the x and z dimensions, and the y and z
+dimensions. Measuring the covariance between x and x, or y and y, or z and z would
+give you the variance of the x, y and z dimensions respectively.
+
+## Covariance (part 3)
+
+The formula for covariance is very similar to the formula for variance. The formula
+for variance could also be written like this: 
+$$
+var(X) = \frac{\sum_{i=1}^n(X_i-\bar{X})(X_i-\bar{X})}{n-1}
+$$
+
+where I have simply expanded the square term to show both parts. So given that knowledge,
+here is the formula for covariance:
+
+$$
+COV(X) = \frac{\sum_{i=1}^n(X_i-\bar{X})(Y_i-\bar{Y})}{n-1}
+$$
+
+## Covariance Matrix
+
+A useful way to get all the possible covariance values between all the different
+dimensions is to calculate them all and put them in a matrix. So, the definition for
+the covariance matrix for a set of data with $n$ dimensions is:
+$$
+C^{n\times n} = (c_{ij},c_{ij} = cov(DIM_i,DIM_j))
+$$
+
+where $C^{n\times n}$ is a matrix with $n$ rows and $n$ columns, and $DIM_x$ is the $x^{th}$ dimension.
+
+## Covariance Matrix Example
+
+3 dimensional covariance matrix
+$$
+C = \left( \begin{array}{ccc}
+cov(x,x) & cov(x,y) & cov(x,z) \\
+cov(y,x) & cov(y,y) & cov(y,z) \\
+cov(z,x) & cov(z,y) & cov(z,z) \end{array} \right)
+$$
+
+Notice the matrix is symmetrical about the diagonal.  Why?
+<div class="notes">
+Because $cov(a,b) = cov(b,a)$
+</div>
+
+## Covariance Example
+
+Calculate covariance between x and y
+
+      x                     y     
+------------           ----------   
+     10                   43        
+     39                   13      
+     19                   32
+     23                   21
+     28                   20
+
+## Covariance Example (part 2)
+Mean of x = 23.8, Mean of y = 25.8
+$$
+\begin{align}
+COV(X) & = \frac{\sum_{i=1}^n(X_i-\bar{X})(Y_i-\bar{Y})}{n-1} \\
+& = \frac{(-13.8)(17.2) + (15.2)(-12.8) + (-4.8)(6.2) + (-0.8)(-4.8) + (4.2)(-5.8)}{5-1} \\
+& = \frac{-237.36 + -194.56 + -29.76 + 3.84 + -24.36}{4} \\
+& = \frac{-482.2}{4} = -120.55
+\end{align}
+$$
+
+## Covariance Example (part 3)
+
+or we can do 
+```{r covariance_example}
+x=c(10,39,19,23,28)
+y=c(43,13,32,21,20)
+cov(x,y)
+```
+
+## Matrix Multiplication
+Example of one non-eigenvector and one eigenvector.  
+
+$$
+ \left( \begin{array}{cc}
+2 & 3 \\
+2 & 1
+\end{array} \right) \times \left( \begin{array}{cc}
+1 \\
+3
+\end{array} \right) =\left( \begin{array}{cc}
+11 \\
+5
+\end{array} \right)
+$$
+and
+$$
+ \left( \begin{array}{cc}
+2 & 3 \\
+2 & 1
+\end{array} \right) \times \left( \begin{array}{cc}
+3 \\
+2
+\end{array} \right) =\left( \begin{array}{cc}
+12 \\
+8
+\end{array} \right) =4\left( \begin{array}{cc}
+3 \\
+2
+\end{array} \right)
+$$
+
+## Matrix Multiplication (part 2)
+How a scaled eigenvector is still and eigenvector
+$$
+2 \times \left( \begin{array}{cc}
+3 \\
+2
+\end{array} \right) =\left( \begin{array}{cc}
+6 \\
+4
+\end{array} \right)
+$$
+$$
+ \left( \begin{array}{cc}
+2 & 3 \\
+2 & 1
+\end{array} \right) \times \left( \begin{array}{cc}
+6 \\
+4
+\end{array} \right) =\left( \begin{array}{cc}
+24 \\
+16
+\end{array} \right) = 4\left( \begin{array}{cc}
+6 \\
+4
+\end{array} \right)
+$$
+
+## Eigenvectors
+
+* As you know, you can multiply two matrices together, provided they are compatible
+sizes. 
+
+* Eigenvectors are a special case of this. Consider the two multiplications between
+a matrix and a vector in the first matrix example
+
+## Eigenvectors (part 2)
+
+* In the first example, the resulting vector is not an integer multiple of the original
+vector, whereas in the second example, the example is exactly 4 times the vector we
+began with. 
+
+* Why is this? Well, the vector is a vector in 2 dimensional space. The vector [3 2] (from the second example multiplication) represents an arrow pointing from the origin.  The other matrix, the square one, can be thought of as a transformation matrix.
+
+## Properties of Eigenvectors
+
+You should first know that eigenvectors
+can only be found for square matrices. And, not every square matrix has eigenvectors.
+And, given an $n\times n$ matrix that does have eigenvectors, there are $n$ of them.
+Given a $3\times 3$ matrix, there are 3 eigenvectors.
+
+Another property of eigenvectors is that even if I scale the vector by some amount
+before I multiply it, I still get the same multiple of it as a result.  
+
+Lastly, all the eigenvectors of a matrix are perpendicular,
+ie. at right angles to each other, no matter how many dimensions you have i.e. orthogonal.
+
+## Eigenvectors (part 3)
+
+* Lastly, all the eigenvectors of a matrix are perpendicular,
+ie. at right angles to each other, no matter how many dimensions you have i.e. orthogonal.
+
+* This is important because it means that you can express the data in terms of these perpendicular eigenvectors,
+instead of expressing them in terms of the $x$ and $y$ axes. We will be doing this later in the section on PCA.
+
+* Often times, eigenvectors are normalized so their length is one.  
+
+## Finding Eigenvectors
+
+How does one go about finding these mystical eigenvectors? Unfortunately, it’s
+only easy(ish) if you have a rather small matrix, like no bigger than about $3\times 3$.  
+
+* The usual way to find the eigenvectors is by complicated iterative methods, which are sometimes neccesary.  
+
+## Eigenvalues
+
+In the previous examples, we saw we got an eigenvector of 4.  
+
+Eigenvectors and eigenvalues always come in pairs.  
+
+## Principal Components Analysis
+
+* It is a way of identifying patterns in data, and expressing the data in such a way as to highlight
+their similarities and differences
+
+* Since patterns in data can be hard to find in data of high dimension, where the luxury of graphical representation is not available, PCA is a powerful tool for analysing data
+
+
+## PCA Method Part 1: Substract the mean
+
+For PCA to work properly, you have to subtract the mean from each of the data dimensions.
+The mean subtracted is the average across each dimension. So, all the $x$ values have $\bar{x}$ (the mean of $x$) subtracted and all the $y$ values subtracted from $\bar{y}$.  
+
+This produces a data set whose mean is zero.
+
+
+
+
 ## VCF File
 
 Variant Call Format
