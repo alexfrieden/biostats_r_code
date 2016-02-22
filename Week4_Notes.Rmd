@@ -231,12 +231,163 @@ The mean subtracted is the average across each dimension. So, all the $x$ values
 
 This produces a data set whose mean is zero.
 
+## PCA Method Part 2: Calculate the covariance matrix
 
+We can do this by doing what we did in a previous section before
 
+## PCA Part 3: Calculate the eigenvectors and eigenvalues of the covariance matrix
 
-## VCF File
+* Since the covariance matrix is square, we can calculate the eigenvectors and eigenvalues
+for this matrix. These are rather important, as they tell us useful information about
+our data. 
 
-Variant Call Format
+## PCA Part 4: Choosing components and forming a feature vector
+
+Here is where the notion of data compression and reduced dimensionality comes into
+it. 
+
+In fact, it turns out that the eigenvector with the highest eigenvalue is the principle component of the data set.
+
+In general, once eigenvectors are found from the covariance matrix, the next step
+is to order them by eigenvalue, highest to lowest. This gives you the components in
+order of significance. 
+
+Now, if you like, you can decide to ignore the components of
+lesser significance. You do lose some information, but if the eigenvalues are small, you
+don’t lose much.
+
+## PCA Part 4: Choosing components and forming a feature vector
+
+If you leave out some components, the final data set will have less
+dimensions than the original. To be precise, if you originally have ✣ dimensions in
+your data, and so you calculate  eigenvectors and eigenvalues, and then you choose
+only the first $p$ eigenvectors, then the final data set has only $p$ dimensions
+
+What needs to be done now is you need to form a feature vector, which is just
+a fancy name for a matrix of vectors. This is constructed by taking the eigenvectors
+that you want to keep from the list of eigenvectors, and forming a matrix with these
+eigenvectors in the columns
+
+$$
+FeatureVector = (eig_1\,eig_2\,...\,eig_n)
+$$
+
+## PCA Part 5: Choosing components and forming a feature vector
+
+Once we have chosen the components (eigenvectors) that we wish to keep in our data and formed a feature vector, we simply take the transpose of the vector and multiply it on the left of the original data set, transposed.
+
+$$
+FinalData = RowFeatureData\times RowDataAdjust
+$$
+
+where $RowFeatureData$ is the matrix with the eigenvectors in the columns tranposed so that the eigenvectors are now in the rows, with the more significant eigenvector at the top.  
+
+$RowDataAdjust$ is the mean-adjusted data transposed.  
+
+## PCA Part 5: Choosing components and forming a feature vector
+
+What will this give us?  It will give us the original data solely in terms of the vectors
+we chose.  This was why it was important that eigenvectors are always perpendicular to each other.
+
+So what have we done here? Basically we have transformed our data so that is
+expressed in terms of the patterns between them, where the patterns are the lines that
+most closely describe the relationships between the data. 
+
+This is helpful because we have now classified our data point as a combination of the contributions from each of those lines. Initially we can have simple x and y axes. This is fine, but the x and y values of each data point don’t really tell us exactly how that point relates to the rest of the data. 
+
+In the case of the transformation using both eigenvectors, we have simply altered the data so that it is in terms of those eigenvectors instead of
+the usual axes.
+
+## PCA Example in R
+I will use the iris dataset for the demonstration. The data contain four continuous variables which corresponds to physical measures of flowers and a categorical variable describing the flowers’ species.
+```{r pca_example}
+# Load data
+data(iris)
+head(iris, 3)
+```
+
+## PCA Example in R (part 2)
+
+We will apply PCA to the four continuous variables and use the categorical variable to visualize the PCs later. Notice that in the following code we apply a log transformation to the continuous variables as suggested by:
+
+http://tgmstat.wordpress.com/2013/11/28/computing-and-visualizing-pca-in-r/#ref1 
+
+And set center and scale. equal to TRUE in the call to prcomp to standardize the variables prior to the application of PCA:
+
+## PCA Example in R (part 3)
+
+```{r}
+# log transform 
+log.ir <- log(iris[, 1:4])
+ir.species <- iris[, 5]
+ 
+# apply PCA - scale. = TRUE is highly 
+# advisable, but default is FALSE. 
+ir.pca <- prcomp(log.ir,
+                 center = TRUE,
+                 scale. = TRUE) 
+```
+
+## PCA Example in R (part 4)
+
+Since skewness and the magnitude of the variables influence the resulting PCs, it is good practice to apply skewness transformation, center and scale the variables prior to the application of PCA. 
+
+In the example above, we applied a log transformation to the variables but we could have been more general and applied a different transformation.  
+
+## PCA Example in R (part 5)
+
+* The **prcomp** function returns an object of class prcomp, which have some methods available. 
+
+* The print method returns the standard deviation of each of the four PCs, and their rotation (or loadings), which are the coefficients of the linear combinations of the continuous variables.
+
+## PCA Example in R (part 6)
+
+```{r prcomp}
+# print method
+print(ir.pca)
+```
+
+## PCA Example in R (part 7)
+
+* The plot method returns a plot of the variances (y-axis) associated with the PCs (x-axis). The Figure below is useful to decide how many PCs to retain for further analysis. 
+
+* In this simple case with only 4 PCs this is not a hard task and we can see that the first two PCs explain most of the variability in the data.
+
+## PCA Example in R (part 8)
+
+```{r}
+# plot method
+plot(ir.pca, type = "l")
+```
+
+## PCA Example in R (part 9)
+
+```{r}
+library(devtools)
+install_github("ggbiplot", "vqv")
+library(ggbiplot)
+```
+
+## PCA Example in R (part 10)
+
+```{r}
+plotPCA<-function(){
+g <- ggbiplot(ir.pca, obs.scale = 1, var.scale = 1, 
+              groups = ir.species, ellipse = TRUE, 
+              circle = TRUE)
+g <- g + scale_color_discrete(name = '')
+g <- g + theme(legend.direction = 'horizontal', 
+               legend.position = 'top')
+print(g)
+}
+```
+
+## PCA Example in R (part 11)
+
+```{r}
+plotPCA()
+```
+
 
 ## Install Bioconductor and packages
 
@@ -402,6 +553,53 @@ head(tab)
 ## PCA on vcf data (part 16)
 ```{r}
 # Draw
-plot(tab$EV2, tab$EV1, col=as.integer(tab$pop), xlab="eigenvector 2", ylab="eigenvector 1")
-legend("bottomright", legend=levels(tab$pop), pch="o", col=1:nlevels(tab$pop))
+graphpca <- function() {
+plot(tab$EV2, tab$EV1, col=as.integer(tab$pop), xlab="eigenvector 2",
+     ylab="eigenvector 1")
+legend("bottomright", legend=levels(tab$pop), pch="o",
+       col=1:nlevels(tab$pop))
+}
 ```
+
+## PCA on vcf data (part 17)
+```{r draw_it}
+graphpca()
+```
+
+## PCA for ancestry
+
+Each principal component represents a direction in the feature space in which the data varies the most. When performing PCA on dense genotyping data these axes of variation represent genetic ancestry.  
+
+Recent paper that tries to do this:
+
+http://www.nature.com/ng/journal/v46/n4/full/ng.2924.html
+
+
+## PCA for ancestry
+
+that introduces the method, LASER, that  gets around this problem by estimating ancestry of sequenced individuals using off-target reads without directly calling genotypes. 
+
+The LASER algorithm first  constructs a PCA map using the the reference panel of individuals. It places each study sample into the reference PCA map one at a time. 
+
+It does this by simulating sequence reads for each of the reference individuals to exactly match the coverage of the study sample. 
+
+## PCA for ancestry
+
+To construct this second PCA map, LASER  uses the pile up counts of non-reference base pairs in the study and (simulated) reference sample reads. 
+
+The final step applies Procrustes analysis to transform reference and study sample points from this second PCA into the original PCA  space constructed with the reference genotypes. 
+
+LASER computes a Procrustes similarity statistic, ranging from 0 to 1, that  to compare the mappings between the two PCA spaces for reference samples. The higher this value, the more confident one can be in the placement of the study sample in the reference PCA space.
+
+## PCA for ancestry
+
+!["pca"](pictures/LaserPCA.png)
+
+## PCA for ancestry
+
+The authors randomly selected 238 individuals from the HGDP dataset  as test samples and the remaining 700 as the reference samples. As the simulated sequence coverage increases, the Procrustes similarity score increases from .950 (.001x) .994 (.01x) .999 (.10x). 
+
+
+## PCA for ancestry
+
+!["pca"](pictures/laserPCApopulations.jpg)
