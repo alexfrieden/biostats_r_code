@@ -363,6 +363,7 @@ plot(ir.pca, type = "l")
 ## PCA Example in R (part 9)
 
 ```{r}
+install.packages("devtools")
 library(devtools)
 install_github("ggbiplot", "vqv")
 library(ggbiplot)
