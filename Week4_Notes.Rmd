@@ -603,3 +603,78 @@ The authors randomly selected 238 individuals from the HGDP dataset  as test sam
 ## PCA for ancestry
 
 !["pca"](pictures/laserPCApopulations.jpg)
+
+## Diagnostic Tests
+
+Suppose we are interested in two mutually exclusive and exhaustive states of health:
+-D1 the state that an individual does not have the disease in question
+-D2 the state of which they have the disease.
+In this situation the states are complements but this is not neccesarily the case.
+
+## Diagnostic Tests
+
+Let T+ represent a positive screening result. We would like to find $P(D1 — T+)$, the probability that a person has a positive test result and has the disease. This is commonly known as a true positive.
+
+## Example
+
+Cerival Cancer is a disease for which the chance of con- tainment is high if detected early. The most common test for this is the Pap Smear. From an onsite proficnecy test was conducted in 1972,1973, and 1978.
+
+This assessed the competency of technicians was scan Pap smearslides. Over- all, 16.25 percent of the tests performed on women with cancer resulted in false negative outcomes.
+
+
+## Example part 2
+
+So, what this means:
+
+$$
+\begin{align}
+P(test\,negative|cancer) = 0.1625 \\
+P(test\,positive|cancer) = 1 - 0.1625 = 0.8375
+\end{align}
+$$
+
+The probability of a positive test result given the individual actually has the disease is called the **sensitivity** of the test.  
+
+Not all women tested actually have suffered from cervical cancer.  In fact, 18.64% were found from the data to be false positives.  
+
+## Example part 3
+
+So, from this we get:
+$$
+\begin{align}
+P(test\,positive|no\,cancer) = 0.1864 \\
+P(test\,negative|cancer) = 1 - 0.1864 = 0.8136
+\end{align}
+$$
+
+The specificity of a test is the probability that its result is negative given that the individual tested does not have the disease.  In this study the specificity of the Pap smear was 0.8136
+
+## Note
+
+In genomics we really don't care about the pure number of false positives.  In 3 billion basepairs in the human genome you are going to have a lot of errors.  A more useful statistic is to look at FP/megabase.  
+
+What that means is that I want to know the rate of false positives over 1 million sites on average.  
+
+## Example part 4
+
+While sensitivity and specificity is good, often times a clinical test validation report will interested in in the positive predictive value of an approach method or test.
+
+$$
+PPV = \frac{No.\, of\, true\, positives}{No.\,of\,true\,positives\,+\,No.\,of\,false\, positives}
+$$
+or 
+$$
+PPV = \frac{true_positives}{total_positive_calls}
+$$
+
+What does a PPV of 1 mean?
+
+## Calculate PPV
+
+$$
+\begin{align}
+P(cancer | testPositive) = \frac{P(cancer \intersect testPositive)}{P(testPositive)} \\
+=\frac{P(cancer)P(testPositive | cancer)}{P(cancer)P(testPositive|cancer) + P(notCancer)}
+\end{align}
+$$
+

@@ -214,6 +214,8 @@ source(&quot;https://bioconductor.org/biocLite.R&quot;)</pre>
 
 <pre >## Using Bioconductor 3.2 (BiocInstaller 1.20.1), R 3.2.3 (2015-12-10).</pre>
 
+<pre >## Old packages: &#39;boot&#39;, &#39;curl&#39;, &#39;rmarkdown&#39;</pre>
+
 </article></slide><slide class=''><hgroup><h2>Locus</h2></hgroup><article  id="locus">
 
 <p>Think of this an interval or a union of intervals across a set of base pairs.</p>
@@ -543,8 +545,6 @@ r^2 &amp; = 0 .092
 
 <p>Lets look at an LD dataset</p>
 
-<pre class = 'prettyprint lang-r'>biocLite(&quot;snpStats&quot;) # install the snpStats bioconductor package.   </pre>
-
 <pre >## BioC_mirror: https://bioconductor.org</pre>
 
 <pre >## Using Bioconductor 3.2 (BiocInstaller 1.20.1), R 3.2.3 (2015-12-10).</pre>
@@ -553,15 +553,13 @@ r^2 &amp; = 0 .092
 
 <pre >## 
 ## The downloaded binary packages are in
-##  /var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//Rtmpx6I7gn/downloaded_packages</pre>
+##  /var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpEfReVx/downloaded_packages</pre>
 
-<pre class = 'prettyprint lang-r'>library(snpStats)</pre>
+<pre >## Old packages: &#39;boot&#39;, &#39;curl&#39;, &#39;rmarkdown&#39;</pre>
 
 <pre >## Loading required package: survival</pre>
 
 <pre >## Loading required package: Matrix</pre>
-
-<pre class = 'prettyprint lang-r'>data(ld.example)</pre>
 
 </article></slide><slide class=''><hgroup><h2>LD in R (part 2)</h2></hgroup><article  id="ld-in-r-part-2">
 
@@ -683,7 +681,7 @@ print(spectrum)</pre>
 </article></slide><slide class=''><hgroup><h2>Motivation</h2></hgroup><article  id="motivation">
 
 <ul>
-<li><p>Say you have a set of hypotheses that you wish to test simultaneously. The first idea that might come to mind is to test each hypothesis separately, using some level of significance α.</p></li>
+<li><p>Say you have a set of hypotheses that you wish to test simultaneously. The first idea that might come to mind is to test each hypothesis separately, using some level of significance \(\alpha\).</p></li>
 <li><p>At first blush, this doesn’t seem like a bad idea. However, consider a case where you have 20 hypotheses to test, and a significance level of 0.05. What’s the probability of observing at least one significant result just due to chance?</p></li>
 </ul>
 
