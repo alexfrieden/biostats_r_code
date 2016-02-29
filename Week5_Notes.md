@@ -260,7 +260,7 @@ vegan  2.3-3  2.3-4              TRUE
 
 
 The downloaded source packages are in
-	'/private/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T/RtmpEEZVpb/downloaded_packages'
+	'/private/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T/RtmpERZkFV/downloaded_packages'
 ```
 
 
@@ -275,7 +275,7 @@ install.packages("MASS", repos = "http://cran.us.r-project.org")
 ```
 
 The downloaded binary packages are in
-	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpEEZVpb/downloaded_packages
+	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpERZkFV/downloaded_packages
 ```
 
 ```r
@@ -316,7 +316,7 @@ Call:
 procrustes(X = vare.mds, Y = vare.mds0) 
 
 Procrustes sum of squares:
-0.00168 
+0.1568 
 ```
 
 
@@ -522,11 +522,11 @@ We will do example of some commonly estimated measures: receiver operating chara
 
 false positive rate (FPR)
 ==============================
-
+The false positive rate is the percentage of healthy individuals who incorrectly receive a positive test result.
 
 true positive rate (TPR)
 ==============================
-
+The proportion of positives that are correctly identified as such.  Also called the sensitivity.  
 
 ROC
 ==============================
@@ -630,11 +630,22 @@ Lets generalize this:
 
 if $X=k$ where $k=0,1,...,n$ the maximum likelihood estimate $p_0$ would be k/n.  
 
-Thus, the estimate is determined by the value of X, and we have the estimator $\hat{p} = X\n$
+Thus, the estimate is determined by the value of X, and we have the estimator $\hat{\mu}(X) = \bar{X}$
 
 Poisson Distribution
 =====================
+a discrete frequency distribution that gives the probability of a number of independent events occurring in a fixed time.
 
+
+Suppose we conduct a Poisson experiment, in which the average number of successes within a given region is $\mu$. Then, the Poisson probability is:
+$$
+p(x;\mu) = \frac{e^{-\mu}\mu^x}{x!}
+$$
+where x is the actual number of successes that result from the experiment.  The mean for this and the variance for this is equal to $\mu$
+
+Example Poisson experiment
+=====================
+The average number of homes sold by the Acme Realty company is 2 homes per day. What is the probability that exactly 3 homes will be sold tomorrow.  
 
 Example
 =====================
@@ -967,3 +978,9 @@ sigma 0.8782272 0.06209969
 Fitting Linear Model (part 11)
 ======================
 The resulting estimates for the slope and intercept are rather good. And we have standard errors for these parameters as well.
+
+Next week
+======================
+Hardy-Weinberg Equilibrium
+
+
