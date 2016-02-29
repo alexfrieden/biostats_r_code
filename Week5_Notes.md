@@ -3,6 +3,12 @@ Week5_Notes
 author: Alexander Frieden
 date: 02/24/2016
 
+
+Extra credit
+===========================
+If you can fix a mistake I make in the notes, add a proof, or add an example I will give you extra credit
+
+
 Paper
 ===========================
 
@@ -254,7 +260,7 @@ vegan  2.3-3  2.3-4              TRUE
 
 
 The downloaded source packages are in
-	'/private/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T/RtmpVMqz1v/downloaded_packages'
+	'/private/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T/RtmpEEZVpb/downloaded_packages'
 ```
 
 
@@ -269,7 +275,7 @@ install.packages("MASS", repos = "http://cran.us.r-project.org")
 ```
 
 The downloaded binary packages are in
-	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpVMqz1v/downloaded_packages
+	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpEEZVpb/downloaded_packages
 ```
 
 ```r
@@ -310,7 +316,7 @@ Call:
 procrustes(X = vare.mds, Y = vare.mds0) 
 
 Procrustes sum of squares:
-0.1562 
+0.00168 
 ```
 
 
@@ -572,15 +578,100 @@ $$
 
 Motivation (part 3)
 ======================
-We thus obtain a function $f(3;p)$.  This function is called the **likelihood function**.  
+We thus obtain a function $f(3;p)$.  This function is called the **likelihood function**.  We denote this by $L(p;3)$
 
+The principle of maximum likelihood says we should use as our estimate of $p_0$ the value
+$p$ which makes $L(p; 3)$ as large as possible. 
+
+Makes sense: we pick the parameter value $p$ which makes the observed data most likely when assuming $p_0$ equals $p$.
+
+Motivation (part 4)
+========================
+
+Notice that since log is an increasing function, the value of $p$ which maximizes $L(p; 3)$ is the same value which maximizes $\log L(p; 3)$.
+
+It is often convenient to maximizes the logarithm of the likelihood function instead of the function itself, so we give this function a name and notation: we write $\ell(p; 3)$ for the log-likelihood function:
+$$
+\ell(p; 3) = \log L(p;3)
+$$
+
+Motivation (part 4)
+========================
+
+Here we get:
+$$
+\ell(p;3) = 3\log(p) + 7\log(1-p) + \log(\binom{n}{k}) 
+$$
+
+Motivation (part 5)
+========================
+We note in particular the $\ell$ has a unique maximum at the single critical point.  
+
+
+![Plot of log likelihood](pictures/logLikelihoodPlot.png)
+
+Motivation (part 6)
+========================
+
+Let us compute:
+$$
+\begin{align}
+0 &= \frac{\partial\ell}{\partial{p}}(p;3) \\
+0 &= \frac{3}{p} - \frac{7}{1-p} \\
+0 &= 3(1-p) - 7p \\
+p &= \frac{3}{10}
+\end{align}
+$$
+Thus the value of p maximizing $\ell(p;3)$ is $p=\frac{3}{10}$.  We call this the **maximum likelihood estimate** of $p_0$ for $X=3$
+
+Maximum Likelihood
+=====================
+Lets generalize this:
+
+if $X=k$ where $k=0,1,...,n$ the maximum likelihood estimate $p_0$ would be k/n.  
+
+Thus, the estimate is determined by the value of X, and we have the estimator $\hat{p} = X\n$
+
+Poisson Distribution
+=====================
+
+
+Example
+=====================
+Let $X_1,...,X_n$ be iid collection of Poisson($\mu$) random variables where $\mu > 0$.  Then our likelihood is:
+$$
+\begin{align}
+L(\mu;x) &= \prod_{i=1}^n\frac{e^{-\mu}\mu^{x_i}}{x_i!} \\
+&= e^{-n\mu}\mu^{\sum_{i=1}^{n}x_i}\frac{1}{\prod_{i=1}^{n}x_i!}
+\end{align}
+$$
+Thus
+$$
+\ell(\mu;x) = -n\mu + \sum_{i=1}^{n}x_i\log\mu - \log\prod_{i=1}^{n}x_i!
+$$
+
+Example (part 2)
+=====================
+Note that $\ell$ is differentiable over (0,$\infty$).  Lets calculate the critical points:
+
+$$
+\begin{align}
+0 &= \frac{\partial\ell}{\partial\mu}(\mu;x) \\
+&= -n + \frac{\sum_{i=1}^{n}x_i}{\mu}
+\end{align}
+$$
+So we get $\mu=\bar{x}$.  And note the average of $x$ here means
+$$
+\bar{x} = \frac{\sum_{i=1}^{n}x_i}{n}
+$$
+Using some further calculus we see that this is not just a local maximum but in fact a global maximum and $\hat{\mu(X)} = \bar{X}$
 
 More on this
-=====================
+========================
 
 http://www.math.utah.edu/~levin/M5080/mle.pdf
 
-Maximum Likelihood
+Maximum Likelihood definition as it pertains to applications
 ======================
 
 Maximum likelihood, also called the maximum likelihood method, is the procedure of finding the value of one or more parameters for a given statistic which makes the known likelihood distribution a maximum. 
