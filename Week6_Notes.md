@@ -1,0 +1,315 @@
+Week6_Notes
+========================================================
+author: 
+date: 
+
+Pearson Correlation
+========================================================
+
+![](pictures/pearsonCorrelation.jpg)
+
+Hardy Weinberg
+========================================================
+In 1908 the Mathematician G.H. Hardy wrote in Science about an observation he had.  
+
+It turned out a German Physician Wilhelm Weinberg had come up with the same thing.  
+
+Thus this equation that was known as Hardy's law was now Hard Weinberg
+
+
+
+The Hardy–Weinberg principle, also known as the Hardy–Weinberg equilibrium, model, theorem, or law, states that allele and genotype frequencies in a population will remain constant from generation to generation in the absence of other evolutionary influences. 
+
+Example
+============================================================
+
+![allele frequency](pictures/alleleFrequencyCalc.jpg)
+
+
+Example (part 2)
+===================================
+In general we let $f_{A/A}$,$f_{A/a}$, and $f_{a/a}$ be the three genotype frequencies at a locus with two alleles then the population frequencies of alleles A are given by 
+$$
+\begin{align}
+p&=f_{A/A} + 1/2f_{A/a} \\
+q&=f_{a/a} + 1/2f_{A/a}
+\end{align}
+$$
+
+Note that p + q = 1.  
+
+
+Hardy Weinberg Part 3
+========================================================
+How can we get genotype frequencies from allele 
+frequencies?
+
+Assuming random mating, the equilibrium genotype 
+frequencies will be
+
+$$
+\begin{align}
+&f_{A/A} = p^2 \\
+&f_{A/a} = 2pq \\
+&f_{a/a} = q^2
+\end{align}
+$$
+
+These proportions are obtained after a single generation of
+random mating.
+
+Hardy Weinberg Part 4
+========================================================
+What are the allele frequencies in the next generation?
+
+We compute:
+$$
+\begin{align}
+p' &= f_{A/A} + \frac{1}{2}f_{A/a} \\
+   &=p^2 + \frac{1}{2}(2pq) = p^2 + pq \\
+   &=p(p + q) = p(1) = p
+
+\end{align}
+$$
+
+The allele frequencies are unchanged!
+
+
+Hardy Weinberg Part 5
+========================================================
+!["hardy weinberg"](pictures/hardyWeinberg.png)
+
+Hardy Weinberg Part 5 Explanation
+========================================================
+Hardy–Weinberg proportions for two alleles: the horizontal axis shows the two allele frequencies p and q 
+
+the vertical axis shows the expected genotype frequencies. 
+
+Each line shows one of the three possible genotypes.
+
+Hardy Weinberg Part 6
+========================================================
+
+Note that rare alleles are rarely found in homozygotes
+
+
+HWE Example
+=======================================
+Albinism is a rare genetically inherited trait that is only expressed in the phenotype of homozygous recessive individuals (aa).  
+
+The most characteristic symptom is a marked deficiency in the skin and hair pigment melanin. 
+
+This condition can occur among any human group as well as among other animal species.  The average human frequency of albinism in North America is only about 1 in 20,000.
+
+HWE Example (part 2)
+=======================================
+
+Referring back to the Hardy-Weinberg equation (p² + 2pq + q² = 1), the frequency of homozygous recessive individuals (aa) in a population is q².  Therefore, in North America the following must be true for albinism:
+$$
+q^2 = \frac{1}{20,000} = 0.00005
+$$
+
+By taking the square root of both sides of this equation, we get:   
+
+$$
+q=.00707
+$$
+
+In other words, the frequency of the recessive albinism allele (a) is $.00707$ or about 1 in 140.  Knowing one of the two variables $(q)$ in the Hardy-Weinberg equation, it is easy to solve for the other $(p)$.
+
+HWE Example (part 3)
+=======================================
+
+Solving:
+$$
+\begin{align}
+p &= 1 - q \\
+  &= 1 - 0.00707 \\
+  &= 0.99293
+\end{align}
+$$
+The frequency of the dominant, normal allele (A) is, therefore, .99293 or about 99 in 100.
+
+HWE Example (part 4)
+=======================================
+The next step is to plug the frequencies of p and q into the Hardy-Weinberg equation:
+
+
+$$
+p^2 + 2pq + q^2 = 1 \\
+(.993)^2 + 2 (.993)(.007) + (.007)^2 = 1 \\
+.986 + .014 + .00005 = 1
+$$
+
+HWE Example (part 4)
+========================================
+This gives us the frequencies for each of the three genotypes for this trait in the population:
+
+$p^2$ =
+predicted frequency
+of homozygous
+dominant individuals	 = .986 = 98.6%
+
+$2pq$ =
+predicted frequency
+of heterozygous
+individuals	 = .014 = 1.4%
+
+$q^2$ =
+predicted frequency
+of homozygous
+recessive individuals 
+(the albinos)	 = .00005 = .005%
+
+HWE Example (part 5)
+========================================
+
+With a frequency of .005% (about 1 in 20,000), albinos are extremely rare.  However, heterozygous carriers for this trait, with a predicted frequency of 1.4% (about 1 in 72), are far more common than most people imagine.  There are roughly 278 times more carriers than albinos.  Clearly, though, the vast majority of humans (98.6%) probably are homozygous dominant and do not have the albinism allele.
+
+Value of HWE
+==========================================
+
+By the outset of the 20th century, geneticists were able to use Punnett squares to predict the probability of offspring genotypes for particular traits based on the known genotypes of their two parents when the traits followed simple Mendelian rules of dominance and recessiveness.  
+
+The Hardy-Weinberg equation essentially allowed geneticists to do the same thing for entire populations.
+
+Hardy Weinberg Implementation
+=========================================
+
+```r
+install.packages("HardyWeinberg", repos = "http://cran.us.r-project.org")
+```
+
+```
+
+The downloaded binary packages are in
+	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpucE8HF/downloaded_packages
+```
+
+```r
+library("HardyWeinberg")
+```
+
+
+R Example 
+==================================
+We store the genotype counts (298, 489 and 213 for $MM$, $MN$ and $NN$ respectively)
+
+```r
+x <- c(MM = 298, MN = 489, NN = 213)
+HW.test <- HWChisq(x, verbose = TRUE)
+```
+
+```
+Chi-square test with continuity correction for Hardy-Weinberg equilibrium
+Chi2 =  0.1789563 p-value =  0.6722717 D =  -3.69375 f =  0.01488253 
+```
+
+R Example (part 2)
+=============================================
+
+This shows that the chi-square statistic has value 0.179, and that the corresponding p value
+for the test is 0.6723. Taking Taking a significance level of $\alpha = 0.05$, we do not reject HWE
+for the mn locus. 
+
+R Example (part 3)
+=============================================
+
+When verbose is set to FALSE (default) the test is silent, and HW.test is
+a list object containing the results of the test (chi-square statistic, the p value of the test,
+half the deviation from HWE (D) for the heterozygote $D = \frac{1}{2}(f_{AB} − e_{AB})$, the minor allele
+frequency $p$ and the inbreeding coefficient $f$. 
+
+R Example (part 4)
+=============================================
+
+By default, HWChisq applies a continuity correction. This is not recommended for low minor allele frequencies. In order to perform a chi-square test without Yates’ continuity correction, it is necessary to set the cc parameter to zero.  
+
+HWE with Correction
+=============================================
+
+
+```r
+HW.test <- HWChisq(x, cc = 0, verbose = TRUE)
+```
+
+```
+Chi-square test for Hardy-Weinberg equilibrium
+Chi2 =  0.2214896 p-value =  0.6379073 D =  -3.69375 f =  0.01488253 
+```
+
+There is no significant deviation from HWE.  
+
+Chi-Square Test
+=======================================
+
+Example #2
+===================================
+
+```r
+data(Markers)
+Markers[1:12,]
+```
+
+```
+   SNP1   iG   iT SNP2 SNP3
+1    TT  641 1037   AA   GG
+2    GT 1207  957   AC   AG
+3    TT 1058 1686   AA   GG
+4    GG 1348  466   CC   AA
+5    GT 1176  948   AC   AG
+6    GG 1906  912   CC   AA
+7    GG 1844  705   CC   AA
+8    GG 2007  599   CC   AA
+9    GT 1369 1018   AC   AG
+10   GG 1936  953   CC   AA
+11   GG 1952  632   AC   AG
+12 <NA>  947  920   AC   AG
+```
+
+Example #2 part 2
+======================================
+
+Note that this data is at the level of each individual. Dataframe Markers contains one SNP
+with missings (SNP1), the two allele intensities of that SNP (iG and iT) and two covariate
+markers (SNP2 and SNP3). Here, the covariates have no missing values. We first test SNP1 for
+HWE using a chi-square test and ignoring the missing genotypes:
+
+Google Genomics
+================================
+A couple years ago, Google announced an effort to collection Genomics data and work to build tools for scale.  
+
+
+Google Genomics
+=================================
+Google has a number of tools, one of which is a tool for running Hardy Weinberg
+
+http://googlegenomics.readthedocs.org/en/latest/use_cases/analyze_variants/hardy_weinberg_equilibrium.html
+
+This allows to make calls to the Google Genomics endpoints to analyze our data and return the metadata we need in R.  
+
+
+
+Using Google Genomics
+===================================
+Download correct files
+
+~~~~~~~
+~/projects]$ git clone git@github.com:googlegenomics/codelabs.git
+~~~~~~~
+
+Run BigQuery Analysis
+===================================
+~~~~~~~
+sortAndLimit <- "ORDER BY ChiSq DESC, reference_name, start, alternate_bases LIMIT 1000"
+result <- DisplayAndDispatchQuery("./sql/hardy-weinberg.sql",
+                                  project=project,
+                                  replacements=c("#_ORDER_BY_"=sortAndLimit,
+                                                 queryReplacements))
+~~~~~~~~
+
+
+
+
+
+
