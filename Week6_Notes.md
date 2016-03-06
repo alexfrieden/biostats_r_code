@@ -183,7 +183,7 @@ install.packages("HardyWeinberg", repos = "http://cran.us.r-project.org")
 ```
 
 The downloaded binary packages are in
-	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpucE8HF/downloaded_packages
+	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpsbX57k/downloaded_packages
 ```
 
 ```r
@@ -240,8 +240,170 @@ Chi2 =  0.2214896 p-value =  0.6379073 D =  -3.69375 f =  0.01488253
 
 There is no significant deviation from HWE.  
 
+Chi-Square Distribution
+=======================================
+
+```r
+plotChi<-function(){
+x=seq(0,30,0.1)
+plot(x,dchisq(x,1),main="Chi-distribution",type="l",col="black")
+colors <- c("red", "blue", "darkgreen", "gold", "black")
+degf <- c(1, 3, 8, 30)
+for (i in 1:4){lines(x,dchisq(x,degf[i]), lwd=2, col=colors[i])}
+labels <- c("df=2", "df=3", "df=8", "df=30", "df=1")
+legend("topright", inset=.05, title="Chi Square Distribution",labels, lwd=2, lty=c(1, 1, 1, 1, 2), col=colors)
+}
+```
+
+
+Chi-Square Distribution (part 2)
+=======================================
+
+```r
+plotChi()
+```
+
+<img src="Week6_Notes-figure/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" width="500px" height="500px" />
+
 Chi-Square Test
 =======================================
+
+* A statistical test that can test out ratios is the Chi-Square aka Goodness of Fit test.
+
+* An important question to answer in any genetic experiment is how can we decide if our data fits any of the Mendelian ratios we have discussed.
+
+Chi-Square Test (part 2)
+=======================================
+
+Chi-Square Formula:
+
+$$
+\chi^2 = \sum\frac{(Observed\,Value - Expected\,Value)^2}{Expected\,Value}
+$$
+
+Degrees of freedom (df) = n-1 where n is the number of classes
+
+
+Chi-Square Example 
+============================
+
+The chi-square test provides a method for testing the association between the row and column variables in a two-way table. The null hypothesis $H_0$ assumes that there is no association between the variables (in other words, one variable does not vary according to the other variable)
+
+The alternative hypothesis $H_a$ claims that some association does exist. The alternative hypothesis does not specify the type of association, so close attention to the data is required to interpret the information provided by the test.
+
+
+Chi-Square Example (part 2)
+============================
+
+Original
+
+|Goals|4|5|6|
+|----|---------------|---------------|----|
+| Grades | 49 | 50 |69|
+| Popular |24 |36 |38|
+| Sports |19|22|28|
+
+Expected
+
+|Goals|4|5|6|
+|----|---------------|---------------|----|
+| Grades |46.1|54.2|67.7|
+| Popular |26.9|31.6|39.5|
+| Sports |18.9|22.2|27.8|
+Grade 4 with "grades" chosen to be most important, is calculated to be 168*92/335 = 46.1, for example.
+
+
+
+Chi-Square Example (part 2)
+============================
+
+The chi-square statistic for the above example is computed as follows: 
+$$
+X^2 = \frac{(49 - 46.1)^2}{46.1} + \frac{(50 - 54.2)^2}{54.2} + \frac{(69 - 67.7)^2}{67.7} \\
++ .... + \frac{(28 - 27.8)^2}{27.8} \\
+= 0.18 + 0.33 + 0.03 + .... + 0.01  \\
+= 1.51
+$$
+
+Chi-Square Example (part 3)
+============================
+
+The degrees of freedom are equal to (3-1)(3-1) = 2*2 = 4, so we are interested in the probability P($X^2$ > 1.51) = 0.8244 on 4 degrees of freedom. 
+
+This indicates that there is no association between the choice of most important factor and the grade of the student -- the difference between observed and expected values under the null hypothesis is negligible.
+
+Similiar thing in R
+==================================
+
+
+```r
+## From Agresti(2007) p.39
+M <- as.table(rbind(c(762, 327, 468), c(484, 239, 477)))
+dimnames(M) <- list(gender = c("F", "M"),
+                    party = c("Democrat","Independent", "Republican"))
+(Xsq <- chisq.test(M))  # Prints test summary
+```
+
+```
+
+	Pearson's Chi-squared test
+
+data:  M
+X-squared = 30.07, df = 2, p-value = 2.954e-07
+```
+
+Similiar thing in R (part 2)
+==================================
+
+We can also get the following metadata:
+
+```r
+Xsq$observed   # observed counts (same as M)
+```
+
+```
+      party
+gender Democrat Independent Republican
+     F      762         327        468
+     M      484         239        477
+```
+
+```r
+Xsq$expected   # expected counts under the null
+```
+
+```
+      party
+gender Democrat Independent Republican
+     F 703.6714    319.6453   533.6834
+     M 542.3286    246.3547   411.3166
+```
+
+Similiar thing in R (part 3)
+==================================
+
+
+```r
+Xsq$residuals  # Pearson residuals
+```
+
+```
+      party
+gender   Democrat Independent Republican
+     F  2.1988558   0.4113702 -2.8432397
+     M -2.5046695  -0.4685829  3.2386734
+```
+
+```r
+Xsq$stdres     # standardized residuals
+```
+
+```
+      party
+gender   Democrat Independent Republican
+     F  4.5020535   0.6994517 -5.3159455
+     M -4.5020535  -0.6994517  5.3159455
+```
 
 Example #2
 ===================================
@@ -274,6 +436,536 @@ Note that this data is at the level of each individual. Dataframe Markers contai
 with missings (SNP1), the two allele intensities of that SNP (iG and iT) and two covariate
 markers (SNP2 and SNP3). Here, the covariates have no missing values. We first test SNP1 for
 HWE using a chi-square test and ignoring the missing genotypes:
+
+
+Example #3 part 4
+======================================
+The data we just looked at is in a data frame, but the Hardy-Weinberg Chi Square test only takes a vector of genotype counts.  How do we convert between these two?  
+
+Example #3 part 3
+======================================
+
+Answer: We need to take one vector from the Markers data frame.  
+
+```r
+Xt <- table(Markers[,1])
+Xv <- as.vector(Xt)
+names(Xv) <- names(Xt)
+HW.test <- HWChisq(Xv,cc=0,verbose=TRUE)
+```
+
+```
+Chi-square test for Hardy-Weinberg equilibrium
+Chi2 =  8.67309 p-value =  0.003229431 D =  -6.77551 f =  0.297491 
+```
+
+
+Inbreeding coefficient
+==========================================
+
+
+HWE Power
+======================================
+Tests for HWE have low power for small samples with a low minor allele frequency or samples that deviate only moderately from HWE. It is therefore important to be able to compute power. 
+
+The function **HWPower** can be used to compute the power of a test for HWE. Function mac is used to compute the minor allele count. When setting $\theta=4$ we get the type 1 error rate of the test.  
+
+Type 2 occurs when the null hypothesis is false, but erroneously fails to be rejected.  
+Type 1 occurs when the null hypothesis $H_0$ is true, but is rejected
+
+HWE Power (part 2)
+=======================================
+
+
+```r
+ x <- c(MM = 298, MN = 489, NN = 213)
+n <- sum(x)
+nM <- mac(x)
+pw4 <- HWPower(n, nM, alpha = 0.05, test = "exact", theta = 4,
+               pvaluetype = "selome")
+print(pw4)
+```
+
+```
+[1] 0.04822774
+```
+
+HWE Power (part 3)
+=========================================
+
+```r
+ pw8 <- HWPower(n, nM, alpha = 0.05, test = "exact", theta = 8,
+                pvaluetype = "selome")
+print(pw8)
+```
+
+```
+[1] 0.9996853
+```
+
+HWE Power (part 4)
+==========================================
+These computations show that for a large sample like this one, the type I error rate (0.0482) is very close to the nominal rate, 0.05
+
+Also the standard exact test has good power (0.9997) for detecting deviations as large $\theta = 8$, which is a doubling of the number of heterozygotes
+with respect to HWE. 
+
+Type I error rate and power for the chi-square test can be calculated
+by setting **test="chisq"**. 
+
+With the allele frequency of this sample (0.5425), $\theta = 8$ amounts to an inbreeding coefficient of -0.1698.
+
+
+Plotting HWE
+================================
+Genetic association studies, genome-wide association studies in particular, use many genetic markers. 
+
+In this context graphics such as ternary plots, log-ratio plots and Q-Q plots become particularly useful, because they can reveal whether HWE is a reasonable assumption for the whole data set. 
+
+We begin to explore the Han Chinese HapMap data set by making a ternary plot.
+
+Plotting HWE (part 2)
+================================
+
+```r
+data("HapMapCHBChr1", package = "HardyWeinberg")
+HWTernaryPlot(HapMapCHBChr1, region = 1, vbounds = FALSE)
+```
+
+<img src="Week6_Notes-figure/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="500px" height="500px" />
+
+```
+$minp
+[1] 0.243975
+
+$maxp
+[1] 0.756025
+
+$inrange
+[1] 87
+
+$percinrange
+[1] 38.67
+
+$nsignif
+[1] 10
+```
+
+
+Plotting HWE (part 3)
+==================================
+
+```r
+HWTernaryPlot(HapMapCHBChr1, region = 7, vbounds = FALSE)
+```
+
+<img src="Week6_Notes-figure/unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="500px" height="500px" />
+
+```
+$minp
+[1] 0.243975
+
+$maxp
+[1] 0.756025
+
+$inrange
+[1] 87
+
+$percinrange
+[1] 38.67
+
+$nsignif
+[1] 4
+```
+
+
+Using Vcf
+==================================
+
+Install required packages
+
+```r
+source("https://bioconductor.org/biocLite.R")
+biocLite("VariantAnnotation")
+```
+
+```
+
+The downloaded binary packages are in
+	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpsbX57k/downloaded_packages
+```
+
+Using Vcf part 2
+===============================
+
+
+```r
+library(VariantAnnotation)
+fl <- system.file("extdata", "ex2.vcf", package="VariantAnnotation")
+vcf <- readVcf(fl, "hg19")
+```
+
+
+Using Vcf part 3
+================================
+
+
+```r
+## The return value is a data.frame with genotype counts
+## and allele frequencies.
+df <- snpSummary(vcf)
+df
+```
+
+```
+               g00 g01 g11    a0Freq    a1Freq  HWEzscore HWEpvalue
+rs6054257        1   1   1 0.5000000 0.5000000 -0.5773503 0.5637029
+20:17330_T/A     2   1   0 0.8333333 0.1666667 -0.3464102 0.7290345
+rs6040355       NA  NA  NA        NA        NA         NA        NA
+20:1230237_T/.  NA  NA  NA        NA        NA         NA        NA
+microsat1       NA  NA  NA        NA        NA         NA        NA
+```
+
+Using Vcf part 4
+================================
+
+
+```r
+## Compare to ranges in the VCF object:
+rowRanges(vcf)
+```
+
+```
+GRanges object with 5 ranges and 5 metadata columns:
+                 seqnames             ranges strand | paramRangeID
+                    <Rle>          <IRanges>  <Rle> |     <factor>
+       rs6054257       20 [  14370,   14370]      * |         <NA>
+    20:17330_T/A       20 [  17330,   17330]      * |         <NA>
+       rs6040355       20 [1110696, 1110696]      * |         <NA>
+  20:1230237_T/.       20 [1230237, 1230237]      * |         <NA>
+       microsat1       20 [1234567, 1234569]      * |         <NA>
+                            REF                ALT      QUAL      FILTER
+                 <DNAStringSet> <DNAStringSetList> <numeric> <character>
+       rs6054257              G                  A        29        PASS
+    20:17330_T/A              T                  A         3         q10
+       rs6040355              A                G,T        67        PASS
+  20:1230237_T/.              T                           47        PASS
+       microsat1            GTC             G,GTCT        50        PASS
+  -------
+  seqinfo: 1 sequence from hg19 genome
+```
+
+
+Using Vcf part 5
+===================================
+
+ * No statistics were computed for the variants in rows 3, 4 and 5. 
+ 
+ * They were omitted because row 3 has two alternate alleles, row 4 has none and row 5 is not a SNP.
+
+```
+                                   ALT      QUAL      FILTER
+                 <DNAStringSetList> <numeric> <character>
+       rs6054257                  A        29        PASS
+    20:17330_T/A                  A         3         q10
+       rs6040355                G,T        67        PASS
+  20:1230237_T/.                           47        PASS
+       microsat1             G,GTCT        50        PASS
+```
+
+PCA worked example part 1
+================================
+
+Lets go through a worked example.
+
+Let us analyze the following 3-variate dataset with 10 observations. Each observation consists of 3 measurements on a wafer: thickness, horizontal displacement, and vertical displacement.
+
+PCA worked example part 2
+================================
+
+$$
+X=
+\left[
+\begin{array}
+{ccc}
+7 & 4 & 3 \\
+4 & 1 & 8 \\
+6 & 3 & 5 \\
+8 & 6 & 1 \\
+8 & 5 & 7 \\
+7 & 2 & 9 \\
+5 & 3 & 3 \\
+9 & 5 & 8 \\
+7 & 4 & 5 \\
+8 & 2 & 2 \\
+\end{array}
+\right]
+$$
+
+PCA worked example part 3
+================================
+First compute the correlation matrix.
+
+$$
+R=
+\left[
+\begin{array}
+{ccc}
+1.00 & 0.67 & -0.10 \\
+0.67 & 1.00 & -0.29 \\
+-0.10 & -0.29 & 1.00 \\
+\end{array}
+\right]
+$$
+
+I don't think the variance has to be 1, I think the data may have just be chosen cleverly?
+
+PCA worked example part 4
+================================
+
+I have constructed the data in R because finding eigenvalues sucks.  
+
+
+```r
+R<-cbind(c(1,0.67,-0.1), c(0.67,1,-0.29),c(-0.1,-0.29,1))
+R
+```
+
+```
+      [,1]  [,2]  [,3]
+[1,]  1.00  0.67 -0.10
+[2,]  0.67  1.00 -0.29
+[3,] -0.10 -0.29  1.00
+```
+
+PCA worked example part 5
+================================
+Lets compute eigenvalues and eigenvectors
+
+
+```r
+eigen(R)
+```
+
+```
+$values
+[1] 1.7703534 0.9277398 0.3019068
+
+$vectors
+           [,1]       [,2]       [,3]
+[1,]  0.6415972 0.38675484  0.6624000
+[2,]  0.6866832 0.09519199 -0.7206974
+[3,] -0.3417884 0.91725633 -0.2045031
+```
+
+PCA worked example part 6
+================================
+
+A couple of notes:
+
+* Each eigenvalue satisfies $|R−\lambda I|=0$.
+
+* The sum of the $eigenvalues=3=p$, which is equal to the trace of **R** (i.e., the sum of the main diagonal elements).
+
+* The determinant of R is the product of the eigenvalues.
+
+* The product is $lambda_1×\lambda_2×\lambda_3=0.499$.
+
+PCA worked example part 6
+================================
+
+Substituting the first eigenvalue of 1.769 and **R** in the appropriate equation we obtain
+
+$$
+R=
+\left[
+\begin{array}
+{ccc}
+−0.769 & 0.670 & −0.100 \\
+0.67 & 1.00 & -0.29 \\
+-0.10 & -0.29 & −0.769 \\
+\end{array}
+\right]
+\left[
+\begin{array}
+{c}
+v_{11} \\
+v_{21} \\
+v_{31} \\
+\end{array}
+\right] = 
+\left[
+\begin{array}
+{c}
+0 \\
+0 \\
+0 \\
+\end{array}
+\right]
+$$
+
+PCA worked example part 7
+================================
+
+This is the matrix expression for three homogeneous equations with three unknowns and yields the first column of V:   0.64  0.69  -0.34  (again, a computerized solution is indispensable).
+
+Repeating this procedure for the other two eigenvalues yields the matrix V.
+
+$$
+V=
+\left[
+\begin{array}
+{ccc}
+0.64 & 0.38 & -0.66 \\
+0.69 & 0.10 & 0.72 \\
+-0.34 & 0.91 & 0.20 \\
+\end{array}
+\right]
+$$
+
+PCA worked example part 8
+================================
+
+Now form the matrix $L^{1/2}$, which is a diagonal matrix whose elements are the square roots of the eigenvalues of R.
+
+
+$$
+L^{1/2}=
+\left[
+\begin{array}
+{ccc}
+1.33 & 0 & 0 \\
+0 & 0.96 & 0 \\
+0 & 0 & 0.55 \\
+\end{array}
+\right]
+$$
+
+PCA worked example part 9
+================================
+
+Then obtain **S**, the factor structure, using $S=VL^{1/2}$.
+
+$$
+S=
+\left[
+\begin{array}
+{ccc}
+0.64 & 0.38 & -0.66 \\
+0.69 & 0.10 & 0.72 \\
+-0.34 & 0.91 & 0.20 \\
+\end{array}
+\right]
+\left[
+\begin{array}
+{ccc}
+1.33 & 0 & 0 \\
+0 & 0.96 & 0 \\
+0 & 0 & 0.55 \\
+\end{array}
+\right]
+=
+\left[
+\begin{array}
+{ccc}
+0.85 & 0.37 & -0.37 \\
+0.91 & 0.10 & 0.40 \\
+-0.45 & 0.88 & 0.11 \\
+\end{array}
+\right]
+$$
+
+This can be read as 0.91 is the correlation between the second variable and the first principal component.  Similiarly for other elements.  
+
+PCA worked example part 10
+================================
+
+Next compute the communality, using the first two eigenvalues only.
+
+$$
+SS^{\prime} = 
+\left[
+\begin{array}
+{cc}
+0.85 & 0.37 \\
+0.91 & 0.10 \\
+-0.45 & 0.88 \\
+\end{array}
+\right]
+\left[
+\begin{array}
+{cc}
+0.85 & 0.91 & -0.45 \\
+  0.37 & 0.09 & 0.88 \\
+\end{array}
+\right] = 
+\left[
+\begin{array}
+{ccc}
+0.8662 & 0.8140 & −0.0606 \\
+0.8140 & 0.8420 & −0.3321 \\
+−0.0606 & −0.3321 & 0.9876 \\
+\end{array}
+\right]
+$$
+
+PCA worked example part 11
+================================
+So we see from this the following results:
+
+$$
+1	0.8662 \\
+2	0.8420 \\
+3	0.9876 \\
+
+$$
+
+This means that the first two principal components "explain" 86.62% of the first variable, 84.20% of the second variable, and 98.76% of the third.
+
+PCA worked example part 12
+================================
+The coefficient matrix, $B$, is formed using the reciprocals of the diagonals of $L^{1/2}$
+
+$$
+B = VL^{-1/2} = \left[
+\begin{array}
+{ccc}
+0.48 & 0.40 & −1.20 \\
+0.52 & 0.10 & 1.31 \\
+-0.26 & 0.95 & 0.37 \\
+\end{array}
+\right]
+$$
+
+PCA worked example part 13
+================================
+
+Finally, we can compute the factor scores from ZB, where Z is X converted to standard score form. These columns are the principal factors.  
+
+We find these values by taking the original values, subtracting the column mean, then multiplying that new matrix of the principal components coefficients matrix B.  
+
+PCA worked example part 14
+================================
+
+$$
+F = ZB = \left[
+\begin{array}
+{ccc}
+0.41 & -0.69 & 0.06 \\
+-2.11 & 0.07 & 0.63 \\
+-0.46 & -0.32 & 0.30 \\
+1.62 & -1.00 & 0.70 \\
+0.70 & 1.09 & 0.65 \\
+-0.86 & 1.32 & -0.85 \\
+-0.60 & -1.31 & 0.86 \\
+0.94 & 1.72 & -0.04 \\
+0.22 & 0.03 & 0.34 \\
+0.15 & -0.91 & -2.65 
+\end{array}
+\right]
+$$
+
+
 
 Google Genomics
 ================================
