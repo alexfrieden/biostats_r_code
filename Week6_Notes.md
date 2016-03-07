@@ -1,12 +1,9 @@
-Week6_Notes
+Week6_Notes: Hardy Weinberg, More PCA
 ========================================================
-author: 
-date: 
+author: Alexander Frieden
+date: 3/07/2016
 
-Pearson Correlation
-========================================================
 
-![](pictures/pearsonCorrelation.jpg)
 
 Hardy Weinberg
 ========================================================
@@ -14,7 +11,7 @@ In 1908 the Mathematician G.H. Hardy wrote in Science about an observation he ha
 
 It turned out a German Physician Wilhelm Weinberg had come up with the same thing.  
 
-Thus this equation that was known as Hardy's law was now Hard Weinberg
+Thus this equation that was known as Hardy's law was now Hardy Weinberg
 
 
 
@@ -183,7 +180,7 @@ install.packages("HardyWeinberg", repos = "http://cran.us.r-project.org")
 ```
 
 The downloaded binary packages are in
-	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpsbX57k/downloaded_packages
+	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//Rtmp2cAfW7/downloaded_packages
 ```
 
 ```r
@@ -219,6 +216,8 @@ When verbose is set to FALSE (default) the test is silent, and HW.test is
 a list object containing the results of the test (chi-square statistic, the p value of the test,
 half the deviation from HWE (D) for the heterozygote $D = \frac{1}{2}(f_{AB} − e_{AB})$, the minor allele
 frequency $p$ and the inbreeding coefficient $f$. 
+
+The coefficient of inbreeding ("f") is a measure of the likelihood of genetic effects due to inbreeding to be expected based on a known pedigree (i.e. a fully documented genealogy e.g. due to a fixed system of breeding).
 
 R Example (part 4)
 =============================================
@@ -592,7 +591,7 @@ biocLite("VariantAnnotation")
 ```
 
 The downloaded binary packages are in
-	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpsbX57k/downloaded_packages
+	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//Rtmp2cAfW7/downloaded_packages
 ```
 
 Using Vcf part 2
