@@ -3,12 +3,16 @@ Ancestry estimation and control of population stratification for sequence-based 
 author: Alexander Frieden
 date: 
 
-Paper
+
+Overview
 ===========================
 
-* Using off-target reads they are able to estimate ancestry.  
+* Often times we would like to check for ancestry data using Prinicpal Component Analysis (PCA) on genome data.  
 
-* Average off target reads is about 1-2x
+* Prinicipal Component Analysis is a method used to cluster data.  
+
+* However, genome data is not often available and exome data is.  This method tries to take off target reads from exome data and the exome data and make calls and make ancestry calls based off of that new data set.  
+
 
 
 Paper (part 2)
@@ -21,9 +25,6 @@ Paper (part 3)
 ==========================
 * We compare each sequenced sample to a reference sample whose ancestral data is known and where the whole genome snp information is known.  
 
-* We construct reference coordinate system.  How is this system generated?
-
-* How do they validate this?
 
 
 Validaiton
@@ -61,6 +62,12 @@ Results (part 2)
 
 * When using HGDP as the reference, both these families were correctly placed in the correct positions.  
 
+
+Difference in Coverage
+=============================
+![](pictures/Fig3.png)
+
+
 Finland data set
 ============================
 
@@ -75,31 +82,26 @@ Finland data set
 * $t_0 = 08263$ and $r^2 = 0.9411$ for PC1 and $r^2=0.4373$ for PC2 for exome
 
 
-Minor Allele Frequency
-============================
-
-Minor allele frequency (MAF) refers to the frequency at which the least common allele occurs in a given population. SNPs with a minor allele frequency of 5% or greater were targeted by the HapMap project.
-
-If a SNP allele frequency is 0.05 in a population of 100 people:
-
-Total number of alleles for each SNP: 100 * 2 = 200  (each individual has two alleles)
-
-Total number of alleles for your SNP with a MAF of 0.05: 200 * 0.05 = 10
-
-The minor allele is present ten times in your population. 
-
-Minor Allele Frequency (page 2)
+Table Results
 ==============================
 
-Note: You don't know how many heterozygote and homozygote.  What are these?
+![table 1](pictures/PCA_table1.png)
 
-More information: http://www.ncbi.nlm.nih.gov/projects/SNP/docs/rs_attributes.html#gmaf
 
-LASER
+Conclusions
 ==============================
-![laser cat](pictures/laserCat.jpg)
+* Off target reads as low as 0.001x we can still reconstruct worldwide continental ancestry
 
-Its a powerful method
+* If samples genotyped at higher density or whole genome sequenced, authors expect better results.  
+
+* Simulations show using estimates ancestry addresses imperfect matching of case and control.  
+
+* Also shows that when population structure is stratified much more different than expected, different methods must be applied.
+
+
+Extra method slides
+==============================
+Extra method slides
 
 Step one: PCA on reference genotypes to define reference space. 
 ==============================
@@ -160,7 +162,7 @@ $$
 It has a number of properties that you can learn in any linear algebra book.  A number of these properties have parallels to group theory.  
 
 
-Laser
+Extra Method Slides
 ============================
 For our matrix $M$, the $k^{th}$ principal component given by $\lambda_k^{1/2}v_k$ where $\lambda_k$ is the kth eigen value of M and $v_k$ is the corresponding eigenvector.  
 
@@ -220,75 +222,6 @@ Sum of distances between corresponding landmarks of two shapes.
 
 
 
-Full tutorial on procrustes 
-============================
-While this is from geology, still good examples:
-
-http://www.indiana.edu/~g562/PBDB2013/Day%203A%20-%20Procrustes.pdf
-
-Geosciences example part 1
-============================
-
-This use the PONDS dataset to demonstrate methods of PCA.  
-
-The file pondsenv.csv contains the species
-data (48 taxa) and pondsenv.csv contains the transformed environmental variables (15 variables) for 30 sites. 
-
-We will use R and the vegan package to analyse these data using a variety of indirect ordination graphical display technique
-
-Geosciences example part 2
-============================
-install packages, you may need to set repos
-
-```r
-install.packages("vegan", repos = "http://cran.us.r-project.org")
-```
-
-```
-
-The downloaded binary packages are in
-	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpB7pOQD/downloaded_packages
-```
-
-
-Geosciences example part 3
-============================
-
-
-```r
-install.packages("MASS", repos = "http://cran.us.r-project.org")
-```
-
-```
-
-The downloaded binary packages are in
-	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//RtmpB7pOQD/downloaded_packages
-```
-
-```r
-library(vegan)
-library(MASS)
-data(varespec)
-#getting dissimilarity index, ignore point is to look at procrustes  
-vare.dis <- vegdist(varespec)
-```
-
-Geosciences example part 4
-============================
-
-```r
-#One form of non-metric multidimensional scaling
-vare.mds0 <- isoMDS(vare.dis, trace=0)
-#The function provides some popular (and effective) standardization methods for community ecologists.
-tmp <- wisconsin(sqrt(varespec))
-#Nonmetric Multidimensional Scaling with Stable Solution from Random Starts
-vare.mds <- metaMDS(varespec, trace = FALSE)
-dis <- vegdist(tmp)
-#One form of non-metric multidimensional scaling
-vare.mds0 <- isoMDS(dis, trace = 0)
-pro <- procrustes(vare.mds, vare.mds0)
-```
-
 
 Laser Procrustes Analysis
 ============================
@@ -311,11 +244,6 @@ Where D is the scaled minimum sum of squared Euclidean distances between $f(X)$ 
 
 Lower Proscrustes similairty corresponds to greater uncertainty and less reliable $Z_h^*$
 
-
-More notes on PCA
-============================
-
-http://www.cs.otago.ac.nz/cosc453/student_tutorials/principal_components.pdf
 
 
 

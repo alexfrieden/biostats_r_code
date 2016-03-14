@@ -45,6 +45,82 @@ Reads (continued)
 ========================================
 ![reads](pictures/reads.png)
 
+
+
+Classification
+========================================
+
+Sometimes we don't want to predict a value i.e. how much money will I have in a year but I want to estimate a qualitative value.  
+
+This is called classifing a valitative response or **classification**.  
+
+Examples
+========================================
+
+* A person arrives at the emergency room with a set of symptoms that could possibly be attributed to one of three medical conditions.  Which of the three conditions does the individual have?
+
+* An online banking service must be able to determine whether or not a transaction being performing on the site is fraudulent, on the basis of a user's IP address, past transaction history, and other features.
+
+* On the basis of DNA variation data for a number of patients with and without a given disease, we would like to discern which variants are deleterious (disease causing) and which are not.
+
+Note
+========================================
+
+For the computer scientists in the room, a lot of this will sound very similar to machine learning, and that is because it is.  
+
+Instead of finding a pattern or threshold, we are finding things that fall enough outside of our distribution that they qualify for or against a classification (such as GOOD or BAD) and we can process them as such.  
+
+
+Training
+========================================
+
+Just like in regression, we have a set of training observations
+
+$$
+(x_1,y_1),(x_2,y_2),...,(x_n,y_n)
+$$
+
+that we can use to build a classifier.
+
+Training Data
+========================================
+
+We want our classifier to perform well on our training data but also on our test data.  
+
+As a matter of practice, you *never* use the same training set as your test set.  This creates a false sense of security in your classifier and you won't be accurately testing your data.  
+Default data set
+==========================================
+
+For this we will use the **default** dataset
+
+```{r}
+library(ISLR)
+#data("Default")
+#attach(Default)
+#
+head(Default)
+```
+
+
+Plot difference
+===========================
+
+```{r}
+default.yes <- subset(Default,default=="Yes")
+default.no <- subset(Default,default=="No")
+plot(default.yes$balance,default.yes$income, col="blue")
+points(default.no$balance,default.no$income,col="red")
+```
+
+More clearly
+===============================
+
+![](pictures/gareth_4.1a.pdf)
+
+
+
+
 Fisher's Exact Test
 ========================================
+
 
