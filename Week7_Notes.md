@@ -132,6 +132,81 @@ More clearly
 ![](pictures/gareth_4.1a.pdf)
 
 
+Description of Default Data Set
+===============================
+
+This dataset describes the annual incomes and monthly credit card balances of a number of individuals.   
+
+The individuals who defaulted on thei credit card payments are shown in orange and those who did not are shown in blue.  
+
+Linear Regression Classifiers (part 1)
+===============================
+
+In cases where you have a qualitative classification, you can't use linear regression
+
+Suppose we are trying to predict the medical condition of a patient in the emergency room on the basis of symptoms.  
+
+We have three possible diagnoses: **stroke, drug overdose, and epileptic seizure**.  We encode them in response variable $Y$
+
+$$
+Y = \left\{
+        \begin{array}{ll}
+            1 & if\,stroke \\
+            2 & if\,drug\,overdose \\
+            3 & if\,epileptic\,seizure
+        \end{array}
+    \right.
+$$
+
+
+Linear Regression Classifiers (part 2)
+===============================
+
+Using this coding, we could use least squares to fit a linear regression model.  
+
+From this we would get a set of predictors $X_1,...,X_n$.  
+
+What is our incorrect assumption with this?
+
+Linear Regression Classifiers (part 3)
+===============================
+
+The issue is we assume this map actually means something, but it doesn't.  The values we pick are arbitrary.  
+
+Our model would assume the difference between **stroke** and **drug overdose** is not the same as **stroke** to **epileptic seizure** which may or may not be true.  
+
+We could just have easily picked:
+
+$$
+Y^{\prime} = \left\{
+        \begin{array}{ll}
+            1 & if\,epileptic\,seizure \\
+            2 & if\,stroke \\
+            3 & if\,drug\,overdose
+        \end{array}
+    \right.
+$$
+
+Linear Regression Classifiers (part 3)
+===============================
+
+This new mapping would give a completely different set of the relationships and values.  
+
+If we had something like **mild, moderate, and severe** then some values associated with them and an ordering would have been reasonable.  
+
+That is not the case here. 
+
+Linear Regression Classifiers (part 4)
+===============================
+
+We want to look at doing this with binary mapping, but for that we first need to understand **dummy variable** approach.
+
+Dummy Variable Approach
+===============================
+
+* Suppose we wish to investigate difference in credit card balance between males and females.  
+
+*  
 
 
 Fisher's Exact Test
