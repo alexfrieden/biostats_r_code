@@ -206,8 +206,94 @@ Dummy Variable Approach
 
 * Suppose we wish to investigate difference in credit card balance between males and females.  
 
-*  
+* We can simply create an indicator or *dummy variable*
 
+$$
+x_i = \left\{
+        \begin{array}{ll}
+            0 & if\,ith\,person\,is\,female \\
+            1 & if\,ith\,person\,is\,male \\
+        \end{array}
+    \right.
+$$
+
+Dummy Variable Approach
+===============================
+
+If we did this and used $x_i$ as the predictor in linear regression then we would get the following model.
+
+$$
+y_i = \beta_0 + \beta_{1}x_i + \epsilon_i =  \\
+\left\{
+        \begin{array}{ll}
+            \beta_0 + \beta_1 + \epsilon_i & if\,i^{th}\,person\,is\,female \\
+            \beta_0 + \epsilon_i & if\,i^{th}\,person\,is\,male \\
+        \end{array}
+    \right.
+$$
+
+Interpretation
+===============================
+
+Now $\beta_0$ can be interpreted as the average credit card balance among males and $\beta_0 + \beta_1$  as the average credit card balance among females.  
+
+When this actually gets computed on the **Credit** data set, you do get a very high p value, showing little statistical evidence of a difference in average credit balance between genders.
+
+This same pattern can be done on systems of more than two levels.  
+
+Back to example
+===============================
+
+so lets implement the dummy variable approach.
+
+$$
+Y = \left\{
+        \begin{array}{ll}
+            0 & if\,stroke \\
+            1 & if\,drug\,overdose
+        \end{array}
+    \right.
+$$
+
+Doing this allows us to predict drug overdose if $\hat{Y} > 0.5$ and stroke overwise.  
+
+The linear regression gives us a rough estimate of probability as some of the values are negative. 
+
+Note
+===============================
+
+Its tough to extend the qualitative responses using linear regression for more than 2 levels.  
+
+For this reason we try to avoid it. 
+
+Logistic Regression
+===============================
+
+Consider the **Default** dataset where we annotate whether someone defaults with **Yes** or **No**.  Logistic regression models the *probability* that Y belongs to a particular category.  
+
+Logistic Regression part 2
+===============================
+
+
+
+```
+
+The downloaded binary packages are in
+	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//Rtmpym2KN0/downloaded_packages
+```
+
+![plot of chunk unnamed-chunk-3](Week7_Notes-figure/unnamed-chunk-3-1.png)
+
+Logistic Regression part 3
+===============================
+
+For the Default data set, logistic regression models the probability of default.  
+
+For example: the probability of default given balance can be written as:
+
+$$
+P(default=Yes|balance)
+$$
 
 Fisher's Exact Test
 ========================================
