@@ -88,6 +88,8 @@ Training Data
 We want our classifier to perform well on our training data but also on our test data.  
 
 As a matter of practice, you *never* use the same training set as your test set.  This creates a false sense of security in your classifier and you won't be accurately testing your data.  
+
+
 Default data set
 ==========================================
 
@@ -95,10 +97,24 @@ For this we will use the **default** dataset
 
 
 ```r
+install.packages("ISLR",repos="http://cran.rstudio.com/")
+```
+
+```
+
+The downloaded binary packages are in
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpghrnT1/downloaded_packages
+```
+
+```r
 library(ISLR)
-#data("Default")
-#attach(Default)
-#
+```
+
+
+Default data set (part 2)
+==========================================
+
+```r
 head(Default)
 ```
 
@@ -124,7 +140,7 @@ plot(default.yes$balance,default.yes$income, col="blue")
 points(default.no$balance,default.no$income,col="red")
 ```
 
-![plot of chunk unnamed-chunk-2](Week7_Notes-figure/unnamed-chunk-2-1.png)
+![plot of chunk unnamed-chunk-3](Week7_Notes-figure/unnamed-chunk-3-1.png)
 
 More clearly
 ===============================
@@ -279,10 +295,10 @@ Logistic Regression part 2
 ```
 
 The downloaded binary packages are in
-	/var/folders/sd/mk5vnyyx72qbcjpjfbtncgp00000gs/T//Rtmpym2KN0/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpghrnT1/downloaded_packages
 ```
 
-![plot of chunk unnamed-chunk-3](Week7_Notes-figure/unnamed-chunk-3-1.png)
+![plot of chunk unnamed-chunk-4](Week7_Notes-figure/unnamed-chunk-4-1.png)
 
 Logistic Regression part 3
 ===============================
@@ -292,10 +308,477 @@ For the Default data set, logistic regression models the probability of default.
 For example: the probability of default given balance can be written as:
 
 $$
-P(default=Yes|balance)
+P(default=Yes\,|\,balance)
 $$
 
-Fisher's Exact Test
+We might predict **default = yes** if the probability is greater than $0.5$.  We also might be more conservative and use $0.1$
+
+R Regression Example part 1
 ========================================
 
+We are going to examine stock market data from the S&P 500 from 2001 to 2005.  
 
+For each date we have recorded the percentage of returns for each of the five previous trading days Lag1 through Lag5 and the **Volume* (number of billions of shares traded previous day).
+
+**Today** is the percentage return on the date in question
+
+**Direction** whether they market was up or down on the date
+
+R Regression Example part 2
+========================================
+
+load our library and take a look at our data.
+
+
+```r
+library(ISLR)
+names(Smarket)
+```
+
+```
+[1] "Year"      "Lag1"      "Lag2"      "Lag3"      "Lag4"      "Lag5"     
+[7] "Volume"    "Today"     "Direction"
+```
+
+R Regression Example part 3
+========================================
+
+Summary of our data to get a sense of data.  
+
+```r
+summary(Smarket)
+```
+
+```
+      Year           Lag1                Lag2          
+ Min.   :2001   Min.   :-4.922000   Min.   :-4.922000  
+ 1st Qu.:2002   1st Qu.:-0.639500   1st Qu.:-0.639500  
+ Median :2003   Median : 0.039000   Median : 0.039000  
+ Mean   :2003   Mean   : 0.003834   Mean   : 0.003919  
+ 3rd Qu.:2004   3rd Qu.: 0.596750   3rd Qu.: 0.596750  
+ Max.   :2005   Max.   : 5.733000   Max.   : 5.733000  
+      Lag3                Lag4                Lag5         
+ Min.   :-4.922000   Min.   :-4.922000   Min.   :-4.92200  
+ 1st Qu.:-0.640000   1st Qu.:-0.640000   1st Qu.:-0.64000  
+ Median : 0.038500   Median : 0.038500   Median : 0.03850  
+ Mean   : 0.001716   Mean   : 0.001636   Mean   : 0.00561  
+ 3rd Qu.: 0.596750   3rd Qu.: 0.596750   3rd Qu.: 0.59700  
+ Max.   : 5.733000   Max.   : 5.733000   Max.   : 5.73300  
+     Volume           Today           Direction 
+ Min.   :0.3561   Min.   :-4.922000   Down:602  
+ 1st Qu.:1.2574   1st Qu.:-0.639500   Up  :648  
+ Median :1.4229   Median : 0.038500             
+ Mean   :1.4783   Mean   : 0.003138             
+ 3rd Qu.:1.6417   3rd Qu.: 0.596750             
+ Max.   :3.1525   Max.   : 5.733000             
+```
+
+R Regression Example part 4
+========================================
+
+Next we might want to look for a naive pearson correlation between pairwise correlations among the predictors in a data set.  
+
+
+```r
+#cor(Smarket)
+```
+We get the error:
+Error in cor(Smarket) : 'x' must be numeric
+
+
+R Regression Example part 5
+========================================
+
+What happened?  Well it broke because the values are qualitative
+
+
+```r
+head(Smarket)
+```
+
+```
+  Year   Lag1   Lag2   Lag3   Lag4   Lag5 Volume  Today Direction
+1 2001  0.381 -0.192 -2.624 -1.055  5.010 1.1913  0.959        Up
+2 2001  0.959  0.381 -0.192 -2.624 -1.055 1.2965  1.032        Up
+3 2001  1.032  0.959  0.381 -0.192 -2.624 1.4112 -0.623      Down
+4 2001 -0.623  1.032  0.959  0.381 -0.192 1.2760  0.614        Up
+5 2001  0.614 -0.623  1.032  0.959  0.381 1.2057  0.213        Up
+6 2001  0.213  0.614 -0.623  1.032  0.959 1.3491  1.392        Up
+```
+
+R Regression Example part 6
+========================================
+
+We can fix this by subsetting our data.
+
+
+```r
+head(Smarket[,-9])
+```
+
+```
+  Year   Lag1   Lag2   Lag3   Lag4   Lag5 Volume  Today
+1 2001  0.381 -0.192 -2.624 -1.055  5.010 1.1913  0.959
+2 2001  0.959  0.381 -0.192 -2.624 -1.055 1.2965  1.032
+3 2001  1.032  0.959  0.381 -0.192 -2.624 1.4112 -0.623
+4 2001 -0.623  1.032  0.959  0.381 -0.192 1.2760  0.614
+5 2001  0.614 -0.623  1.032  0.959  0.381 1.2057  0.213
+6 2001  0.213  0.614 -0.623  1.032  0.959 1.3491  1.392
+```
+
+R Regression Example part 7
+========================================
+
+Now lets look at the correlation
+
+
+```r
+cor(Smarket[,-9])
+```
+
+```
+             Year         Lag1         Lag2         Lag3         Lag4
+Year   1.00000000  0.029699649  0.030596422  0.033194581  0.035688718
+Lag1   0.02969965  1.000000000 -0.026294328 -0.010803402 -0.002985911
+Lag2   0.03059642 -0.026294328  1.000000000 -0.025896670 -0.010853533
+Lag3   0.03319458 -0.010803402 -0.025896670  1.000000000 -0.024051036
+Lag4   0.03568872 -0.002985911 -0.010853533 -0.024051036  1.000000000
+Lag5   0.02978799 -0.005674606 -0.003557949 -0.018808338 -0.027083641
+Volume 0.53900647  0.040909908 -0.043383215 -0.041823686 -0.048414246
+Today  0.03009523 -0.026155045 -0.010250033 -0.002447647 -0.006899527
+               Lag5      Volume        Today
+Year    0.029787995  0.53900647  0.030095229
+Lag1   -0.005674606  0.04090991 -0.026155045
+Lag2   -0.003557949 -0.04338321 -0.010250033
+Lag3   -0.018808338 -0.04182369 -0.002447647
+Lag4   -0.027083641 -0.04841425 -0.006899527
+Lag5    1.000000000 -0.02200231 -0.034860083
+Volume -0.022002315  1.00000000  0.014591823
+Today  -0.034860083  0.01459182  1.000000000
+```
+
+R Regression Example part 8
+========================================
+
+Unfortunately we don't get anything quite this fast, we need to do further investigation.  
+
+
+Notes on Pearson Correlation
+=========================================
+
+![its a lie!](pictures/3030529-slide-wufrozj.png)
+
+Notes on Pearson Correlation (part 2)
+=========================================
+
+Obviously correlation does not imply causation.  
+
+Notes on Pearson Correlation (part 3)
+=========================================
+
+![its a lie!](pictures/Correlation_examples.png)
+
+
+Logistic Regression in R part 1
+=========================================
+
+Next we want to fit logistic regression model to predict **Direction** using **Lag1** through **Lag5** and volume.  
+Logistic Regression in R part 2
+=========================================
+
+The **glm()** method functions a lot like **lm()** except tht we must pass in the argument **family=binomial** in order to tell R to run a logistic representation rather than some other type of generalized linear model.
+
+Logistic Regression in R part 3
+=========================================
+
+
+```r
+glm.fit=glm(Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume,
+            data=Smarket,family=binomial)
+```
+
+Logistic Regression in R part 4
+=========================================
+
+```r
+summary(glm.fit)
+```
+
+```
+
+Call:
+glm(formula = Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + 
+    Volume, family = binomial, data = Smarket)
+
+Deviance Residuals: 
+   Min      1Q  Median      3Q     Max  
+-1.446  -1.203   1.065   1.145   1.326  
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)
+(Intercept) -0.126000   0.240736  -0.523    0.601
+Lag1        -0.073074   0.050167  -1.457    0.145
+Lag2        -0.042301   0.050086  -0.845    0.398
+Lag3         0.011085   0.049939   0.222    0.824
+Lag4         0.009359   0.049974   0.187    0.851
+Lag5         0.010313   0.049511   0.208    0.835
+Volume       0.135441   0.158360   0.855    0.392
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1731.2  on 1249  degrees of freedom
+Residual deviance: 1727.6  on 1243  degrees of freedom
+AIC: 1741.6
+
+Number of Fisher Scoring iterations: 3
+```
+
+```r
+cat('\r\n\r\n')
+```
+
+
+
+
+Logistic Regression in R part 5
+=========================================
+The smallest p-value here is associated with **Lag1**.  
+
+The negative coefficient for this predictor suggests that if the market had a positive return yesterday, then it less likely to go up today.  
+
+Note:  the value is 0.15, the p-value is relatively high and so there is no CLEAR evidence of a real association between **Lag1** and **Direction**
+
+Predicting 
+=========================================
+
+The **predict()** function can be used to predict the probability that the market will go up, given values of the predictors.  
+
+The **type=response** option tells R to output probabilities of the form $P(Y=1|X)$.  
+
+If no data set is provided **predict()** will then compute probabilies for the training datat that was used to fit the logistic regression model.  Why is this bad?
+
+Predicting (part 2)
+=========================================
+In, the following, we have only pritned the first ten probabilities.  
+
+We know the values correspond to the probability of the market going u rather than down because the **contrasts()** function indicates that R has created a dummy variable with a 1 for **Up**
+
+Predicting (part 3)
+=========================================
+
+
+```r
+attach(Smarket)
+glm.probs=predict(glm.fit,type="response")
+glm.probs[1:10]
+```
+
+```
+        1         2         3         4         5         6         7 
+0.5070841 0.4814679 0.4811388 0.5152224 0.5107812 0.5069565 0.4926509 
+        8         9        10 
+0.5092292 0.5176135 0.4888378 
+```
+
+```r
+contrasts(Direction)
+```
+
+```
+     Up
+Down  0
+Up    1
+```
+
+
+
+Predicting (part 4)
+=========================================
+
+In order to make an actual prediction we need to convert the predictions to proper labels.  
+
+
+```r
+glm.pred=rep("Down",1250)
+glm.pred[glm.probs > 0.5]="Up"
+```
+
+Predicting (part 5)
+=========================================
+
+So this command first creates a vector of 1250 Down elements.  
+
+The second line transforms to **Up** all the elements for which the predicted probability of a market increase exceeds 0.5.  
+
+We can now use a tool known as a *confusion matrix* to see how good this prediction is
+
+Predicting (part 6)
+=========================================
+
+```r
+table(glm.pred, Direction)
+```
+
+```
+        Direction
+glm.pred Down  Up
+    Down  145 141
+    Up    457 507
+```
+
+```r
+(507+145)/1250
+```
+
+```
+[1] 0.5216
+```
+
+```r
+mean(glm.pred==Direction)
+```
+
+```
+[1] 0.5216
+```
+
+Predicting (part 7)
+=========================================
+The diagonal elements of the confusion matrix indicate correct predictions, off-diagonals are the incorrect ones.  
+
+Our model did 652 correct predictions which correctly predicted the market 52.2% of the time.
+
+The **mean()** function was used to compute the fraction of days for which the prediction was correct.  
+
+Predicting (part 8)
+=========================================
+
+It appears logistic regression model did well.  
+
+However result is misleading because we traomed amd tested the model on same set of 1250 observations.  
+
+In other words $100 - 52.2 = 47.8%$ is the training error rate.  
+
+Predicting (part 9)
+=========================================
+
+The training error rate is an overestimate of the test error rate.  
+
+Our best bet here is to use part of the data to train the model then use the remaining data to test it, such that the data sets are disjoint.  
+
+This will give us a more realistic error rate.
+
+Predicting (part 10)
+=========================================
+
+First we need to subset our data.  We do this by creating a vector corresponding to observations from 2001 to 2004.  
+
+
+```r
+train=(Year<2005)
+Smarket.2005 = Smarket[!train,]
+dim(Smarket.2005)
+```
+
+```
+[1] 252   9
+```
+
+```r
+Direction.2005=Direction[!train]
+```
+
+Predicting (part 11)
+=========================================
+
+Now we fit a logistic regression model using the subset observations that correspond to dates before 2005.
+
+We then get predicted probabilities for the market for days in 2005.
+
+Predicting (part 12)
+=========================================
+
+
+```r
+glm.fit=glm(Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume,
+            data=Smarket, family=binomial, subset=train)
+glm.probs=predict(glm.fit, Smarket.2005,type="response")
+```
+
+Predicting (part 13)
+=========================================
+Notice we have trained and teted our model on two disjoint data sets: 2001-2005 and 2005
+
+Now we compare to actual values.  
+
+Predicting (part 14)
+=========================================
+
+```r
+glm.pred=rep("Down",252)
+glm.pred[glm.probs>0.5]="Up"
+table(glm.pred,Direction.2005)
+```
+
+```
+        Direction.2005
+glm.pred Down Up
+    Down   77 97
+    Up     34 44
+```
+
+```r
+mean(glm.pred==Direction.2005)
+```
+
+```
+[1] 0.4801587
+```
+
+```r
+mean(glm.pred!=Direction.2005)
+```
+
+```
+[1] 0.5198413
+```
+
+Predicting (part 15)
+=========================================
+
+Sadly, results show we get 52% test error rate.
+
+Predicting (part 16)
+=========================================
+
+Remember initially our smallest p-value for our model was very large which belonged to **Lag1**
+
+We can try to remove the other variables to get a better model.  
+
+This is due to when we use predictors that haveno relationship with the response tends to cause a deterioration in the test error rate by causing an increaes in the variance but no decrease in bias.  
+
+the bias of an estimator is the difference between this estimator's expected value and the true value of the parameter being estimated
+
+Predicting (part 17)
+=========================================
+
+Lets try using just **Lag1** and **Lag2**
+
+
+```r
+glm.fit=glm(Direction~Lag1+Lag2,data=Smarket,family=binomial,subset=train)
+glm.probs=predict(glm.fit,Smarket.2005,type="response")
+glm.pred=rep("Down",252)
+glm.pred[glm.probs>0.5] = "Up"
+table(glm.pred,Direction.2005)
+```
+
+```
+        Direction.2005
+glm.pred Down  Up
+    Down   35  35
+    Up     76 106
+```
+
+Predicting (part 18)
+=========================================
