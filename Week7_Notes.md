@@ -103,7 +103,7 @@ install.packages("ISLR",repos="http://cran.rstudio.com/")
 ```
 
 The downloaded binary packages are in
-	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpghrnT1/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpZExqOU/downloaded_packages
 ```
 
 ```r
@@ -295,7 +295,7 @@ Logistic Regression part 2
 ```
 
 The downloaded binary packages are in
-	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpghrnT1/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpZExqOU/downloaded_packages
 ```
 
 ![plot of chunk unnamed-chunk-4](Week7_Notes-figure/unnamed-chunk-4-1.png)
@@ -766,7 +766,8 @@ Lets try using just **Lag1** and **Lag2**
 
 
 ```r
-glm.fit=glm(Direction~Lag1+Lag2,data=Smarket,family=binomial,subset=train)
+glm.fit=glm(Direction~Lag1+Lag2,data=Smarket,
+            family=binomial,subset=train)
 glm.probs=predict(glm.fit,Smarket.2005,type="response")
 glm.pred=rep("Down",252)
 glm.pred[glm.probs>0.5] = "Up"
@@ -782,3 +783,194 @@ glm.pred Down  Up
 
 Predicting (part 18)
 =========================================
+
+* Now the results appear to be a little better: 56% of the daily movements have been correctly predicted.  
+
+* It is worth noting that in this case, a much simpler strategy of predicting that the market will increase every day will also be correct 56% of the time.  
+
+* In terms of overall error rate, the logistic regression method is no better than the naive approach.  However, the confusion matrix shows that on days when logistic regression predicts an incrase in the market, it has a 58% accuracy rate.  
+
+Tree based Methods 
+=========================================
+
+* From graph theory, trees are undirected graphs in which any two vertices have exactly one path between them.  
+
+* Tree based methods are a way of stratifying or segmenting the predictor space into a number of simpler regions.  
+
+Tree based Methods (part 2)
+=========================================
+
+* Decision trees can be applied to both regression and classifications problems.  
+
+* Trees in general are highly sensitive to changing parameters as a change in a parameters can cause early splits in the tree, thus **branching** all the way down.  
+
+* We are going to start with regression trees
+
+
+Predicting Trees
+=========================================
+
+* At a high level we want to predict a response or class $Y$ from inputs $X_1,...,X_p$. 
+
+* We do this by growing a binary tree.
+
+* BTW if any of you ever interview at Google, make sure you know binary trees like the back of your hand.  They love them.  Like, LOVE them.  
+
+* At each internal node in the tree, we apply a test to one of the inputs $X_i$.
+
+Predicting Trees (part 2)
+=========================================
+
+*  Depending on
+the outcome of the test, we go to either the left or the right sub-branch of the tree.
+
+* Eventually we come to a leaf node, where we make a prediction. This prediction aggregates or averages all the training data points which reach that leaf.
+
+* So isn't this just a messy way to do regression?  Why do this?
+
+Predicting Trees (part 3)
+=========================================
+
+* When we do linear, logistic, or other types of regression are **global models**.  Because they are global, a single predictive formula is supposed to hold over the entire data space. 
+
+* When the data has lots of features which interact in complicated, nonlinear ways, assembling a single global model can be very difficult, and hopelessly confusing when you do succeed.  
+
+Predicting Trees (part 4)
+=========================================
+
+* An alternative approach to nonlinear regression is to sub-divide, or partition, the space into smaller regions, where the interactions are more manageable.
+
+* We then partition the sub-divisions again — this is recursive partitioning, as in hierarchical clustering — until finally we get to chunks of the space which are so tame that we can fit simple models to them. 
+
+Predicting Trees (part 5)
+=========================================
+
+* Each of the terminal nodes, or leaves, of the tree represents a cell of the partition, and has attached to it a simple model which applies in that cell only. 
+
+* A point $x$ belongs to a leaf if $x$ falls in the corresponding cell of the partition. To figure out which cell we are in, we start at the **root node** of the tree, and ask a sequence of questions
+about the features.
+
+Predicting Trees (part 6)
+=========================================
+![](pictures/clinton-obama-divide.jpg)
+
+Predicting Trees Example (Part 1)
+=========================================
+
+```r
+calif = read.table("data/cadata.dat",header=TRUE)
+require(tree)
+treefit = tree(log(MedianHouseValue) ~ Longitude+Latitude,data=calif)
+```
+
+Predicting Trees Example (Part 2)
+=========================================
+This does a tree regression of the log price on longitude and latitude.
+
+Predicting Trees Example (Part 3)
+=========================================
+![plot of chunk unnamed-chunk-19](Week7_Notes-figure/unnamed-chunk-19-1.png)
+
+Predicting Trees Example (Part 4)
+=========================================
+* Regression tree for predicting California housing prices from geographic coordinates. 
+
+* At each internal node, we ask the associated question, and go to the left child if the answer is “yes”, to the right child if the answer is “no”.
+
+* Note that leaves are labeled with log prices; the plotting function isn’t flexible enough, unfortunately, to apply transformations to the labels.
+
+Predicting Trees Example (Part 5)
+=========================================
+Map of actual median house prices (color-coded by decile, darker
+being more expensive), and the partition of the treefit tree.
+
+Predicting Trees Example (Part 6)
+=========================================
+![plot of chunk unnamed-chunk-20](Week7_Notes-figure/unnamed-chunk-20-1.png)
+
+Predicting Trees Example (Part 7)
+=========================================
+
+```r
+summary(treefit)
+```
+
+```
+
+Regression tree:
+tree(formula = log(MedianHouseValue) ~ Longitude + Latitude, 
+    data = calif)
+Number of terminal nodes:  12 
+Residual mean deviance:  0.1662 = 3429 / 20630 
+Distribution of residuals:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-2.75900 -0.26080 -0.01359  0.00000  0.26310  1.84100 
+```
+
+Predicting Trees Example (Part 8)
+=========================================
+Here “deviance” is just mean squared error; this gives us an root mean square error of 0.41, not shocking since we’re using only two variables, and have only twelve nodes.
+
+Carseats Example
+=========================================
+
+For our second example, we are going to classify **Sales** in **Carseats** example.  
+
+In the following, we use **ifelse()** function to create a variable called High which takes on a values of **Yes** if the **Sales** evariable exceeds 8 and takes on a **No** otherwise
+
+Carseats Example (part 2)
+=========================================
+
+```r
+attach(Carseats)
+High=ifelse(Sales<=8,"No","Yes")
+Carseats=data.frame(Carseats, High)
+```
+
+Carseats Example (part 3)
+=========================================
+We now use the tree() function to fit a classification tree in order to predict **High** using all variables but **Sales**.
+
+
+```r
+tree.carseats=tree(High~.-Sales,Carseats)
+```
+
+Carseats Example (part 4)
+=========================================
+Now lets look at the summary method.  This is going to list the internal nodes in the treee and the training (error) rate.  
+
+Carseats Example (part 5)
+=========================================
+
+
+```r
+summary(tree.carseats)
+```
+
+```
+
+Classification tree:
+tree(formula = High ~ . - Sales, data = Carseats)
+Variables actually used in tree construction:
+[1] "ShelveLoc"   "Price"       "Income"      "CompPrice"   "Population" 
+[6] "Advertising" "Age"         "US"         
+Number of terminal nodes:  27 
+Residual mean deviance:  0.4575 = 170.7 / 373 
+Misclassification error rate: 0.09 = 36 / 400 
+```
+
+Carseats Example (part 6)
+=========================================
+
+The small deviance indicates a tree that provides a good fit to the training data.  
+
+The **residual mean deviance** reported is simply the deviance divded by $n - T_0$.
+
+Carseats Example (part 7)
+=========================================
+![plot of chunk unnamed-chunk-25](Week7_Notes-figure/unnamed-chunk-25-1.png)
+
+Carseats Example (part 8)
+=========================================
+The most important indicator of **Sales** appears to be shelving location since the first branch differentiates **Good** locations from **Bad** and **Medium** locations
