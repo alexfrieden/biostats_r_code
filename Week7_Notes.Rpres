@@ -38,7 +38,7 @@ Reads
 ========================================
 Multiple, fragmented sequence reads must be assembled together on the basis of their overlapping areas.
 
-Variants are then called from this person.  
+Variants are then called from this data  
 
 
 Reads (continued)
@@ -129,12 +129,12 @@ Description of Default Data Set
 
 This dataset describes the annual incomes and monthly credit card balances of a number of individuals.   
 
-The individuals who defaulted on thei credit card payments are shown in orange and those who did not are shown in blue.  
+The individuals who defaulted on the credit card payments are shown in orange and those who did not are shown in blue.  
 
 Linear Regression Classifiers (part 1)
 ===============================
 
-In cases where you have a qualitative classification, you can't use linear regression
+In cases where you have a qualitative classification, you can't use linear regression.  Why not?
 
 Suppose we are trying to predict the medical condition of a patient in the emergency room on the basis of symptoms.  
 
