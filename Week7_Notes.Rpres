@@ -520,7 +520,7 @@ glm.probs=predict(glm.fit, Smarket.2005,type="response")
 
 Predicting (part 13)
 =========================================
-Notice we have trained and teted our model on two disjoint data sets: 2001-2005 and 2005
+Notice we have trained and tested our model on two disjoint data sets: 2001-2004 and 2005
 
 Now we compare to actual values.  
 

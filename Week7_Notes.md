@@ -103,7 +103,7 @@ install.packages("ISLR",repos="http://cran.rstudio.com/")
 ```
 
 The downloaded binary packages are in
-	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//Rtmpeyd8Mo/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//Rtmpb8T5Ck/downloaded_packages
 ```
 
 ```r
@@ -295,7 +295,7 @@ Logistic Regression part 2
 ```
 
 The downloaded binary packages are in
-	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//Rtmpeyd8Mo/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//Rtmpb8T5Ck/downloaded_packages
 ```
 
 ![plot of chunk unnamed-chunk-4](Week7_Notes-figure/unnamed-chunk-4-1.png)
@@ -707,7 +707,7 @@ glm.probs=predict(glm.fit, Smarket.2005,type="response")
 
 Predicting (part 13)
 =========================================
-Notice we have trained and teted our model on two disjoint data sets: 2001-2005 and 2005
+Notice we have trained and tested our model on two disjoint data sets: 2001-2004 and 2005
 
 Now we compare to actual values.  
 
