@@ -423,3 +423,346 @@ The four most commmon types of linkage: complete, average, single, and centroid.
 Hierarchial Clustering Algorithm part 3
 ========================================================
 <img src="pictures/10.12.pdf" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="1100" height="575" />
+
+Hierarchial Clustering Algorithm Steps
+========================================================
+
+1.  Begin with $n$ observations and a measure (such as Euclidean) of all ${n \choose 2} = n(n-1)/2$ pairwise dissimilarities.  Treat each observation as its own cluster.  
+
+2.  For $i=n,n-1,...,2$
+  + Examine all pairwise inter-cluster dissimilarities among the i clusters and identify the pair of clusters that are least dissimilar.  Fuse those two clusters.  The dissimilarity between these two clusters indicates the height in the dendrogram at which the fusion should be placed.  
+  + Computer the new pairwise inter-cluster dissimilarities among the i - 1 remaining clusters.  
+  
+Complete Linkage
+========================================================
+
+Maximal Intercluster dissimilarity.  
+
+Compute all pairwise dissimilarities between the observations in cluster A and the observations in cluster B, and record the largest of these dissimilarities.
+
+Single Linkage
+========================================================
+
+Minimal intercluster dissimilarity.  
+
+Compute all pairwise dissimilarities between the observations in cluster A and the observations in cluster B, and record the smallest of these dissimilarities.  
+
+Simple linkage can result in extended, trailing clusters in which single observations are fused one-at-a-time.
+
+Average
+========================================================
+
+Mean intercluster dissimilarity.  
+
+Compute all pairewise dissimilarities between the observations in cluster A and the observations in cluster B, and record the *average* of these dissimilarities.
+
+Centroid
+========================================================
+
+Dissimilarity between the centroid for cluster A (a mean vector of length $p$) and the centroid for cluster B.  
+
+Centroid linkage can result in undesriable inversions.  
+
+Choice of Dissimilarity Measure
+========================================================
+
+Choice of dissimilarity measure has a major role on what the dendrogram looks like and where our data clusters.  
+
+We can do things like Euclidean Distance, Correlation-based distance, etc.  We will not go into how these are chosen and consequences of this.  
+
+Hierarchial Clustering in R (part 1)
+========================================================
+
+The **hclust()** function implements hierarchical clustering in R.
+
+In the following example we are going to plot data using this method with the different types of linking.
+
+The **dist()** function is used to to compute a matrix of inter-observation Euclidean distance matrix. 
+
+Hierarchial Clustering in R (part 2)
+========================================================
+Changing the method parameter would allow us to do average or single
+
+```r
+hc.complete  = hclust(dist(x), method="complete")
+hc.average  = hclust(dist(x), method="average")
+hc.single  = hclust(dist(x), method="single")
+hc.complete
+```
+
+```
+
+Call:
+hclust(d = dist(x), method = "complete")
+
+Cluster method   : complete 
+Distance         : euclidean 
+Number of objects: 50 
+```
+
+Hierarchial Clustering in R (part 3)
+========================================================
+We can now plot the denodrograms obtained using the plot function.  
+
+The numbers at the bottom of the plot identify each observation.
+
+
+Hierarchial Clustering in R (part 4)
+========================================================
+![plot of chunk unnamed-chunk-16](Week8_Notes-figure/unnamed-chunk-16-1.png)
+
+Hierarchial Clustering in R (part 5)
+========================================================
+To determine the cluster labels for each observation associated with a given cut of the denodrogram, we can use **cuttree()**
+
+```r
+cutree(hc.complete, 2)
+```
+
+```
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
+[36] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+```
+
+```r
+cutree(hc.average, 2)
+```
+
+```
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 1 2 2
+[36] 2 2 2 2 2 2 2 2 1 2 1 2 2 2 2
+```
+
+```r
+cutree(hc.single, 2)
+```
+
+```
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+[36] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+```
+
+Hierarchial Clustering in R (part 6)
+========================================================
+From this data, complete and average linkage generally seperate the observations into their correct group.  
+
+However, single linkage identifies one point as belonging to its own cluster.  When we look to sort into four groups, there are still two singletons.
+
+
+```r
+cutree(hc.single,4)
+```
+
+```
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 3 3 3 3 3 3 3 3 3 3
+[36] 3 3 3 3 3 3 4 3 3 3 3 3 3 3 3
+```
+
+Hierarchial Clustering in R (part 7)
+========================================================
+
+To scale the variables before HC, we use **scale()**
+
+```r
+xsc=scale(x)
+plot(hclust(dist(xsc),method="complete"), main = "Hierarchial Clustering with Scaled Features")
+```
+
+![plot of chunk unnamed-chunk-19](Week8_Notes-figure/unnamed-chunk-19-1.png)
+
+NC160 Data Example (part 1)
+========================================================
+Here we are going to use unsupervised methods to analyze genomic data.  
+
+NC160 is a cancer cell line microarray data.  
+
+This data consists of 6830 gene expression measurements on 64 cancer cell lines
+
+NC160 Data Example (part 2)
+========================================================
+Add our data
+
+```r
+library(ISLR)
+nci.labs=NCI60$labs
+nci.data=NCI60$data
+```
+
+NC160 Data Example (part 3)
+========================================================
+Note that every cell line is labeled with a cancer type.  
+
+One analysis we could perform is to run PCA on our data, then type if the groupings have anything to do with type and trying to filter down to get the types.
+
+Since we have done a lot of PCA already, we are not going to do that. 
+NC160 Data Example (part 4)
+========================================================
+
+We want to use hierarchical clustering to see if observations cluster into distinct types of cancer.  
+
+To start, we standardize the variables to have mean zero and standard deviation one.  We do this because we don't want to weight any genes heavier than any other ones.  
+
+
+```r
+sd.data = scale(nci.data)
+```
+
+NC160 Data Example (part 5)
+========================================================
+
+We now perform hierarchical clustering using complete, single, and average linkage.  Euclidean distance is used as our measure.  
+
+
+NC160 Data Example (part 6)
+========================================================
+
+![plot of chunk unnamed-chunk-22](Week8_Notes-figure/unnamed-chunk-22-1.png)
+
+NC160 Data Example (part 7)
+========================================================
+
+Choice of linkage affects results obtained.  
+
+Typically Single linkage will yield *trailing clusters*.  These are very large clusteres onto which individual observations attach one-by-one.
+
+Complete and Average tend to be more balanced clusters.  A priori,  we would choose go with complete and average linkage.
+
+NC160 Data Example (part 8)
+========================================================
+
+Lets look at a cut of four on our dendrogram.  
+
+
+```r
+hc.out=hclust(dist(sd.data))
+hc.clusters=cutree(hc.out,4)
+table(hc.clusters, nci.labs)
+```
+
+```
+           nci.labs
+hc.clusters BREAST CNS COLON K562A-repro K562B-repro LEUKEMIA MCF7A-repro
+          1      2   3     2           0           0        0           0
+          2      3   2     0           0           0        0           0
+          3      0   0     0           1           1        6           0
+          4      2   0     5           0           0        0           1
+           nci.labs
+hc.clusters MCF7D-repro MELANOMA NSCLC OVARIAN PROSTATE RENAL UNKNOWN
+          1           0        8     8       6        2     8       1
+          2           0        0     1       0        0     1       0
+          3           0        0     0       0        0     0       0
+          4           1        0     0       0        0     0       0
+```
+
+NC160 Data Example (part 9)
+========================================================
+Some patterns emerge:  All leukemia cell lines fall in cluster 3.  
+
+All breast cancer cell lines are spread out about evenly NOT in cluster 3.  
+
+Lets look at the plot next.
+
+NC160 Data Example (part 10)
+========================================================
+![plot of chunk unnamed-chunk-24](Week8_Notes-figure/unnamed-chunk-24-1.png)
+
+NC160 Data Example (part 11)
+========================================================
+
+The **abline()** function draws a straight line on top of any existing plot.  
+
+The argument **h=139** is chosen to give four distinct clusters. 
+
+It can be verified that the resulting clusters are the same as the ones we obtained from **cutree(hc.out,4)**
+
+NC160 Data Example (part 12)
+========================================================
+
+Lets take a look at **hc.out**
+
+```r
+hc.out
+```
+
+```
+
+Call:
+hclust(d = dist(sd.data))
+
+Cluster method   : complete 
+Distance         : euclidean 
+Number of objects: 64 
+```
+
+NC160 Data Example (part 13)
+========================================================
+
+Before we claimed that K-means clustering and hierarchial clustering with the dendrogram cut to obtain the same number of clusteres can yield very different results.  
+
+Lets run this exerise using the **NCI60** data set.  How does our hierarchical clustering compare to what we get if we perform K-means clustering on $K=4$.
+
+NC160 Data Example (part 14)
+========================================================
+
+```r
+set.seed(2)
+km.out=kmeans(sd.data, 4, nstart=20)
+km.clusters=km.out$cluster
+table(km.clusters,hc.clusters)
+```
+
+```
+           hc.clusters
+km.clusters  1  2  3  4
+          1 11  0  0  9
+          2  0  0  8  0
+          3  9  0  0  0
+          4 20  7  0  0
+```
+
+NC160 Data Example (part 15)
+========================================================
+We see the results using each method are somewhat different.  What would this have looked like if these had been the same?
+
+NC160 Data Example (part 16)
+========================================================
+
+```r
+table(hc.clusters,hc.clusters)
+```
+
+```
+           hc.clusters
+hc.clusters  1  2  3  4
+          1 40  0  0  0
+          2  0  7  0  0
+          3  0  0  8  0
+          4  0  0  0  9
+```
+
+```r
+table(km.clusters,km.clusters)
+```
+
+```
+           km.clusters
+km.clusters  1  2  3  4
+          1 20  0  0  0
+          2  0  8  0  0
+          3  0  0  9  0
+          4  0  0  0 27
+```
+
+NC160 Data Example (part 17)
+========================================================
+
+Also note that cluster 2 in K-means is identical to cluster 3 in hierarchical clustering.  However the rest different. 
+
+NC160 Data Example (part 18)
+========================================================
+
+Sometimes performing hierarchical clustering on the first few principal component score vectors can give better results.  
+
+PCA can remove a lot of the noise from our data and give us a cleaner dendrogram.  
+
+Similarly for K-means.  
