@@ -255,7 +255,7 @@ install.packages("genetics", repos = "http://cran.us.r-project.org")
 ```
 
 The downloaded binary packages are in
-	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpYmQpTD/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpdoyHkz/downloaded_packages
 ```
 
 ```r
@@ -276,7 +276,7 @@ HWE.chisq(Akt1Snp1)
 	replicates)
 
 data:  tab
-X-squared = 6.927, df = NA, p-value = 0.0106
+X-squared = 6.927, df = NA, p-value = 0.009499
 ```
 
 R comparison example (part 10)
@@ -620,7 +620,7 @@ install.packages("randomForest", repos = "http://cran.us.r-project.org")
 ```
 
 The downloaded binary packages are in
-	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpYmQpTD/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpdoyHkz/downloaded_packages
 ```
 
 ```r
@@ -657,7 +657,254 @@ Decision Trees using Tree-Based Methods (part 4)
 =========================================================
 Here we are using the median home value in our random forest.
 
+```r
+train = sample(1:nrow(Boston), nrow(Boston)/2)
+bag.boston=randomForest(medv~.,data = Boston, subset = train, mtry = 13, importance = TRUE)
+bag.boston
+```
 
 ```
-Error in eval(expr, envir, enclos) : object 'train' not found
+
+Call:
+ randomForest(formula = medv ~ ., data = Boston, mtry = 13, importance = TRUE,      subset = train) 
+               Type of random forest: regression
+                     Number of trees: 500
+No. of variables tried at each split: 13
+
+          Mean of squared residuals: 11.08966
+                    % Var explained: 86.57
 ```
+
+Decision Trees using Tree-Based Methods (part 5)
+=========================================================
+
+The argument **mtry=13** indicates that all 13 predictors should be considered for each split of the tree
+
+in other words, the bagging should be done. Lets see how it does
+
+Decision Trees using Tree-Based Methods (part 6)
+=========================================================
+![plot of chunk unnamed-chunk-17](Week9_Notes-figure/unnamed-chunk-17-1.png)
+
+Decision Trees using Tree-Based Methods (part 7)
+=========================================================
+
+```r
+mean((yhat.bag-boston.test)^2)
+```
+
+```
+[1] 13.33831
+```
+
+Decision Trees using Tree-Based Methods (part 8)
+=========================================================
+
+The test set MSE associated with the bagged regression tree is 13.16.  
+
+This is about half the value obtained using an optimally pruned single tree (25.05).  Going through this was skipped, I can write up something if folks are interested in it.
+
+We could change the number of trees grown using **ntree** argument.
+
+Decision Trees using Tree-Based Methods (part 9)
+=========================================================
+
+
+```r
+bag.boston=randomForest(medv~., data=Boston, subset=train,mtry=13, ntree=25)
+yhat.bag = predict(bag.boston, newdata=Boston[-train,])
+mean((yhat.bag-boston.test)^2)
+```
+
+```
+[1] 15.96786
+```
+
+Decision Trees using Tree-Based Methods (part 10)
+=========================================================
+
+So far we have been doing bagging.  In order to do random forest, we need to change the mtry argument. 
+
+By default, **randomForest()** will use $p/3$ for regression trees and $\sqrt{p}$ variables when building classification trees. 
+
+In the following we will use $mtry = 6$
+
+Decision Trees using Tree-Based Methods (part 11)
+=========================================================
+
+
+```r
+set.seed(1)
+rf.boston = randomForest(medv~.,data=Boston,subset=train,mtry=6,importance=TRUE)
+yhat.rf = predict(rf.boston,newdata=Boston[-train,])
+mean((yhat.rf-boston.test)^2)
+```
+
+```
+[1] 11.48022
+```
+
+Decision Trees using Tree-Based Methods (part 12)
+=========================================================
+
+Test set MSE is 11.48.  This indicates that random forests yielded an improvement over bagging.  
+
+This is no surprise, random forests is a popular method because it performs very well in a lot of cases.  
+If you are interested in these topics, Max Kuhn has a great book on these and more:
+
+http://www.amazon.com/Applied-Predictive-Modeling-Max-Kuhn/dp/1461468485
+
+Decision Trees using Tree-Based Methods (part 13)
+=========================================================
+
+To go more in depth to gain more insight into our variables, we use the **importance()** function to view importance of each variable.  
+
+Decision Trees using Tree-Based Methods (part 14)
+=========================================================
+
+
+```r
+importance(rf.boston)
+```
+
+```
+          %IncMSE IncNodePurity
+crim    12.547772    1094.65382
+zn       1.375489      64.40060
+indus    9.304258    1086.09103
+chas     2.518766      76.36804
+nox     12.835614    1008.73703
+rm      31.646147    6705.02638
+age      9.970243     575.13702
+dis     12.774430    1351.01978
+rad      3.911852      93.78200
+tax      7.624043     453.19472
+ptratio 12.008194     919.06760
+black    7.376024     358.96935
+lstat   27.666896    6927.98475
+```
+
+Decision Trees using Tree-Based Methods (part 15)
+=========================================================
+To find plots of importance measures we can do:
+
+```r
+varImpPlot(rf.boston)
+```
+
+![plot of chunk unnamed-chunk-22](Week9_Notes-figure/unnamed-chunk-22-1.png)
+
+Decision Trees using Tree-Based Methods (part 16)
+=========================================================
+We see that across all trees considered, two variables stand out: **lstat** and **rm**
+
+Thus the wealth of the community (lstat) and house size (rm) are the two most important variables.
+
+Decision Trees using Tree-Based Methods (part 17)
+=========================================================
+
+For boosting, we will use the **gbm** package.  
+
+Since this is a regression problem, we are going to run **gbm()** with **distribution="gaussian"**.  
+
+If this was a binary classification problem we would use **distribution="bernoulli"**
+
+
+Decision Trees using Tree-Based Methods (part 18)
+=========================================================
+
+```r
+install.packages("gbm", repos = "http://cran.us.r-project.org")
+```
+
+```
+
+The downloaded binary packages are in
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpdoyHkz/downloaded_packages
+```
+
+```r
+library(gbm)
+set.seed(1)
+boost.boston=gbm(medv~.,data=Boston[train,], distribution="gaussian",n.trees=5000,interaction.depth=4)
+```
+
+Decision Trees using Tree-Based Methods (part 19)
+=========================================================
+Getting the summary produces a relative influence plot and also outputs the relative influence statistics
+
+Decision Trees using Tree-Based Methods (part 20)
+=========================================================
+![plot of chunk unnamed-chunk-24](Week9_Notes-figure/unnamed-chunk-24-1.png)
+
+```
+            var    rel.inf
+lstat     lstat 45.9627334
+rm           rm 31.2238187
+dis         dis  6.8087398
+crim       crim  4.0743784
+nox         nox  2.5605001
+ptratio ptratio  2.2748652
+black     black  1.7971159
+age         age  1.6488532
+tax         tax  1.3595005
+indus     indus  1.2705924
+chas       chas  0.8014323
+rad         rad  0.2026619
+zn           zn  0.0148083
+```
+
+Decision Trees using Tree-Based Methods (part 21)
+=========================================================
+
+Again we see lstat and rm are by far the most important variables.  We can also produce partial dependence plots for these two variables.  
+
+These plots illustrate the marginal effect of the selected variables on the response after integrating out the other variables.  
+
+In this case we might expect median house prices are incraseing with **rm** and decreasing with **lstat**
+
+Decision Trees using Tree-Based Methods (part 22)
+=========================================================
+
+```r
+par(mfrow=c(1,2))
+plot(boost.boston,i="rm")
+plot(boost.boston,i="lstat")
+```
+
+![plot of chunk unnamed-chunk-25](Week9_Notes-figure/unnamed-chunk-25-1.png)
+
+Decision Trees using Tree-Based Methods (part 23)
+=========================================================
+We now use the boosted model to predict **medv**
+
+```r
+yhat.boost=predict(boost.boston,newdata=Boston[-train,],n.trees=5000)
+mean((yhat.boost-boston.test)^2)
+```
+
+```
+[1] 11.84434
+```
+
+Decision Trees using Tree-Based Methods (part 24)
+=========================================================
+The test MSE obtained is 11.84, similar to the test MSE for random forest and superior to that of bagging. 
+
+We can augment the shrinking parameter $\lambda$.  The default is 0.001, however lets take $\lambda=0.2$
+
+Decision Trees using Tree-Based Methods (part 25)
+=========================================================
+And we get an improvement!
+
+```r
+boost.boston=gbm(medv~.,data=Boston[train,],distribution="gaussian",
+                 n.trees=5000,interaction.depth=4,shrinkage=0.2)
+yhat.boost=predict(boost.boston,newdata=Boston[-train,],n.trees=5000)
+mean((yhat.boost-boston.test)^2)
+```
+
+```
+[1] 11.51109
+```
+
