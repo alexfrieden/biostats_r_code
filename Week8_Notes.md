@@ -333,7 +333,7 @@ It is *always* recommended to run K-means clustering with a large value of **nst
 
 It is also important to use the **set.seed()** function so that the results are reproducible.  
 
-Hierarchial Clustering
+Hierarchical Clustering
 ========================================================
 
 One potential disadvantage of K-means clustering is that it requires us to pre-specify the number of clusteres K.  
@@ -363,7 +363,7 @@ We can make this precise:
 
 For any two observations, we can look at the point in the tree where branches containing those two observations are first fused.  
 
-The height of the fusion, as measured on the vertical axis, indicates how difficult the two observations are. 
+The height of the fusion, as measured on the vertical axis, indicates how different the two observations are. 
 
 Reading Dendrogram (part 3)
 ========================================================
@@ -570,15 +570,15 @@ plot(hclust(dist(xsc),method="complete"), main = "Hierarchial Clustering with Sc
 
 ![plot of chunk unnamed-chunk-19](Week8_Notes-figure/unnamed-chunk-19-1.png)
 
-NC160 Data Example (part 1)
+NCI60 Data Example (part 1)
 ========================================================
 Here we are going to use unsupervised methods to analyze genomic data.  
 
-NC160 is a cancer cell line microarray data.  
+NCI60 is a cancer cell line microarray data.  
 
 This data consists of 6830 gene expression measurements on 64 cancer cell lines
 
-NC160 Data Example (part 2)
+NCI60 Data Example (part 2)
 ========================================================
 Add our data
 
@@ -588,14 +588,14 @@ nci.labs=NCI60$labs
 nci.data=NCI60$data
 ```
 
-NC160 Data Example (part 3)
+NCI60 Data Example (part 3)
 ========================================================
 Note that every cell line is labeled with a cancer type.  
 
 One analysis we could perform is to run PCA on our data, then type if the groupings have anything to do with type and trying to filter down to get the types.
 
 Since we have done a lot of PCA already, we are not going to do that. 
-NC160 Data Example (part 4)
+NCI60 Data Example (part 4)
 ========================================================
 
 We want to use hierarchical clustering to see if observations cluster into distinct types of cancer.  
@@ -607,18 +607,18 @@ To start, we standardize the variables to have mean zero and standard deviation 
 sd.data = scale(nci.data)
 ```
 
-NC160 Data Example (part 5)
+NCI60 Data Example (part 5)
 ========================================================
 
 We now perform hierarchical clustering using complete, single, and average linkage.  Euclidean distance is used as our measure.  
 
 
-NC160 Data Example (part 6)
+NCI60 Data Example (part 6)
 ========================================================
 
 ![plot of chunk unnamed-chunk-22](Week8_Notes-figure/unnamed-chunk-22-1.png)
 
-NC160 Data Example (part 7)
+NCI60 Data Example (part 7)
 ========================================================
 
 Choice of linkage affects results obtained.  
@@ -627,7 +627,7 @@ Typically Single linkage will yield *trailing clusters*.  These are very large c
 
 Complete and Average tend to be more balanced clusters.  A priori,  we would choose go with complete and average linkage.
 
-NC160 Data Example (part 8)
+NCI60 Data Example (part 8)
 ========================================================
 
 Lets look at a cut of four on our dendrogram.  
@@ -654,7 +654,7 @@ hc.clusters MCF7D-repro MELANOMA NSCLC OVARIAN PROSTATE RENAL UNKNOWN
           4           1        0     0       0        0     0       0
 ```
 
-NC160 Data Example (part 9)
+NCI60 Data Example (part 9)
 ========================================================
 Some patterns emerge:  All leukemia cell lines fall in cluster 3.  
 
@@ -662,11 +662,11 @@ All breast cancer cell lines are spread out about evenly NOT in cluster 3.
 
 Lets look at the plot next.
 
-NC160 Data Example (part 10)
+NCI60 Data Example (part 10)
 ========================================================
 ![plot of chunk unnamed-chunk-24](Week8_Notes-figure/unnamed-chunk-24-1.png)
 
-NC160 Data Example (part 11)
+NCI60 Data Example (part 11)
 ========================================================
 
 The **abline()** function draws a straight line on top of any existing plot.  
@@ -675,7 +675,7 @@ The argument **h=139** is chosen to give four distinct clusters.
 
 It can be verified that the resulting clusters are the same as the ones we obtained from **cutree(hc.out,4)**
 
-NC160 Data Example (part 12)
+NCI60 Data Example (part 12)
 ========================================================
 
 Lets take a look at **hc.out**
@@ -694,14 +694,14 @@ Distance         : euclidean
 Number of objects: 64 
 ```
 
-NC160 Data Example (part 13)
+NCI60 Data Example (part 13)
 ========================================================
 
 Before we claimed that K-means clustering and hierarchial clustering with the dendrogram cut to obtain the same number of clusteres can yield very different results.  
 
 Lets run this exerise using the **NCI60** data set.  How does our hierarchical clustering compare to what we get if we perform K-means clustering on $K=4$.
 
-NC160 Data Example (part 14)
+NCI60 Data Example (part 14)
 ========================================================
 
 ```r
@@ -720,11 +720,11 @@ km.clusters  1  2  3  4
           4 20  7  0  0
 ```
 
-NC160 Data Example (part 15)
+NCI60 Data Example (part 15)
 ========================================================
 We see the results using each method are somewhat different.  What would this have looked like if these had been the same?
 
-NC160 Data Example (part 16)
+NCI60 Data Example (part 16)
 ========================================================
 
 ```r
@@ -753,12 +753,12 @@ km.clusters  1  2  3  4
           4  0  0  0 27
 ```
 
-NC160 Data Example (part 17)
+NCI60 Data Example (part 17)
 ========================================================
 
 Also note that cluster 2 in K-means is identical to cluster 3 in hierarchical clustering.  However the rest different. 
 
-NC160 Data Example (part 18)
+NCI60 Data Example (part 18)
 ========================================================
 
 Sometimes performing hierarchical clustering on the first few principal component score vectors can give better results.  
