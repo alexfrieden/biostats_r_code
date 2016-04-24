@@ -255,7 +255,7 @@ install.packages("genetics", repos = "http://cran.us.r-project.org")
 ```
 
 The downloaded binary packages are in
-	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpdoyHkz/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpZsAXSm/downloaded_packages
 ```
 
 ```r
@@ -276,7 +276,7 @@ HWE.chisq(Akt1Snp1)
 	replicates)
 
 data:  tab
-X-squared = 6.927, df = NA, p-value = 0.009499
+X-squared = 6.927, df = NA, p-value = 0.009899
 ```
 
 R comparison example (part 10)
@@ -446,14 +446,14 @@ The bootstrap sample is taken from the original using sampling with replacement 
 
 This process is repeated a large number of times (typically 1,000 or 10,000 times), and for each of these bootstrap samples we compute its mean (or some other statistic that we want)
 
-Boosting part 1
+Bagging part 1
 =========================================================
 
 In the example provided we were able to compute mean of a sample or approximate it for something we can't know directly.  
 
 We are now going to use bootstrap to do something completely different: improve statistical learning methods such as decision trees.  
 
-Boosting part 2
+Bagging part 2
 =========================================================
 
 Two weeks ago we discussed decision trees.  However, those trees in general suffer from high variance.  
@@ -461,19 +461,19 @@ This means that if we split the training data into two parts at random, and fit 
 
 Again, this goes back to a lot of tree methods are unfortunately not very robust.  In contrast, if we had a low variance method we would get results have some robust way of computing a model.
 
-Boosting part 3
+Bagging part 3
 =========================================================
 
 Bootstrap aggregation or "bagging" is a general purpose procedure for reducing variance of a statistical learning method.  
 
-Boosting part 4
+Bagging part 4
 =========================================================
 
 Recall that given a set of $n$ independent observations $Z_1,...,Z_n$ each with variance $\sigma^2$, the variance of the mean $\bar{Z}$ of the observations is given by $\sigma^2/n$  
 
 In other words, when we average a set of observations, this reduces variance. 
 
-Boosting part 5
+Bagging part 5
 =========================================================
 In this way, we could take many training sets, make many predictions, then average the models in some way.  
 
@@ -483,7 +483,7 @@ $$
 \hat{f}_{avg}(x) = \frac{1}{B}\sum_{b=1}^B\hat{f^b}(x)
 $$
 
-Boosting part 6
+Bagging part 6
 =========================================================
 
 Because we do not have access to many training sets, we can generate those sets using bootstrapping from the single training data set.  
@@ -620,7 +620,7 @@ install.packages("randomForest", repos = "http://cran.us.r-project.org")
 ```
 
 The downloaded binary packages are in
-	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpdoyHkz/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpZsAXSm/downloaded_packages
 ```
 
 ```r
@@ -820,7 +820,7 @@ install.packages("gbm", repos = "http://cran.us.r-project.org")
 ```
 
 The downloaded binary packages are in
-	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpdoyHkz/downloaded_packages
+	/var/folders/tj/8dxhxfns3fb0fx5kswwdvjbr0000gp/T//RtmpZsAXSm/downloaded_packages
 ```
 
 ```r

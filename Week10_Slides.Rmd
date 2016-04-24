@@ -1,0 +1,329 @@
+---
+title: "Week10_Slides"
+author: "Alexander Frieden"
+date: "April 23, 2016"
+output: ioslides_presentation
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(root.dir = normalizePath(".."))
+```
+
+## Multiple Testing Correction Part 1
+
+Discussion will be about this paper
+
+http://www.nature.com/nbt/journal/v27/n12/pdf/nbt1209-1135.pdf
+
+
+## Multiple Testing Correction Part 2
+
+Multiple Testing Correction works with the idea that when I run a test on a huge number of iterations, I am going to get an incorrect result.  
+
+## Motivating Example
+
+Suppose we are studying CTCF.  This is a highly conserved zinc-finger DNA-binding protein that exhibits diverse regulatory functions.
+
+It may play a major role in the global organization of the chromatin architecture in the human genome
+
+## Multiple Testing Correction Part 3
+
+One way to find out biologically meaningful these scores are is to asses the proability a score would occur by chance.  
+
+We have done this by defining a null hypothesis
+
+Figure 1C demonstrates this.  This is a histogram of scores produced by scanning a shuffled version of human chromosome 21 with the CTCF motif.  
+
+## Multiple Testing Correction Part 4
+
+When all 20 nucleotide segments that match the CTCF binding site were looked at (all 68 million of them)
+
+Only one of these had a score greater than 26.30.  Then the probability of this is then 1/68 million or $1.5\,*\,10^{-8}$.  This is the probaility a score at least as large as the observed score would be observed or the P-value
+
+## Multiple Testing Correction Part 5
+
+Alternately, a score of 17 is equal to the percentage of scores in the null distribution that are greater than 17.0.  In the data there are 35 of these yielding a p-value $5.5x10^{-7}$
+
+The P-value associated with a score $x$ corresponds to the area under the null distribution of the right of $x$.  
+
+## Multiple Testing Correction Part 6
+
+What we just saw is empirical null model.  This is relatively painful to compute.  
+
+Algorithmic approach can be used based on distribution of four basepairs: Thymine, Adenine, Cytosine, and Guanine
+
+We can then compute the top score from (1B) with a score of $2.3 \times 10^{-10}$ compared to much higher result from earlier.  
+
+This P-value is much more accurate and much cheaper compared to empirical null distribution approach.  
+
+## Multiple Testing Correction Part 7
+
+Usually we would compare to a threshold $\alpha$ either 0.01 or 0.05.  
+
+What our threshold is depends heavily on the cost of false negative or false positive.  
+
+## High Throughput Data
+
+High Throughput data is one where we get a lot of biological data out of an experiment thanks to massively parallel sequencing.  
+
+## Why can't we use P-values
+
+The P-value is only statistically valid when a single score is computed.  
+
+Example is if a single 20-bp sequence had been tested.  
+
+However, we didn't do that.  We need to apply a multiple testing correction
+
+## Why can't we use P-values Part 2
+
+Most common (which is sometimes too strict) is Bonferroni Correction.  
+
+If $n$ seperate tests were run with a threshold of $\alpha$ then the P value must be less than or equal to $\alpha/n$
+
+## Why can't we use P-values Part 3
+
+In our case our new threshold would be
+
+$$
+\alpha_{C} = \frac{0.01}{68 \times 10^6} = 1.5 \times 10^{-10}
+$$
+
+So none of our scores are deemed significant.  
+
+## Why can't we use P-values Part 4
+
+Practically speaking, this means that given a et of CTCF sites and our Bonferroni adjusted significance threshold of $\alpha = 0.01$, we can be 99% sure nonoe of the scores would be observed by chance when drawn according to our hypothesis. 
+
+This can be too strict.  It might be better to identify a set of scores for which a specified percentage of scores are drawn according to the null.  This is the general idea of False Discovery Rate estimation.
+
+## Why can't we use P-values Part 5
+
+Using the empirical null distribution in (1e), FDR estimates were generated.  
+
+We are also able to compute FDRs from P-values using the Benjamini-Hochberg procedure (which is also why it is a correction)
+
+## Why can't we use P-values Part 6
+
+If the P-values are uniformly distributed, then the P-value 5% of the way down the list should be about 0.05.  
+
+We can sort the list then divide each element by its percentile rank to get an estimated false discovery rate.  
+
+## Conclusions
+
+* Multiple Testing Correction needs to happen.  In our example we brought 35 different loci down to zero.  
+
+* Cost and Benefit help to determine the best correction method.  
+
+# Extra Content
+
+Will not be on final exam
+
+## What are Haplotypes
+
+A haplotype is a group of genes within an organism that was inherited together from a single parent. 
+
+The word "haplotype" is derived from the word "haploid," which describes cells with only one set of chromosomes, and from the word "genotype," which refers to the genetic makeup of an organism.
+
+## Haplotypes part 1
+
+* Haplotypes are notoriously hard to compute.  
+
+* One trick today is to estimate it via GATK Haplotype Caller
+
+## Haplotypes part 2
+
+```{r, echo=FALSE}
+install.packages("png", repos="http://cran.rstudio.com/")
+library(png)
+library(grid)
+img <- readPNG("pictures/gatk-logo.png")
+grid.raster(img)
+```
+
+## Haplotypes part 3
+
+From aligned reads for Illumina data, we can actually compute haplotypes in an active region.  
+
+This is a "walker" or tool called HaplotypeCaller.  
+
+More info can be found at 
+https://www.broadinstitute.org/gatk/guide/tooldocs/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php
+
+## Haplotypes part 4
+
+This allows the HaplotypeCaller to be more accurate when calling regions that are traditionally difficult to call, for example when they contain different types of variants close to each other. 
+
+It also makes the HaplotypeCaller much better at calling indels than position-based callers like UnifiedGenotyper.
+
+# How HaplotypeCaller works
+
+## Define active regions
+
+The program determines which regions of the genome it needs to operate on, based on the presence of significant evidence for variation.
+
+## Determine haplotypes by assembly of the active region
+
+For each ActiveRegion, the program builds a De Bruijn-like graph to reassemble the ActiveRegion, and identifies what are the possible haplotypes present in the data. 
+
+The program then realigns each haplotype against the reference haplotype using the Smith-Waterman algorithm in order to identify potentially variant sites.
+
+##  Determine likelihoods of the haplotypes given the read data
+
+For each ActiveRegion, the program performs a pairwise alignment of each read against each haplotype using the PairHMM algorithm. 
+
+This produces a matrix of likelihoods of haplotypes given the read data. These likelihoods are then marginalized to obtain the likelihoods of alleles for each potentially variant site given the read data.
+
+## Assign sample genotypes
+
+For each potentially variant site, the program applies Bayes' rule, using the likelihoods of alleles given the read data to calculate the likelihoods of each genotype per sample given the read data observed for that sample. The most likely genotype is then assigned to the sample.
+
+## Haplotypes part 5
+
+We are going to look at a Bayesian approach to estimating unknown haplotypes which is similar to the type used in the GATK method.  
+
+## Haplotypes part 6
+
+There are many approaches to doing Bayesian haplotype reconstruction
+
+We will be focusing on Stephens et al 2001
+
+http://www.sciencedirect.com/science/article/pii/S0002929707614244
+
+## Haplotypes part 7
+
+First we aim to reconstruct individual haplotype pairs.  We do this by attempting to assign the most likely haplotype pairs to an individual.
+
+We then assume the haplotype estimates the true ones and then calculate haplotype frequency.  
+
+What we are going to show can be implemented using PHASE and fastPHASE software packages.  Unfortunately there is no equivalent R package for these.  
+
+## Haplotypes part 8
+
+General idea behind Bayesian methods is we can make an inference about paremeters based on its conditional distribution given the data.  
+
+Let $\theta$  be the parameter of interest.
+
+Let $X$ be the data we have.  
+
+The conditional probability of $\theta$ given $X$ be denoted $\pi(\theta|X)$.  This is commonly referred to the posterior density of $\theta$
+
+## Haplotypes part 9
+
+The distribution depends on three quantities
+
+1.  The prior distribution of $\theta$ given by $\pi(\theta)$
+
+2.  The likelihood of the data given by $L(\theta|X) = f(X|\theta)
+
+3.  A constant c such that
+
+$$
+c = \frac{1}{\int_{\theta}\pi(\theta)L(\theta|X)d\theta}
+$$
+
+## Haplotypes part 10
+
+The relationship between the posterior density and each of the three quantities listed is a result of Bayes rule given by (note semicolon is the probability density function):
+
+$$
+\pi(\theta|X) = \frac{\pi(\theta;X)}{f(X)} = \frac{f(X|\theta)\pi(\theta)}{\int_{\theta}\pi(\theta)f(X|\theta)d\theta}
+$$
+
+Or equivalently
+
+$$
+\pi(\theta|X) = cL(\theta|X)\pi(\theta)
+$$
+
+Since we can substitute for c using our earlier equation
+
+## Haplotypes part 11
+
+In practice, exact calculation of the posterior probability is not possible so we need to use numerical methods compute it.  
+
+## Markov Chain
+
+Introduce Markov Chain, markov property, state space, gambler's ruin
+
+## MCMC
+
+Markov chain Monte Carlo (MCMC) methods are a class of algorithms for sampling from a probability distribution based on constructing a Markov chain that has the desired distribution as its equilibrium distribution. 
+
+The state of the chain after a number of steps is then used as a sample of the desired distribution. 
+
+The quality of the sample improves as a function of the number of steps.
+
+## Marginal Distribution
+
+For the following, we will need the marginal distribution.  
+
+Marginal distribution of a subset of a collection of random variables is the probability distribution of the variables contained in the subset
+
+## Gibb's Sampling
+
+Suppose the population parameters $\theta = (\theta_1,\theta_2,...,\theta_K)$ and we are interested in the joint posterior density $\pi(\theta|X)$
+
+We cannot obtain density directly.  Also suppose $\pi(\theta_k|\theta_{-k},X)$ is the marginal distribution of the single parameter $\theta_k$ conditional on current values.  
+
+The Gibb's Sampler provides us with posterior density $\pi(\theta|X)$ based on sampling from the marginal distributions $\pi(\theta_k|\theta_{-k},X)$
+
+## Gibb's Sampling part 2
+
+We begin with $t = 0$ and initial vaues $\theta_1^{(0)},...,\theta_K^{(0)}$
+
+$$
+\begin{align}
+\theta_1^{(t+1)}|\theta_{-1},X & \sim \pi(\theta_1|\theta_2^{(t)},...,\theta_K^{(t)},X) \\
+\theta_2^{(t+1)}|\theta_{-2},X & \sim \pi(\theta_2|\theta_1^{(t+1)}|\theta_2^{(t)},\theta_3^{(t)},...,\theta_K^{(t)},X) \\
+& ... \\
+\theta_K^{(t+1)}|\theta_{-K},X & \sim \pi(\theta_K|\theta_{-K}^{(t+1)}|\theta_K^{(t+1)},...,\theta_{K-1}^{(t+1)},X)
+\end{align}
+$$
+
+Then keep repeating by letting $t=t+1$ and repeat $M$ times where $M$ is large.
+
+## Gibb's Sampling notes
+
+* $\theta^{(t)}$ is the value of $\theta$ at the $t^{th}$ iteration and is sampled on current estimates  of remaining parameters.  
+
+* Note that this algorithm is in fact a markov chain and only depends on its previous state.  
+
+* We can show that this does converge to $\pi(\theta|X)$ as number of iterations gets very large.
+
+## Gibb's Sampling part 3
+
+Now consider the genetic setting.  Let $H_i$ represent the potentially unobservable haplotype and $G_i$ represent the obersved genotype for individual $i$ where $i=1,...,n$
+
+We want to find the posterior probability of haplotypes given the observed genotype data across individuals, denoted $\pi(H|G)$.  
+
+The probability relies on the distribution for the haplotypes given by $\pi(H)$ and the likelihood of the data given by $L(H|G)$
+
+## Gibb's Sampling part 4
+
+Formally we write this
+
+$$
+\pi(H|G) = cL(H|G)\pi(H)
+$$
+
+where $c$ is a constant.  
+
+## Gibb's Sampling part 5
+
+Goal of this is going to be use the Gibb's Sampler the same except the parameters are replaced by haplotype pairs.  Let $t = 0$ and define initial values $H_1^{(0)},...,H_n^{(0)}$ where n is the number of individuals.  
+
+$$
+\begin{align}
+H_1^{(t+1)}|G,H_{-1} & \sim \pi(H_1|H_2^{(t)},...,H_n^{(t)},G) \\
+H_2^{(t+1)}|G,H_{-2} & \sim \pi(H_2|H_1^{(t+1)},H_2^{(t)},H_3^{(t)},...,H_n^{(t)},G) \\
+& ... \\
+H_n^{(t+1)}|G,H_{-n} & \sim \pi(H_n|H_{-n}^{(t+1)},...,H_{n-1}^{(t+1)},G)
+\end{align}
+$$
+
+## Bayesian Haplotype Reconstruction
+
+Repeating this a large number of times leads to a stable state and gives us consistent estimates for the unknown haplotypes.  
+
+This approach assumes a number of things including random mating.  I think the set of results you get back with just go up for non-diploids.  
+
+
