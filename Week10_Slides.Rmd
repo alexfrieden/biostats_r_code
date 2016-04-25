@@ -326,4 +326,75 @@ Repeating this a large number of times leads to a stable state and gives us cons
 
 This approach assumes a number of things including random mating.  I think the set of results you get back with just go up for non-diploids.  
 
+## Expectation Maximization
 
+There are other methods to do this, one such type is expectation maximization
+
+Here we will effectively be applying maximum likelihood estimation to estimate the missing data.  
+
+## Expectation Maximization part 2
+
+More about this can be read on the paper Dempster et al 1977
+
+And details found in Andrea Foulkes APplied Statistical Genetics With R
+
+## Expectation Maximization part 3
+
+In the first example, we estimate the population level frequencies of haplotypes within the **actn3** gene in Caucasians
+
+This is based on the FAMuSS data
+
+## Expectation Maximization part 4
+
+```{r}
+install.packages("haplo.stats",repos="http://cran.rstudio.com/")
+library(haplo.stats)
+fms <- read.delim("http://www.uvm.edu/~rsingle/Rdata/otherdata/FMS_data.tsv", 
+                  header=T, sep="\t")
+attach(fms)
+Geno <- cbind(substr(actn3_r577x,1,1), substr(actn3_r577x,2,2),
+              substr(actn3_rs540874,1,1),substr(actn3_rs540874,2,2),
+              substr(actn3_rs1815739,1,1),substr(actn3_rs1815739,2,2),
+              substr(actn3_1671064,1,1),substr(actn3_1671064,2,2))
+```
+
+## Expectation Maximization part 5
+
+```{r}
+SNPnames <- c("actn3_r577x","actn3_rs540874","actn3_rs1815739",
+              "actn3_1671064")
+````
+
+## Expectation Maximization part 6
+
+Now we have our data, we are going to use some of the functions provided in haplotype package.  
+
+**haplo.em.control()** function is used within the **haplo.em()** function call to specify the minimum posterior probability of the haplotype pair.  
+
+Pairs that have an estimated frequency lower than this threshold will be removed from the list of possible pairs.  
+
+## Expectation Maximization part 7
+
+```{r}
+Geno.C <- Geno[Race=="Caucasian" && !is.na(Race),]
+HaploEM <- haplo.em(Geno.C, locus.label= SNPnames,
+                    control=haplo.em.control(min.posterior = 1e-4))
+```
+
+## Expectation Maximization Note
+
+Note these values may differ in each run since starting values are different
+
+## Expectation Maximization part 8
+
+```{r}
+HaploEM
+```
+
+## Expectation Maximization part 9
+
+Column named hap.freq is the estimated population level haplotype frequency.   
+
+From this we can see that the most common haplotype is given by CGCA.  
+
+From population level haplotypes we could then use estimators to estimate the sample specific haplotype pair probabilities.
