@@ -1,0 +1,85 @@
+---
+title: "Final Exam"
+author: "Alexander Frieden"
+date: "April 27, 2016"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1.  What is PCA?  Why would it be used?
+
+2.  Use the following to do a Bonferoni Correction on the data
+**(Hint: Use p.adjust())**
+```{r}
+Input = (
+
+"Factor  Raw.p
+ A        .001
+ B        .01
+ C        .025
+ D        .05
+ E        .1
+")
+Data = read.table(textConnection(Input),header=TRUE)
+```
+
+How many pass a threshold of $\alpha = 0.01$ before and after?
+
+
+3.  For this problem we are going to use the gene expression data set found here:
+http://www-bcf.usc.edu/~gareth/ISL/Ch10Ex11.csv
+
+This data is gene expression from 40 tissue samples with measurements on 1000 genes.  The first 20 samples are from healthy patients while the second 20 are from a diseased group. 
+
+A)  Load data into R.  Remember to set **header=F**.
+
+B)  Apply hierarchial clustering to the samples using correlation-based distance, and plot the dendrogram.  Do the genes seperate the samples into the two groups?  Do your results depend on the type of linkage used?
+
+C)  Your collaborator wants to know which genes differ the most across the two groups.  Suggest a way to answer the question.  For a bonus, apply it here.  
+
+4.  Using the genetics package, run:
+```
+install.packages("genetics", repos="http://cran.rstudio.com/")
+library(genetics)
+```
+
+Then use the **genotype()** method and the **LD()** method to compute the $r^2$ pairwise linkage disequilibrium on the following arrays.  What does this tell us?  
+
+```{r}
+v1<- c('A/A','A/C','C/C','C/A',NA,'A/A','A/C','A/C')
+v2<- c('A/A','C/C','C/A','C/A',NA,'A/A','A/C','A/C')
+```
+
+Bonus :  For the following haplotype frequencies
+
+```{r, echo=FALSE, fig.height=2, fig.width=2, message=FALSE, warning=FALSE}
+install.packages("png", repos="http://cran.rstudio.com/")
+library(png)
+library(grid)
+img <- readPNG("pictures/haploTypeFrequencies.png")
+grid.raster(img)
+```
+
+And for the following allele frequencies
+
+```{r, echo=FALSE, fig.height=2, fig.width=2, message=FALSE, warning=FALSE}
+library(png)
+library(grid)
+img <- readPNG("pictures/AlleleFrequencies.png")
+grid.raster(img)
+```
+
+Which can be rewritten
+
+```{r, echo=FALSE, fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
+library(png)
+library(grid)
+img <- readPNG("pictures/RelationshipBetweenHalpotypeAndAllelicFreq.png")
+grid.raster(img)
+```
+
+
+Prove that the Linkage Disequilibrium $D$ is $D =  (x_{11})(x_{22}) – (x_{12})(x_{21})$
